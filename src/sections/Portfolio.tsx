@@ -86,7 +86,6 @@ const Portfolio: React.FC = () => {
 
     return (
         <section className="component-container">
-            <h1>Portfolio</h1>
             {Object.keys(projects)
                 .sort((a, b) => {
                     const numA = parseInt(a.split('-')[0]);
@@ -99,9 +98,9 @@ const Portfolio: React.FC = () => {
 
                     return (
                         <div key={projectKey} className="project-section">
-                            <h2>
+                            <h3>
                                 {formatProjectTitle(parseInt(projectNum), projectName)}
-                            </h2>
+                            </h3>
                             <div className="project-images">
                                 {images.map(image => (
                                     <div key={image.fileName} className="portfolio-image">
