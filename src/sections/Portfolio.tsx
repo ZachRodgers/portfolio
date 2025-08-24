@@ -97,13 +97,13 @@ const Portfolio: React.FC = () => {
                     const images = projects[projectKey];
 
                     return (
-                        <div key={projectKey} className="project-section">
+                        <div key={projectKey} className="project-section" id={`project-${projectNum}`}>
                             <h3>
                                 {formatProjectTitle(parseInt(projectNum), projectName)}
                             </h3>
                             <div className="project-images">
                                 {images.map(image => (
-                                    <div key={image.fileName} className="portfolio-image">
+                                    <div key={image.fileName} className="portfolio-image" id={`${image.projectName.toLowerCase()}-${image.pageName.toLowerCase()}`}>
                                         <img
                                             src={image.fullPath}
                                             alt={`${formatProjectTitle(image.projectNumber, image.projectName)} - ${image.pageName}`}

@@ -10,10 +10,12 @@ import Branding from './sections/Branding';
 
 // Import components
 import Footer from './components/Footer';
+import DynamicNav from './components/DynamicNav';
 
 function App() {
     return (
         <div className="App">
+            <DynamicNav />
             <Hero />
             <Resume />
             <Contents />
