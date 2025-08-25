@@ -110,8 +110,8 @@ const Portfolio: React.FC = () => {
             });
     }, []);
 
-    const formatProjectTitle = (projectNumber: number, projectName: string): string => {
-        return `${projectNumber.toString().padStart(2, '0')} ${projectName}`;
+    const formatProjectTitle = (projectNumber: number): string => {
+        return `${projectNumber.toString().padStart(2, '0')}`;
     };
 
     return (
@@ -129,7 +129,7 @@ const Portfolio: React.FC = () => {
                     return (
                         <div key={projectKey} className="project-section" id={`project-${projectNum}`}>
                             <h3>
-                                {formatProjectTitle(parseInt(projectNum), projectName)}
+                                {formatProjectTitle(parseInt(projectNum))}
                             </h3>
                             <div className="project-images">
                                 {images.map(image => {
@@ -144,7 +144,7 @@ const Portfolio: React.FC = () => {
                                         >
                                             <img
                                                 src={image.fullPath}
-                                                alt={`${formatProjectTitle(image.projectNumber, image.projectName)} - ${image.pageName}`}
+                                                alt={`${formatProjectTitle(image.projectNumber)} - ${image.pageName}`}
                                             />
                                         </div>
                                     );
