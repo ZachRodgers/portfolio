@@ -3,8 +3,10 @@
 /* Colors */
 :root {
     --bg-primary: #121212;
+    --bg-secondary: #1d1d1d;
     --text-primary: #ffffff;
     --text-secondary: #a0a0a0;
+    --border-primary: #2d2d2d;
     --purple: #7000ff;
     --purple-faded: #1f132f;
 }

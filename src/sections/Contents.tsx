@@ -40,6 +40,7 @@ const ProjectImage: React.FC<ProjectImageProps> = ({ src, alt, className, fallba
 
 const Contents: React.FC = () => {
     const [projects, setProjects] = useState<Project[]>([]);
+    const [isMobile, setIsMobile] = useState(false);
 
     const getImagePath = (folder: string, name: string): string => {
         return `/assets/contents/${folder}/${name}.png`;
@@ -51,6 +52,16 @@ const Contents: React.FC = () => {
             projectSection.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 600);
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     useEffect(() => {
         fetch('/assets/portfolio/projects.json')
@@ -126,44 +137,76 @@ const Contents: React.FC = () => {
     return (
         <section className="contents-section">
             <div className="contents-container">
-                <div className="contents-grid">
-                    {projects.map((project) => (
-                        <div
-                            key={project.number}
-                            className="project-card"
-                            onClick={() => handleProjectClick(project.number)}
-                        >
-                            <div className="project-image-container">
-                                <h3 className="project-number">{String(project.number).padStart(2, '0')}</h3>
-                                <div className="project-background">
-                                    <ProjectImage
-                                        src={project.backgroundImage}
-                                        alt={`${project.name} background`}
-                                        fallbackSrc="/assets/contents/background/Placeholder.png"
+                {isMobile ? (
+                    <div className="mobile-contents">
+                        {projects.filter(project => project.name !== 'Placeholder').map((project) => (
+                            <div
+                                key={project.number}
+                                className="mobile-project-item"
+                                onClick={() => handleProjectClick(project.number)}
+                            >
+                                <div className="mobile-project-icon">
+                                    <img
+                                        src={`/assets/icons/project_icons/${project.name}.svg`}
+                                        alt={project.name}
+                                        onError={(e) => {
+                                            console.error(`Failed to load icon: ${project.name}.svg`);
+                                            e.currentTarget.style.display = 'none';
+                                            const fallback = document.createElement('div');
+                                            fallback.className = 'mobile-icon-fallback';
+                                            fallback.textContent = project.name.charAt(0).toUpperCase();
+                                            e.currentTarget.parentNode?.appendChild(fallback);
+                                        }}
                                     />
                                 </div>
-                                <div
-                                    className="project-overlay"
-                                    style={{
-                                        transformOrigin: project.animationOrigin,
-                                        '--animation-scale': project.animationScale,
-                                        '--animation-rotate': `${project.animationRotate}deg`
-                                    } as React.CSSProperties}
-                                >
-                                    <ProjectImage
-                                        src={project.overlayImage}
-                                        alt={`${project.name} overlay`}
-                                        fallbackSrc="/assets/contents/overlay/Placeholder.png"
-                                    />
+                                <div className="mobile-project-info">
+                                    <h3>{project.name}</h3>
+                                    <p>{project.description}</p>
                                 </div>
                             </div>
-                            <div className="project-info">
-                                <h2>{project.name}</h2>
-                                <p>{project.description}</p>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="contents-grid">
+                        {projects.map((project) => (
+                            <div
+                                key={project.number}
+                                className="project-card"
+                                data-project-name={project.name}
+                                onClick={() => handleProjectClick(project.number)}
+                            >
+                                <div className="project-image-container">
+                                    <h3 className="project-number">{String(project.number).padStart(2, '0')}</h3>
+                                    <div className="project-background">
+                                        <ProjectImage
+                                            src={project.backgroundImage}
+                                            alt={`${project.name} background`}
+                                            fallbackSrc="/assets/contents/background/Placeholder.png"
+                                        />
+                                    </div>
+                                    <div
+                                        className="project-overlay"
+                                        style={{
+                                            transformOrigin: project.animationOrigin,
+                                            '--animation-scale': project.animationScale,
+                                            '--animation-rotate': `${project.animationRotate}deg`
+                                        } as React.CSSProperties}
+                                    >
+                                        <ProjectImage
+                                            src={project.overlayImage}
+                                            alt={`${project.name} overlay`}
+                                            fallbackSrc="/assets/contents/overlay/Placeholder.png"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="project-info">
+                                    <h2>{project.name}</h2>
+                                    <p>{project.description}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </section>
     );
