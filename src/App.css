@@ -74,34 +74,3 @@ section {
         color: var(--text-primary);
     }
 }
-
-/* Portfolio styles */
-.portfolio-image {
-    width: 100%;
-    max-width: 1200px;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.portfolio-image img {
-    width: 100%;
-    max-width: 1200px;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.project-section h3 {
-    opacity: 0.15;
-}
-
-.project-section {
-    margin-bottom: 2rem;
-}
-
-.project-images {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}

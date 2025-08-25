@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import './Portfolio.css';
 
 interface PortfolioImage {
     projectNumber: number;
@@ -11,6 +12,34 @@ interface PortfolioImage {
 
 const Portfolio: React.FC = () => {
     const [projects, setProjects] = useState<{ [key: string]: PortfolioImage[] }>({});
+    const [visibleImages, setVisibleImages] = useState<Set<string>>(new Set());
+    const imageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    const imageId = entry.target.getAttribute('data-image-id');
+                    if (entry.isIntersecting && imageId) {
+                        setVisibleImages(prev => {
+                            const newSet = new Set(prev);
+                            newSet.add(imageId);
+                            return newSet;
+                        });
+                    }
+                });
+            },
+            { threshold: 0.1, rootMargin: '50px' }
+        );
+
+        Object.values(imageRefs.current).forEach(ref => {
+            if (ref) {
+                observer.observe(ref);
+            }
+        });
+
+        return () => observer.disconnect();
+    }, [projects]);
 
     useEffect(() => {
         // Load image list from JSON file
@@ -103,14 +132,23 @@ const Portfolio: React.FC = () => {
                                 {formatProjectTitle(parseInt(projectNum), projectName)}
                             </h3>
                             <div className="project-images">
-                                {images.map(image => (
-                                    <div key={image.fileName} className="portfolio-image" id={`${image.projectName.toLowerCase()}-${image.pageName.toLowerCase()}`}>
-                                        <img
-                                            src={image.fullPath}
-                                            alt={`${formatProjectTitle(image.projectNumber, image.projectName)} - ${image.pageName}`}
-                                        />
-                                    </div>
-                                ))}
+                                {images.map(image => {
+                                    const imageId = image.fileName;
+                                    return (
+                                        <div
+                                            key={image.fileName}
+                                            ref={el => imageRefs.current[imageId] = el}
+                                            data-image-id={imageId}
+                                            className={`portfolio-image ${visibleImages.has(imageId) ? 'visible' : ''}`}
+                                            id={`${image.projectName.toLowerCase()}-${image.pageName.toLowerCase()}`}
+                                        >
+                                            <img
+                                                src={image.fullPath}
+                                                alt={`${formatProjectTitle(image.projectNumber, image.projectName)} - ${image.pageName}`}
+                                            />
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     );
