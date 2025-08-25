@@ -14,9 +14,10 @@ const Portfolio: React.FC = () => {
 
     useEffect(() => {
         // Load image list from JSON file
-        fetch('/assets/portfolio/images.json')
+        fetch('/assets/portfolio/projects.json')
             .then(response => response.json())
-            .then(imageFiles => {
+            .then(data => {
+                const imageFiles = data.images;
                 const parsedImages: PortfolioImage[] = imageFiles.map((fileName: string) => {
                     // Handle both dash and underscore separators
                     const separator = fileName.includes('-') ? '-' : '_';

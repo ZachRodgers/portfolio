@@ -38,9 +38,10 @@ const DynamicNav: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        fetch('/assets/portfolio/images.json')
+        fetch('/assets/portfolio/projects.json')
             .then(response => response.json())
-            .then(imageFiles => {
+            .then(data => {
+                const imageFiles = data.images;
                 const parsedImages: PortfolioImage[] = imageFiles.map((fileName: string) => {
                     const separator = fileName.includes('-') ? '-' : '_';
                     const parts = fileName.replace('.jpg', '').split(separator);
