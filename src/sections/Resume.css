@@ -1,0 +1,250 @@
+.resume-container {
+    display: flex;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 0rem;
+}
+
+.resume-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.2rem;
+}
+
+.profile-image {
+    width: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.profile-name {
+    margin: 0;
+}
+
+.profile-statement {
+    line-height: 1.5;
+    text-align: justify;
+    margin: 0;
+}
+
+.section-title {
+    margin-bottom: 1.2rem;
+    margin-top: 0;
+}
+
+.experience-item,
+.education-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.experience-header,
+.education-header,
+.achievement-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.experience-icon,
+.education-icon,
+.achievement-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background-color: transparent;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: fadeInScale 0.8s ease-out forwards;
+    animation-delay: 0.3s;
+    animation-play-state: paused;
+}
+
+.experience-section.animate .experience-icon,
+.education-section.animate .education-icon,
+.achievements-section.animate .achievement-icon {
+    animation-play-state: running;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.experience-header-content,
+.education-header-content,
+.achievement-header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+}
+
+.job-date,
+.education-date {
+    margin: 0 0 0.4rem 0;
+}
+
+.job-description,
+.education-description {
+    line-height: 1.5;
+    margin: 0;
+}
+
+.languages-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.language-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.language-name {
+    margin: 0;
+}
+
+.language-bar {
+    width: 100%;
+    height: 5px;
+    background-color: var(--border-primary);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.language-progress {
+    height: 100%;
+    background-color: var(--text-primary);
+    border-radius: 2px;
+    width: 0;
+    animation: fillBar 1.5s ease-out forwards;
+    animation-delay: 1.3s;
+    animation-play-state: paused;
+}
+
+.languages-section.animate .language-progress {
+    animation-play-state: running;
+}
+
+@keyframes fillBar {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: var(--target-width);
+    }
+}
+
+.achievement-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+}
+
+.skills-section {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.skill-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 7px;
+    object-fit: contain;
+    background-color: transparent;
+    padding: 0.2rem;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.6s ease-out forwards;
+    transition: transform 0.2s ease;
+    animation-play-state: paused;
+}
+
+.skills-section.animate .skill-icon {
+    animation-play-state: running;
+}
+
+.skill-icon:hover {
+    transform: scale(1.05);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .resume-container {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 2rem 1rem;
+    }
+
+    .resume-column {
+        width: 100% !important;
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .skill-icon {
+        width: 50px;
+    }
+
+    .profile-image {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 1rem auto;
+    }
+
+    .profile-section {
+        text-align: center;
+    }
+
+    .profile-statement {
+        text-align: left;
+    }
+}
