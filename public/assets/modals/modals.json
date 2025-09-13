@@ -1,0 +1,161 @@
+{
+    "modals": [
+        {
+            "id": "spark-video-1",
+            "type": "video",
+            "video": "https://youtu.be/VBL-cFxQaSo",
+            "title": "Spark on a Mission",
+            "content": "Spark in context being deployed by EMS and used on a wilderness rescue mission to locate a patient, deliver first aid supplies, and act as a communication beacon.",
+            "targetImage": "1Spark-1Spark.jpg",
+            "targetLocation": "mid_mid"
+        },
+        {
+            "id": "spark-research-1",
+            "type": "text",
+            "title": "Primary Interviews",
+            "content": "A primary research method which was used throughout, was the process of interviewing and presenting iterative work with EMS and SAR professionals, most from the North Bruce Peninsula and Parcs Canada. When you see a circle callout somewhere in this book, you're reading feedback from one of these industry professionals.",
+            "targetImage": "1Spark-2Research.jpg",
+            "targetLocation": "bottom_left"
+        },
+        {
+            "id": "spark-concept-1",
+            "type": "image",
+            "image": "spark_comic.jpg",
+            "title": "How does Spark work?",
+            "content": "Select area to search on controller. Searched areas show up green, unsearched is gray. Spark locates the patient. Using an infrared camera and mobile cell relay. Releases a care package. Drops of undercarriage and 2-way AV radio. Establishes communication. Returns to cell tower height and establishes radio coms. Patient treats the emergency. Uses supplies, directed by EMS to help assess and treat. EMS/SAR arrives with needed personnel and equipment. Spark can return anytime to pick up more equipment.",
+            "targetImage": "1Spark-3Concept.jpg",
+            "targetLocation": "top_mid"
+        },
+        {
+            "id": "spark-system-1",
+            "type": "image",
+            "image": "spark_controller.jpg",
+            "title": "How do you design a drone, that doesn't have an operator?",
+            "content": "The design of everything, from the physical appearance, to general use by patients and EMS had to be thought out, simplified, and safe to use. The goal of spark is a drone, with batteries, a controller, care package that anyone could pickup and control with minimal training, which has never been done in the commercial drone market before.",
+            "targetImage": "1Spark-6System_Design.jpg",
+            "targetLocation": "top_mid"
+        },
+        {
+            "id": "spark-technical-1",
+            "type": "image",
+            "image": "spark_technical.jpg",
+            "title": "Internal Design",
+            "content": "Spark has been outfitted with sensors, an internal waterproofed chassis, care package mounting and many other flight essentials precisely engineered to use every last bit of internal space.",
+            "targetImage": "1Spark-8Technical.jpg",
+            "targetLocation": "mid_right"
+        },
+        {
+            "id": "spark-acido-1",
+            "type": "text",
+            "title": "ACIDO Rocket",
+            "content": "ACIDO Rocket is a design competition tailored towards 4th year industrial design students in Canada where they can display their final projects. A series of judges visits the projects and discuss. My project won the Design Readiness award meaning of all the projects presented at the competition mine had the most accurate preparing to be ready to put into the world through accurate CAD, testing, and thorough engineering. You can view more here: https://acido.info/spark/",
+            "targetImage": "1Spark-8Technical.jpg",
+            "targetLocation": "bottom_left"
+        },
+        {
+            "id": "obsidian-hero-1",
+            "type": "text",
+            "title": "Iconic Design Project",
+            "content": "Problem finding, brainstorming and initial ideation were captured on Miro to develop the design challenge: How can we update the iconic U-lock by incorporating electronics and designing for on-bike storage to simplify user experience? This project was done for a 4th year student project in collaboration with Audrey Sabbagh. View her portfolio at: https://www.audreysabbagh.com/",
+            "targetImage": "2Obsidian_1Obsidian.jpg",
+            "targetLocation": "bottom_right"
+        },
+        {
+            "id": "vital-hero-1",
+            "type": "video",
+            "video": "https://youtu.be/L6UbIT4t8Eo",
+            "title": "Vital Promotional Video",
+            "content": "See Vital in use for all 3 use cases: instant, routine, and passive in context to understand how Vital integrates into daily life and stands out amongst other smart wearables.",
+            "targetImage": "3Vital_1Vital.jpg",
+            "targetLocation": "mid_mid"
+        },
+        {
+            "id": "vital-research-1",
+            "type": "text",
+            "title": "Primary Research",
+            "content": "Multiple practitioners and health professionals were interviewed including doctors, nurses, and technicians. This initial research helped determine patient pain points and validate market research. Research was continued throughout the development process to ensure the design met real user needs and addressed genuine healthcare challenges.",
+            "targetImage": "3Vital_2Research.jpg",
+            "targetLocation": "bottom_mid"
+        },
+        {
+            "id": "vital-technical-1",
+            "type": "video",
+            "video": "https://youtu.be/Y89XzIiODdk",
+            "title": "Vital Prototype",
+            "content": "The Vital prototype was built with electronics and programmed on Arduino to do basic UI displays and sounds. This video demonstrates the functional prototype in action.",
+            "targetImage": "3Vital_6Technical.jpg",
+            "targetLocation": "mid_left"
+        },
+        {
+            "id": "vital-concept-1",
+            "type": "image",
+            "image": "vital_sketches.jpg",
+            "title": "Concept and Ideation",
+            "content": "The Vital project started off with lots of sketching in order to communicate with industry professionals for research and also explore concepts for appearance and function. However, Vital was very important to make and test with prototypes.",
+            "targetImage": "3Vital_3Concept.jpg",
+            "targetLocation": "mid_left"
+        },
+        {
+            "id": "batterola-hero-1",
+            "type": "video",
+            "video": "https://youtu.be/udlQ2L2O6lc",
+            "title": "Batterola in Use",
+            "content": "Batterola was a project based on using flat sheet-based material in order to make a home organizer. I made the project to make a die line, but I decided afterwards to actually get it laser cut, refine the design, and ensure it works so I could use the organizer in my house. Here's an example of it in use.",
+            "targetImage": "4Batterola_4Usage.jpg",
+            "targetLocation": "top_mid"
+        },
+        {
+            "id": "batterola-concept-1",
+            "type": "text",
+            "title": "Concept and Iteration",
+            "content": "The project focused on foldability and concept iteration, demonstrating how sketching is a useful tool in design development. Many concepts evolved from bulky assembled ideas to minimal, easy-to-replace cardboard packaging. The final design could be something a consumer could throw out like regular packaging or keep and refill. It could be sold as flat sheet material or pre-assembled, offering flexibility in distribution and use.",
+            "targetImage": "4Batterola_3Ideation.jpg",
+            "targetLocation": "mid_right"
+        },
+        {
+            "id": "spark-iteration-1",
+            "type": "image",
+            "image": "spark_concepts.jpg",
+            "title": "Iteration",
+            "content": "Using insights collected from test data, iteration sketches were made. VizCom sketch to render AI tool was used to help preview some rendered concepts which were then photoshopped to work on form. Furthermore, a small scale plasticine prototype was made to help explore form while modeling around the constraints of the care package.",
+            "targetImage": "1Spark-3Concept.jpg",
+            "targetLocation": "mid_right"
+        },
+        {
+            "id": "spark-cad-1",
+            "type": "image",
+            "image": "spark_cad.jpg",
+            "title": "CAD Development",
+            "content": "The first modeling attempt was built as an un-detailed, un-surfaced shell around the electronics and care package, following the design intention. The initial CAD was 3D printed at one third scale and plasticine was applied to work on potential surfaces. The model was then captured using 3D scanning to later reference in CAD. Afterwards it was surfaced in Gravity Sketch using VR and collaborative design methods, then finally properly modeled in SolidWorks based around real components, engineering principles and simulated aerodynamics.",
+            "targetImage": "1Spark-4User_Testing.jpg",
+            "targetLocation": "mid_right"
+        },
+        {
+            "id": "spark-gear-1",
+            "type": "image",
+            "image": "spark_gear.jpg",
+            "title": "It takes 12 people to save a life",
+            "content": "6 people carry equipment, 6 people carry the patient, trading occasionally to rest. In search and rescue missions, 75% of the time, attaining proper crew numbers remains just out of reach. Yet, even with one person missing, the delicate balance between life and loss hangs by a thread.",
+            "targetImage": "1Spark-2Research.jpg",
+            "targetLocation": "bottom_mid"
+        },
+        {
+            "id": "spark-renders-1",
+            "type": "image",
+            "image": "spark_renders.jpg",
+            "title": "Renders and CMF",
+            "content": "Spark's material selection was heavily focused on weight reduction while incorporating simple design elements. EMS orange was used for the main body with black accents, and frosted polycarbonate was chosen because polycarbonate provides excellent strength while the frosted finish allows visibility of internal components without showing scratches from outdoor use.",
+            "targetImage": "1Spark-7Features.jpg",
+            "targetLocation": "top_mid"
+        },
+        {
+            "id": "spark-review-1",
+            "type": "image",
+            "image": "spark_review.jpg",
+            "title": "User Testing and Feedback",
+            "content": "Began prototyping with low-fidelity cardboard, progressing to foam core to introduce curvature and primarily focus on size exploration. The foam core model facilitated a bottom-up approach, constructing the prototype around supplies and equipment, guided by the initial sketch. These models were tested and presented in front of groups of peers and instructors to receive feedback about the design. A lot of feedback leaned toward the negative regarding size, color, and scary appearance.",
+            "targetImage": "1Spark-4User_Testing.jpg",
+            "targetLocation": "mid_left"
+        }
+    ]
+}

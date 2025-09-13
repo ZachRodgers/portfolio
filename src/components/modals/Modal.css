@@ -142,10 +142,10 @@
     justify-content: center;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
     z-index: 5;
     box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(3px);
 }
 
 .modal-button-icon {
@@ -158,11 +158,14 @@
 }
 
 .portfolio-image:hover .modal-button {
-    opacity: 0.8;
+    opacity: 1;
 }
 
 .portfolio-image:hover .modal-button:hover {
     opacity: 1;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+
 }
 
 /* Position classes for modal buttons */
