@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Portfolio.css';
+import ModalManager from '../components/modals/ModalManager';
 
 interface PortfolioImage {
     projectNumber: number;
@@ -146,6 +147,7 @@ const Portfolio: React.FC = () => {
                                                 src={image.fullPath}
                                                 alt={`${formatProjectTitle(image.projectNumber)} - ${image.pageName}`}
                                             />
+                                            <ModalManager targetImage={image.fileName} />
                                         </div>
                                     );
                                 })}
