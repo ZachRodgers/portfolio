@@ -1,7 +1,7 @@
 {
     "modals": [
         {
-            "id": "spark-video-1",
+            "id": "spark-video",
             "type": "video",
             "video": "https://youtu.be/VBL-cFxQaSo",
             "title": "Spark on a Mission",
@@ -10,7 +10,7 @@
             "targetLocation": "mid_mid"
         },
         {
-            "id": "spark-research-1",
+            "id": "spark-research",
             "type": "text",
             "title": "Primary Interviews",
             "content": "A primary research method which was used throughout, was the process of interviewing and presenting iterative work with EMS and SAR professionals, most from the North Bruce Peninsula and Parcs Canada. When you see a circle callout somewhere in this book, you're reading feedback from one of these industry professionals.",
@@ -18,7 +18,7 @@
             "targetLocation": "bottom_left"
         },
         {
-            "id": "spark-concept-1",
+            "id": "spark-concept",
             "type": "image",
             "image": "spark_comic.jpg",
             "title": "How does Spark work?",
@@ -27,7 +27,7 @@
             "targetLocation": "top_mid"
         },
         {
-            "id": "spark-system-1",
+            "id": "spark-system",
             "type": "image",
             "image": "spark_controller.jpg",
             "title": "How do you design a drone, that doesn't have an operator?",
@@ -36,7 +36,7 @@
             "targetLocation": "top_mid"
         },
         {
-            "id": "spark-technical-1",
+            "id": "spark-technical",
             "type": "image",
             "image": "spark_technical.jpg",
             "title": "Internal Design",
@@ -45,7 +45,7 @@
             "targetLocation": "mid_right"
         },
         {
-            "id": "spark-acido-1",
+            "id": "spark-acido",
             "type": "text",
             "title": "ACIDO Rocket",
             "content": "ACIDO Rocket is a design competition tailored towards 4th year industrial design students in Canada where they can display their final projects. A series of judges visits the projects and discuss. My project won the Design Readiness award meaning of all the projects presented at the competition mine had the most accurate preparing to be ready to put into the world through accurate CAD, testing, and thorough engineering. You can view more here: https://acido.info/spark/",
@@ -53,7 +53,7 @@
             "targetLocation": "bottom_left"
         },
         {
-            "id": "obsidian-hero-1",
+            "id": "obsidian-hero",
             "type": "text",
             "title": "Iconic Design Project",
             "content": "Problem finding, brainstorming and initial ideation were captured on Miro to develop the design challenge: How can we update the iconic U-lock by incorporating electronics and designing for on-bike storage to simplify user experience? This project was done for a 4th year student project in collaboration with Audrey Sabbagh. View her portfolio at: https://www.audreysabbagh.com/",
@@ -61,7 +61,7 @@
             "targetLocation": "bottom_right"
         },
         {
-            "id": "vital-hero-1",
+            "id": "vital-hero",
             "type": "video",
             "video": "https://youtu.be/L6UbIT4t8Eo",
             "title": "Vital Promotional Video",
@@ -70,7 +70,7 @@
             "targetLocation": "mid_mid"
         },
         {
-            "id": "vital-research-1",
+            "id": "vital-research",
             "type": "text",
             "title": "Primary Research",
             "content": "Multiple practitioners and health professionals were interviewed including doctors, nurses, and technicians. This initial research helped determine patient pain points and validate market research. Research was continued throughout the development process to ensure the design met real user needs and addressed genuine healthcare challenges.",
@@ -78,7 +78,7 @@
             "targetLocation": "bottom_mid"
         },
         {
-            "id": "vital-technical-1",
+            "id": "vital-technical",
             "type": "video",
             "video": "https://youtu.be/Y89XzIiODdk",
             "title": "Vital Prototype",
@@ -87,7 +87,7 @@
             "targetLocation": "mid_left"
         },
         {
-            "id": "vital-concept-1",
+            "id": "vital-concept",
             "type": "image",
             "image": "vital_sketches.jpg",
             "title": "Concept and Ideation",
@@ -96,7 +96,7 @@
             "targetLocation": "mid_left"
         },
         {
-            "id": "batterola-hero-1",
+            "id": "batterola-hero",
             "type": "video",
             "video": "https://youtu.be/udlQ2L2O6lc",
             "title": "Batterola in Use",
@@ -105,7 +105,7 @@
             "targetLocation": "top_mid"
         },
         {
-            "id": "batterola-concept-1",
+            "id": "batterola-concept",
             "type": "text",
             "title": "Concept and Iteration",
             "content": "The project focused on foldability and concept iteration, demonstrating how sketching is a useful tool in design development. Many concepts evolved from bulky assembled ideas to minimal, easy-to-replace cardboard packaging. The final design could be something a consumer could throw out like regular packaging or keep and refill. It could be sold as flat sheet material or pre-assembled, offering flexibility in distribution and use.",
@@ -113,7 +113,7 @@
             "targetLocation": "mid_right"
         },
         {
-            "id": "spark-iteration-1",
+            "id": "spark-iteration",
             "type": "image",
             "image": "spark_concepts.jpg",
             "title": "Iteration",
@@ -122,7 +122,7 @@
             "targetLocation": "mid_right"
         },
         {
-            "id": "spark-cad-1",
+            "id": "spark-cad",
             "type": "image",
             "image": "spark_cad.jpg",
             "title": "CAD Development",
@@ -131,7 +131,7 @@
             "targetLocation": "mid_right"
         },
         {
-            "id": "spark-gear-1",
+            "id": "spark-gear",
             "type": "image",
             "image": "spark_gear.jpg",
             "title": "It takes 12 people to save a life",
@@ -140,7 +140,7 @@
             "targetLocation": "bottom_mid"
         },
         {
-            "id": "spark-renders-1",
+            "id": "spark-renders",
             "type": "image",
             "image": "spark_renders.jpg",
             "title": "Renders and CMF",
@@ -149,7 +149,7 @@
             "targetLocation": "top_mid"
         },
         {
-            "id": "spark-review-1",
+            "id": "spark-review",
             "type": "image",
             "image": "spark_review.jpg",
             "title": "User Testing and Feedback",

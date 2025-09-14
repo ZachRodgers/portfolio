@@ -130,7 +130,7 @@ const Resume: React.FC = () => {
     }
 
     return (
-        <section className="component-container">
+        <section id="resume-section" className="component-container">
             <div className="resume-container">
                 <div className="resume-column" style={{ width: `${resumeData.columns.column1}%` }}>
                     <div className="profile-section">
