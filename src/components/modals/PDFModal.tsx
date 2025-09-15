@@ -30,6 +30,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
     const [previewContainer, setPreviewContainer] = useState<HTMLDivElement | null>(null);
     const [isNavigating, setIsNavigating] = useState(false);
     const [navigationTimeout, setNavigationTimeout] = useState<NodeJS.Timeout | null>(null);
+    const [previewNeedsScroll, setPreviewNeedsScroll] = useState(false);
 
 
     useEffect(() => {
@@ -170,6 +171,10 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                 const { scrollTop, scrollHeight, clientHeight } = previewContainer;
                 const progress = scrollTop / (scrollHeight - clientHeight);
                 setPreviewScrollProgress(Math.max(0, Math.min(1, progress)));
+
+                // Check if scrolling is needed
+                const needsScroll = scrollHeight > clientHeight;
+                setPreviewNeedsScroll(needsScroll);
             }
         };
 
@@ -179,6 +184,28 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
             return () => previewContainer.removeEventListener('scroll', handlePreviewScroll);
         }
     }, [previewContainer]);
+
+    useEffect(() => {
+        const checkPreviewScroll = () => {
+            if (previewContainer) {
+                const { scrollHeight, clientHeight } = previewContainer;
+                const needsScroll = scrollHeight > clientHeight;
+                setPreviewNeedsScroll(needsScroll);
+            }
+        };
+
+        if (previewContainer) {
+            checkPreviewScroll();
+
+            // Use ResizeObserver to detect when content changes
+            const resizeObserver = new ResizeObserver(checkPreviewScroll);
+            resizeObserver.observe(previewContainer);
+
+            return () => {
+                resizeObserver.disconnect();
+            };
+        }
+    }, [previewContainer, pages]);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -457,34 +484,36 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                         </div>
                     </div>
 
-                    <div className="pdf-modal-preview-scrollbar-column">
-                        {/* Preview Custom Scrollbar */}
-                        {pages.length > 0 && displayContainer && (
-                            <div
-                                className="pdf-modal-preview-custom-scrollbar"
-                                ref={(el) => {
-                                    if (el) {
-                                        setPreviewScrollbarHeight(el.clientHeight);
-                                    }
-                                }}
-                            >
+                    {previewNeedsScroll && (
+                        <div className="pdf-modal-preview-scrollbar-column">
+                            {/* Preview Custom Scrollbar */}
+                            {pages.length > 0 && displayContainer && (
                                 <div
-                                    className="pdf-modal-preview-scrollbar-track"
-                                    onClick={handlePreviewScrollbarClick}
+                                    className="pdf-modal-preview-custom-scrollbar"
+                                    ref={(el) => {
+                                        if (el) {
+                                            setPreviewScrollbarHeight(el.clientHeight);
+                                        }
+                                    }}
                                 >
                                     <div
-                                        className="pdf-modal-preview-scrollbar-thumb"
-                                        onClick={handlePreviewScrollbarThumbClick}
-                                        onMouseDown={handlePreviewThumbMouseDown}
-                                        style={{
-                                            height: `${Math.max(20, (previewContainer?.clientHeight || 0) / (previewContainer?.scrollHeight || 1) * previewScrollbarHeight)}px`,
-                                            top: `${previewScrollProgress * (previewScrollbarHeight - Math.max(20, (previewContainer?.clientHeight || 0) / (previewContainer?.scrollHeight || 1) * previewScrollbarHeight))}px`
-                                        }}
-                                    />
+                                        className="pdf-modal-preview-scrollbar-track"
+                                        onClick={handlePreviewScrollbarClick}
+                                    >
+                                        <div
+                                            className="pdf-modal-preview-scrollbar-thumb"
+                                            onClick={handlePreviewScrollbarThumbClick}
+                                            onMouseDown={handlePreviewThumbMouseDown}
+                                            style={{
+                                                height: `${Math.max(20, (previewContainer?.clientHeight || 0) / (previewContainer?.scrollHeight || 1) * previewScrollbarHeight)}px`,
+                                                top: `${previewScrollProgress * (previewScrollbarHeight - Math.max(20, (previewContainer?.clientHeight || 0) / (previewContainer?.scrollHeight || 1) * previewScrollbarHeight))}px`
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

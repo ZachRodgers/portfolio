@@ -158,14 +158,44 @@
             "targetLocation": "mid_left"
         },
         {
-            "id": "spark-portfolio",
+            "id": "spark-technical",
             "type": "pdf",
-            "pdfDirectory": "pages",
+            "pdfDirectory": "SparkTechnical",
+            "pageCount": 9,
+            "title": "Technical Specifications",
+            "content": "Spark was fully designed and 3D printed from CAD, build around components and mindfull of aerodynamics.",
+            "targetImage": "1Spark-8Technical.jpg",
+            "targetLocation": "top_mid"
+        },
+        {
+            "id": "parallel-branding",
+            "type": "pdf",
+            "pdfDirectory": "Parallel",
             "pageCount": 13,
-            "title": "Spark Portfolio Document",
-            "content": "Complete portfolio document showcasing the Spark project development process, research findings, design iterations, and technical specifications.",
+            "title": "Parallel Brand Guideline",
+            "content": "Branding for Parallel Parking Solutions Inc. an SaaS platform for ALPR-powered smart parking systems.",
             "targetImage": "1Spark-1Spark.jpg",
             "targetLocation": "top_right"
+        },
+        {
+            "id": "avalanche-branding",
+            "type": "pdf",
+            "pdfDirectory": "Avalanche",
+            "pageCount": 16,
+            "title": "Avalanche Brand Guideline",
+            "content": "A branding project done for University where we invent a unique product with a targeted brand demographic. I love cookies and thought I could make the next iconic lunch time snack.",
+            "targetImage": "1Spark-1Spark.jpg",
+            "targetLocation": "top_mid"
+        },
+        {
+            "id": "company-store-branding",
+            "type": "pdf",
+            "pdfDirectory": "CompanyStore",
+            "pageCount": 1,
+            "title": "Company Store Brand Guideline",
+            "content": "A branding project done for a company named CompanyStore, they do merchanising and produce their own goods, this project was a complete rebrand.",
+            "targetImage": "1Spark-1Spark.jpg",
+            "targetLocation": "top_left"
         }
     ]
 }
