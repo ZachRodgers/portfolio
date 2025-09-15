@@ -156,6 +156,16 @@
             "content": "Began prototyping with low-fidelity cardboard, progressing to foam core to introduce curvature and primarily focus on size exploration. The foam core model facilitated a bottom-up approach, constructing the prototype around supplies and equipment, guided by the initial sketch. These models were tested and presented in front of groups of peers and instructors to receive feedback about the design. A lot of feedback leaned toward the negative regarding size, color, and scary appearance.",
             "targetImage": "1Spark-4User_Testing.jpg",
             "targetLocation": "mid_left"
+        },
+        {
+            "id": "spark-portfolio",
+            "type": "pdf",
+            "pdfDirectory": "pages",
+            "pageCount": 13,
+            "title": "Spark Portfolio Document",
+            "content": "Complete portfolio document showcasing the Spark project development process, research findings, design iterations, and technical specifications.",
+            "targetImage": "1Spark-1Spark.jpg",
+            "targetLocation": "top_right"
         }
     ]
 }

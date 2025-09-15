@@ -12,6 +12,8 @@ interface ModalConfig {
     video?: string;
     image?: string;
     pdf?: string;
+    pdfDirectory?: string;
+    pageCount?: number;
     title: string;
     content: string;
     targetImage: string;
@@ -97,7 +99,8 @@ const ModalManager: React.FC<ModalManagerProps> = ({ targetImage }) => {
                         <PDFModal
                             isOpen={isModalOpen}
                             onClose={handleModalClose}
-                            pdfSrc={activeModal.pdf ? `/assets/modals/pdfs/${activeModal.pdf}` : undefined}
+                            pdfDirectory={activeModal.pdfDirectory}
+                            pageCount={activeModal.pageCount}
                             title={activeModal.title}
                             content={activeModal.content}
                         />
