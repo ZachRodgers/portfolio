@@ -1,0 +1,26 @@
+[
+    {
+        "id": "parallel-branding",
+        "type": "pdf",
+        "pdfDirectory": "Parallel",
+        "pageCount": 13,
+        "title": "Parallel Brand Guideline",
+        "content": "Branding for Parallel Parking Solutions Inc."
+    },
+    {
+        "id": "avalanche-branding",
+        "type": "pdf",
+        "pdfDirectory": "Avalanche",
+        "pageCount": 16,
+        "title": "Avalanche Brand Guideline",
+        "content": "A cookie brand designed for school lunches!"
+    },
+    {
+        "id": "company-store-branding",
+        "type": "pdf",
+        "pdfDirectory": "CompanyStore",
+        "pageCount": 1,
+        "title": "Company Store Re-Brand",
+        "content": "Full company rebrand."
+    }
+]

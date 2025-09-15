@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Github, Mail, Linkedin, ArrowUp, FolderOpen, FileText } from 'lucide-react';
+import PDFModal from './modals/PDFModal';
 import './Footer.css';
 
 interface Project {
@@ -11,9 +12,22 @@ interface ProjectsData {
     projects: { [key: string]: Project };
 }
 
+interface BrandingProject {
+    id: string;
+    type: string;
+    pdfDirectory: string;
+    pageCount: number;
+    title: string;
+    content: string;
+}
+
 const Footer: React.FC = () => {
     const [projects, setProjects] = useState<Project[]>([]);
+    const [brandingProjects, setBrandingProjects] = useState<BrandingProject[]>([]);
     const [loading, setLoading] = useState(true);
+    const [brandingLoading, setBrandingLoading] = useState(true);
+    const [selectedBrandingProject, setSelectedBrandingProject] = useState<BrandingProject | null>(null);
+    const [isBrandingModalOpen, setIsBrandingModalOpen] = useState(false);
 
     useEffect(() => {
         fetch('/assets/portfolio/projects.json')
@@ -26,6 +40,19 @@ const Footer: React.FC = () => {
             .catch(error => {
                 console.error('Error loading projects:', error);
                 setLoading(false);
+            });
+    }, []);
+
+    useEffect(() => {
+        fetch('/assets/branding/branding.json')
+            .then(response => response.json())
+            .then((data: BrandingProject[]) => {
+                setBrandingProjects(data);
+                setBrandingLoading(false);
+            })
+            .catch(error => {
+                console.error('Error loading branding projects:', error);
+                setBrandingLoading(false);
             });
     }, []);
 
@@ -42,6 +69,16 @@ const Footer: React.FC = () => {
 
     const getCurrentYear = () => {
         return new Date().getFullYear();
+    };
+
+    const handleBrandingClick = (project: BrandingProject) => {
+        setSelectedBrandingProject(project);
+        setIsBrandingModalOpen(true);
+    };
+
+    const handleCloseBrandingModal = () => {
+        setIsBrandingModalOpen(false);
+        setSelectedBrandingProject(null);
     };
 
     const getProjectIcon = (projectName: string) => {
@@ -86,11 +123,25 @@ const Footer: React.FC = () => {
                     <div className="footer-section">
                         <h3>Branding</h3>
                         <ul className="footer-links">
-                            <li>
-                                <span className="footer-note">
-                                    Branding section coming soon
-                                </span>
-                            </li>
+                            {brandingLoading ? (
+                                <li>Loading branding...</li>
+                            ) : (
+                                brandingProjects.map((project) => (
+                                    <li key={project.id}>
+                                        <button
+                                            onClick={() => handleBrandingClick(project)}
+                                            className="footer-link footer-link-with-icon"
+                                        >
+                                            <img
+                                                src="/assets/modals/icons/modal_pdf.svg"
+                                                alt="PDF icon"
+                                                className="footer-pdf-icon"
+                                            />
+                                            <span>{project.title}</span>
+                                        </button>
+                                    </li>
+                                ))
+                            )}
                         </ul>
                     </div>
 
@@ -180,6 +231,17 @@ const Footer: React.FC = () => {
                     </div>
                 </div>
             </div>
+
+            {selectedBrandingProject && (
+                <PDFModal
+                    isOpen={isBrandingModalOpen}
+                    onClose={handleCloseBrandingModal}
+                    pdfDirectory={selectedBrandingProject.pdfDirectory}
+                    pageCount={selectedBrandingProject.pageCount}
+                    title={selectedBrandingProject.title}
+                    content={selectedBrandingProject.content}
+                />
+            )}
         </footer>
     );
 };

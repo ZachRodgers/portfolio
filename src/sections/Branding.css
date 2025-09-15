@@ -1,0 +1,107 @@
+.branding-section {
+    padding: 2rem 0;
+}
+
+.branding-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.branding-title {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.branding-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.branding-card {
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.branding-grid:hover .branding-card:not(:hover) .branding-card-content {
+    opacity: 0.5;
+}
+
+.branding-card-image-container {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+}
+
+.branding-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.branding-card:hover .branding-card-image {
+    transform: scale(1.02);
+    filter: blur(3px);
+}
+
+.branding-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.branding-card:hover .branding-card-overlay {
+    opacity: 1;
+}
+
+.branding-pdf-icon {
+    width: 80px;
+    height: 60px;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+.branding-card-content {
+    padding: 1rem 0.25rem;
+}
+
+.branding-card-description {
+    line-height: 1.25;
+}
+
+@media (max-width: 768px) {
+    .branding-container {
+        padding: 0 1rem;
+    }
+
+    .branding-title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .branding-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .branding-card-image-container {
+        height: 200px;
+    }
+}

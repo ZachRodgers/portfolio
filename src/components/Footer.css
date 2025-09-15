@@ -72,6 +72,17 @@
     filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
 }
 
+.footer-pdf-icon {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) saturate(100%) invert(62%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(95%) contrast(89%);
+    transition: filter 0.3s ease;
+}
+
+.footer-link-with-icon:hover .footer-pdf-icon {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
 .footer-note {
     color: var(--text-secondary);
     font-size: 14px;
