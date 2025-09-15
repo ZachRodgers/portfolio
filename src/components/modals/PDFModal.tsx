@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import './PDFModal.css';
 
@@ -22,30 +22,15 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
     const [dragStartY, setDragStartY] = useState(0);
     const [dragStartScroll, setDragStartScroll] = useState(0);
     const [scrollbarHeight, setScrollbarHeight] = useState(400);
+    const [previewScrollbarHeight, setPreviewScrollbarHeight] = useState(400);
+    const [previewScrollProgress, setPreviewScrollProgress] = useState(0);
+    const [isPreviewDragging, setIsPreviewDragging] = useState(false);
+    const [previewDragStartY, setPreviewDragStartY] = useState(0);
+    const [previewDragStartScroll, setPreviewDragStartScroll] = useState(0);
+    const [previewContainer, setPreviewContainer] = useState<HTMLDivElement | null>(null);
+    const [isNavigating, setIsNavigating] = useState(false);
+    const [navigationTimeout, setNavigationTimeout] = useState<NodeJS.Timeout | null>(null);
 
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                onClose();
-            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-                e.preventDefault();
-                handlePreviousPage();
-            } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-                e.preventDefault();
-                handleNextPage();
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener('keydown', handleKeyDown);
-            document.body.style.overflow = 'hidden';
-        }
-
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-            document.body.style.overflow = 'unset';
-        };
-    }, [isOpen, onClose, currentPage, pageCount]);
 
     useEffect(() => {
         if (isOpen && pdfDirectory && pageCount) {
@@ -55,7 +40,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
 
     useEffect(() => {
         const handleScroll = () => {
-            if (displayContainer) {
+            if (displayContainer && !isNavigating) {
                 const { scrollTop, scrollHeight, clientHeight } = displayContainer;
                 const progress = scrollTop / (scrollHeight - clientHeight);
                 setScrollProgress(Math.max(0, Math.min(1, progress)));
@@ -79,7 +64,27 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                     }
                 });
 
-                setCurrentPage(closestPage);
+                if (closestPage !== currentPage) {
+                    setCurrentPage(closestPage);
+
+                    // Only sync preview if not currently navigating
+                    if (!isNavigating && previewContainer) {
+                        const previewItems = previewContainer.querySelectorAll('.pdf-modal-preview-item');
+                        const currentPreviewItem = previewItems[closestPage - 1] as HTMLElement;
+                        if (currentPreviewItem) {
+                            const containerRect = previewContainer.getBoundingClientRect();
+                            const itemRect = currentPreviewItem.getBoundingClientRect();
+
+                            // Only scroll if the item is not visible
+                            if (itemRect.top < containerRect.top || itemRect.bottom > containerRect.bottom) {
+                                currentPreviewItem.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
+                            }
+                        }
+                    }
+                }
             }
         };
 
@@ -88,7 +93,92 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
             handleScroll(); // Initialize scroll position
             return () => displayContainer.removeEventListener('scroll', handleScroll);
         }
-    }, [displayContainer]);
+    }, [displayContainer, isNavigating, currentPage, previewContainer]);
+
+    const navigateToPage = useCallback((pageNumber: number, source: 'user' | 'sync') => {
+        if (isNavigating || pageNumber < 1 || pageNumber > (pageCount || 1)) return;
+
+        setIsNavigating(true);
+        setCurrentPage(pageNumber);
+
+        // Clear any existing timeout
+        if (navigationTimeout) {
+            clearTimeout(navigationTimeout);
+        }
+
+        // Scroll main display to page
+        if (displayContainer) {
+            const pageElement = displayContainer.querySelector(`[data-page="${pageNumber}"]`) as HTMLElement;
+            if (pageElement) {
+                pageElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // Scroll preview to show current page
+        if (previewContainer && source === 'user') {
+            const previewItems = previewContainer.querySelectorAll('.pdf-modal-preview-item');
+            const targetPreviewItem = previewItems[pageNumber - 1] as HTMLElement;
+            if (targetPreviewItem) {
+                targetPreviewItem.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }
+
+        // Reset navigation flag after animation completes
+        const timeout = setTimeout(() => {
+            setIsNavigating(false);
+        }, 600);
+        setNavigationTimeout(timeout);
+    }, [isNavigating, pageCount, navigationTimeout, displayContainer, previewContainer]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    navigateToPage(currentPage - 1, 'user');
+                }
+            } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (currentPage < (pageCount || 1)) {
+                    navigateToPage(currentPage + 1, 'user');
+                }
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleKeyDown);
+            document.body.style.overflow = 'hidden';
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen, onClose, currentPage, pageCount, navigateToPage]);
+
+    useEffect(() => {
+        const handlePreviewScroll = () => {
+            if (previewContainer) {
+                const { scrollTop, scrollHeight, clientHeight } = previewContainer;
+                const progress = scrollTop / (scrollHeight - clientHeight);
+                setPreviewScrollProgress(Math.max(0, Math.min(1, progress)));
+            }
+        };
+
+        if (previewContainer) {
+            previewContainer.addEventListener('scroll', handlePreviewScroll);
+            handlePreviewScroll(); // Initialize scroll position
+            return () => previewContainer.removeEventListener('scroll', handlePreviewScroll);
+        }
+    }, [previewContainer]);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -116,6 +206,40 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
         }
     }, [isDragging, dragStartY, dragStartScroll, displayContainer, scrollbarHeight]);
 
+    useEffect(() => {
+        const handlePreviewMouseMove = (e: MouseEvent) => {
+            if (isPreviewDragging && previewContainer) {
+                const deltaY = e.clientY - previewDragStartY;
+                const scrollHeight = previewContainer.scrollHeight - previewContainer.clientHeight;
+                const scrollbarTrackHeight = previewScrollbarHeight;
+                const scrollRatio = deltaY / scrollbarTrackHeight;
+                const newScroll = previewDragStartScroll + (scrollRatio * scrollHeight);
+                previewContainer.scrollTop = Math.max(0, Math.min(scrollHeight, newScroll));
+            }
+        };
+
+        const handlePreviewMouseUp = () => {
+            setIsPreviewDragging(false);
+        };
+
+        if (isPreviewDragging) {
+            document.addEventListener('mousemove', handlePreviewMouseMove);
+            document.addEventListener('mouseup', handlePreviewMouseUp);
+            return () => {
+                document.removeEventListener('mousemove', handlePreviewMouseMove);
+                document.removeEventListener('mouseup', handlePreviewMouseUp);
+            };
+        }
+    }, [isPreviewDragging, previewDragStartY, previewDragStartScroll, previewContainer, previewScrollbarHeight]);
+
+    useEffect(() => {
+        return () => {
+            if (navigationTimeout) {
+                clearTimeout(navigationTimeout);
+            }
+        };
+    }, [navigationTimeout]);
+
     const loadPages = async () => {
         if (!pdfDirectory || !pageCount) return;
 
@@ -137,41 +261,24 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
         }
     };
 
-    const scrollToPage = (pageNumber: number) => {
-        if (displayContainer) {
-            const pageElement = displayContainer.querySelector(`[data-page="${pageNumber}"]`) as HTMLElement;
-            if (pageElement) {
-                pageElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }
-    };
-
     const handlePreviousPage = () => {
         if (currentPage > 1) {
-            const newPage = currentPage - 1;
-            setCurrentPage(newPage);
-            scrollToPage(newPage);
+            navigateToPage(currentPage - 1, 'user');
         }
     };
 
     const handleNextPage = () => {
         if (currentPage < (pageCount || 1)) {
-            const newPage = currentPage + 1;
-            setCurrentPage(newPage);
-            scrollToPage(newPage);
+            navigateToPage(currentPage + 1, 'user');
         }
     };
 
     const handlePageClick = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-        scrollToPage(pageNumber);
+        navigateToPage(pageNumber, 'user');
     };
 
     const handleScrollbarClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (displayContainer) {
+        if (displayContainer && !isNavigating) {
             const rect = e.currentTarget.getBoundingClientRect();
             const clickY = e.clientY - rect.top;
             const percentage = clickY / rect.height;
@@ -192,6 +299,30 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
         setIsDragging(true);
         setDragStartY(e.clientY);
         setDragStartScroll(displayContainer?.scrollTop || 0);
+    };
+
+    const handlePreviewScrollbarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (previewContainer && !isNavigating) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickY = e.clientY - rect.top;
+            const percentage = clickY / rect.height;
+            const maxScroll = previewContainer.scrollHeight - previewContainer.clientHeight;
+            const targetScroll = percentage * maxScroll;
+
+            previewContainer.scrollTop = targetScroll;
+        }
+    };
+
+    const handlePreviewScrollbarThumbClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+    };
+
+    const handlePreviewThumbMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsPreviewDragging(true);
+        setPreviewDragStartY(e.clientY);
+        setPreviewDragStartScroll(previewContainer?.scrollTop || 0);
     };
 
     if (!isOpen) return null;
@@ -308,7 +439,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                     </div>
 
                     <div className="pdf-modal-preview-column">
-                        <div className="pdf-modal-preview-scroll">
+                        <div className="pdf-modal-preview-scroll" ref={setPreviewContainer}>
                             {pages.map((page, index) => (
                                 <div
                                     key={index}
@@ -324,6 +455,35 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                                 </div>
                             ))}
                         </div>
+                    </div>
+
+                    <div className="pdf-modal-preview-scrollbar-column">
+                        {/* Preview Custom Scrollbar */}
+                        {pages.length > 0 && displayContainer && (
+                            <div
+                                className="pdf-modal-preview-custom-scrollbar"
+                                ref={(el) => {
+                                    if (el) {
+                                        setPreviewScrollbarHeight(el.clientHeight);
+                                    }
+                                }}
+                            >
+                                <div
+                                    className="pdf-modal-preview-scrollbar-track"
+                                    onClick={handlePreviewScrollbarClick}
+                                >
+                                    <div
+                                        className="pdf-modal-preview-scrollbar-thumb"
+                                        onClick={handlePreviewScrollbarThumbClick}
+                                        onMouseDown={handlePreviewThumbMouseDown}
+                                        style={{
+                                            height: `${Math.max(20, (previewContainer?.clientHeight || 0) / (previewContainer?.scrollHeight || 1) * previewScrollbarHeight)}px`,
+                                            top: `${previewScrollProgress * (previewScrollbarHeight - Math.max(20, (previewContainer?.clientHeight || 0) / (previewContainer?.scrollHeight || 1) * previewScrollbarHeight))}px`
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
