@@ -31,13 +31,38 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
     const [isNavigating, setIsNavigating] = useState(false);
     const [navigationTimeout, setNavigationTimeout] = useState<NodeJS.Timeout | null>(null);
     const [previewNeedsScroll, setPreviewNeedsScroll] = useState(false);
+    const [imagesLoaded, setImagesLoaded] = useState(0);
+    const [allImagesLoaded, setAllImagesLoaded] = useState(false);
 
 
     useEffect(() => {
         if (isOpen && pdfDirectory && pageCount) {
+            setImagesLoaded(0);
+            setAllImagesLoaded(false);
             loadPages();
         }
     }, [isOpen, pdfDirectory, pageCount]);
+
+    useEffect(() => {
+        if (pages.length > 0 && imagesLoaded === pages.length) {
+            setAllImagesLoaded(true);
+            setTimeout(() => {
+                if (displayContainer) {
+                    const { scrollHeight, clientHeight } = displayContainer;
+                    if (scrollHeight > clientHeight) {
+                        setScrollbarHeight(displayContainer.clientHeight);
+                    }
+                }
+                if (previewContainer) {
+                    const { scrollHeight, clientHeight } = previewContainer;
+                    if (scrollHeight > clientHeight) {
+                        setPreviewScrollbarHeight(previewContainer.clientHeight);
+                        setPreviewNeedsScroll(true);
+                    }
+                }
+            }, 100);
+        }
+    }, [imagesLoaded, pages.length, displayContainer, previewContainer]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -267,6 +292,14 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
         };
     }, [navigationTimeout]);
 
+    const handleImageLoad = () => {
+        setImagesLoaded(prev => prev + 1);
+    };
+
+    const handlePreviewImageLoad = () => {
+        // Preview images don't count toward the loading state
+    };
+
     const loadPages = async () => {
         if (!pdfDirectory || !pageCount) return;
 
@@ -385,7 +418,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                                 disabled={currentPage <= 1}
                             >
                                 <ChevronLeft size={16} />
-                                Previous (Up)
+                                Previous
                             </button>
                             <button
                                 className="pdf-modal-nav-button"
@@ -393,14 +426,14 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                                 disabled={currentPage >= (pageCount || 1)}
                             >
                                 <ChevronRight size={16} />
-                                Next (Down)
+                                Next
                             </button>
                             <button
                                 className="pdf-modal-nav-button"
                                 onClick={onClose}
                             >
                                 <X size={16} />
-                                Close (Esc)
+                                Close
                             </button>
                         </div>
                     </div>
@@ -415,17 +448,29 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                             ) : error ? (
                                 <div className="pdf-modal-error">{error}</div>
                             ) : pages.length > 0 ? (
-                                <div className="pdf-modal-pages-stack">
-                                    {pages.map((page, index) => (
-                                        <img
-                                            key={index}
-                                            src={page}
-                                            alt={`Page ${index + 1}`}
-                                            className="pdf-modal-page-display"
-                                            data-page={index + 1}
-                                        />
-                                    ))}
-                                </div>
+                                <>
+                                    {!allImagesLoaded && (
+                                        <div className="pdf-modal-loading">
+                                            Loading images... ({imagesLoaded}/{pages.length})
+                                        </div>
+                                    )}
+                                    <div className="pdf-modal-pages-stack" style={{ opacity: allImagesLoaded ? 1 : 0 }}>
+                                        {pages.map((page, index) => (
+                                            <img
+                                                key={index}
+                                                src={page}
+                                                alt={`Page ${index + 1}`}
+                                                className="pdf-modal-page-display"
+                                                data-page={index + 1}
+                                                onLoad={handleImageLoad}
+                                                onError={() => {
+                                                    console.error(`Failed to load image: ${page}`);
+                                                    handleImageLoad();
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
                             ) : (
                                 <div className="pdf-modal-loading">No pages available</div>
                             )}
@@ -438,7 +483,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
 
                     <div className="pdf-modal-scrollbar-column">
                         {/* Custom Scrollbar */}
-                        {pages.length > 0 && displayContainer && (
+                        {allImagesLoaded && pages.length > 0 && displayContainer && (
                             <div
                                 className="pdf-modal-custom-scrollbar"
                                 ref={(el) => {
@@ -470,21 +515,24 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                             {pages.map((page, index) => (
                                 <div
                                     key={index}
-                                    className={`pdf-modal-preview-item ${index + 1 === currentPage ? 'active' : 'inactive'
-                                        }`}
+                                    className={`pdf-modal-preview-item ${index + 1 === currentPage ? 'active' : 'inactive'} ${!allImagesLoaded ? 'loading' : ''}`}
                                     onClick={() => handlePageClick(index + 1)}
                                 >
                                     <img
                                         src={page}
                                         alt={`Page ${index + 1} preview`}
                                         className="pdf-modal-preview-image"
+                                        onLoad={handlePreviewImageLoad}
+                                        onError={() => {
+                                            console.error(`Failed to load preview image: ${page}`);
+                                        }}
                                     />
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    {previewNeedsScroll && (
+                    {previewNeedsScroll && allImagesLoaded && (
                         <div className="pdf-modal-preview-scrollbar-column">
                             {/* Preview Custom Scrollbar */}
                             {pages.length > 0 && displayContainer && (
