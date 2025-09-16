@@ -11,17 +11,28 @@ import Branding from './sections/Branding';
 // Import components
 import Footer from './components/Footer';
 import DynamicNav from './components/DynamicNav';
+import LoadingScreen from './components/LoadingScreen';
+
+// Import hooks
+import useAssetLoading from './hooks/useAssetLoading';
 
 function App() {
+    const { isLoading } = useAssetLoading();
+
     return (
         <div className="App">
-            <DynamicNav />
-            <Hero />
-            <Resume />
-            <Contents />
-            <Portfolio />
-            <Branding />
-            <Footer />
+            <LoadingScreen isLoading={isLoading} />
+            {!isLoading && (
+                <>
+                    <DynamicNav />
+                    <Hero />
+                    <Resume />
+                    <Contents />
+                    <Portfolio />
+                    <Branding />
+                    <Footer />
+                </>
+            )}
         </div>
     );
 }
