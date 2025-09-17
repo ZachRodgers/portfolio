@@ -6,6 +6,9 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    margin-bottom: 100px;
+    overflow: visible;
+
 }
 
 .hero-video {
@@ -18,4 +21,46 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.hero-text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    z-index: 10;
+}
+
+.hero-name {
+    font-size: 10rem;
+    font-weight: 800;
+    white-space: nowrap;
+    background: linear-gradient(to bottom, var(--purple) 0%, var(--text-primary) var(--gradient-stop, 0%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 2rem;
+    font-weight: 300;
+    margin: 0;
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    text-align: left;
+    color: var(--text-primary);
+    margin-top: -3.5rem;
+}
+
+@media (max-width: 768px) {
+    .hero-name {
+        font-size: 3rem;
+        white-space: nowrap;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-top: -0.8rem;
+        white-space: nowrap;
+    }
 }

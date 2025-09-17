@@ -11,6 +11,7 @@ const Hero: React.FC = () => {
     const staticVideoRef = useRef<HTMLVideoElement>(null);
     const explodeVideoRef = useRef<HTMLVideoElement>(null);
     const [currentVideo, setCurrentVideo] = useState(STATIC_VIDEO);
+    const [textTransform, setTextTransform] = useState(0);
     const lastScrollPosition = useRef<number>(0);
     const isScrollingDown = useRef<boolean>(true);
     const reverseStartTime = useRef<number>(0);
@@ -19,6 +20,12 @@ const Hero: React.FC = () => {
     useEffect(() => {
         const handleScroll = () => {
             const scrollTop = window.pageYOffset;
+
+            // Calculate text transform based on scroll position
+            const maxScroll = 800; // 800px scroll distance
+            const maxTransform = 400; // 400px transform distance
+            const transformValue = Math.min(scrollTop / maxScroll, 1) * maxTransform;
+            setTextTransform(transformValue);
 
             if (scrollTop === 0) {
                 // At the very top, only switch to static if we're not in reverse mode
@@ -194,6 +201,31 @@ const Hero: React.FC = () => {
             >
                 <source src={`${VIDEO_PATH}${EXPLODE_VIDEO}.mp4`} type="video/mp4" />
             </video>
+
+            {/* Text overlay */}
+            <div
+                className="hero-text-overlay"
+                style={{
+                    transform: `translate(-50%, calc(-50% + ${textTransform}px))`
+                }}
+            >
+                <h1
+                    className="hero-name"
+                    style={{
+                        '--gradient-stop': `${Math.min(textTransform / 4, 52)}%`
+                    } as React.CSSProperties}
+                >
+                    zach rodgers
+                </h1>
+                <p
+                    className="hero-subtitle"
+                    style={{
+                        color: 'var(--text-primary)'
+                    }}
+                >
+                    industrial design portfolio
+                </p>
+            </div>
         </section>
     );
 };
