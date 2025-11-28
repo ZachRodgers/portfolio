@@ -1,0 +1,826 @@
+{
+  "recipes": [
+    {
+      "section": "Meals",
+      "title": "Italian Lasagna",
+      "image": "lasagna.jpg",
+      "ingredients": [
+        "Lasagna Noodle, oven ready",
+        "2 lbs. lean ground beef",
+        "1 Italian sausage, diced",
+        "1 onion, diced",
+        "2 cloves garlic, minced",
+        "3 cups tomato sauce",
+        "1 teaspoon italian seasoning",
+        "1 tablespoon sugar",
+        "4 cups mozzarella",
+        "1/4 cup parmesan cheese",
+        "2 cups cottage cheese",
+        "1 egg, beaten"
+      ],
+      "instructions": [
+        "Cook beef, sausage, onion, and garlic over medium-high heat until no pink remains; drain fat.",
+        "Stir in tomato sauce, sugar, and italian seasoning; simmer 5 minutes.",
+        "In a bowl combine parmesan, cottage cheese, and egg until creamy.",
+        "Preheat oven to 350°F.",
+        "Create 3 layers, starting with meat sauce, then lasagna noodles, then 1/3 cheese mixture. Top with mozzarella.",
+        "Cover with foil and bake 45 minutes. Remove foil and bake another 15 minutes."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Spinach Pesto Lasagna",
+      "image": "spinach_pesto_lasgna.jpg",
+      "ingredients": [
+        {
+          "title": "Noodle",
+          "items": [
+            "2 1/2+ cups flour",
+            "4 eggs",
+            "Salt"
+          ]
+        },
+        {
+          "items": [
+            "3 cups spinach",
+            "4 cups cottage cheese",
+            "1/2 cup pesto",
+            "1/2 cup Parmesan, grated",
+            "1/2 cup parsley, chopped",
+            "4 cups zucchini, sliced",
+            "3 cups mozzarella, grated"
+          ]
+        }
+      ],
+      "instructions": [
+        "Mix flour and salt; crack eggs in the center and knead about 8 minutes until soft but not sticky, adding flour as needed.",
+        "Rest dough 30 minutes, cut into portions, roll or run through a pasta maker until thin, then boil 2–3 minutes and set aside.",
+        "Wilt spinach; combine with cottage cheese, pesto, parsley, parmesan, salt, and pepper.",
+        "Preheat oven to 400°F and grease an 11x17 pan.",
+        "Layer noodles, 1/3 cheese mixture, spinach, and zucchini; repeat twice. Top with remaining mozzarella.",
+        "Cover with foil and bake 45 minutes. Remove foil and bake 15 minutes more."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Honey Garlic Ribs",
+      "image": "ribs.jpg",
+      "ingredients": [
+        "1 rack pork back ribs",
+        "1/3 cup honey",
+        "1 teaspoon paprika",
+        "1/2 teaspoon chili powder",
+        "1/2 teaspoon garlic powder",
+        "1/4 teaspoon celery salt",
+        "1/4 cup brown sugar",
+        "1/8 cup white sugar",
+        "1/4 teaspoon ground pepper",
+        "1 small onion, finely chopped",
+        "6 ounces BBQ sauce"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F.",
+        "Separate ribs into individual pieces.",
+        "Toss ribs with honey, spices, sugars, pepper, onion, and BBQ sauce until well coated.",
+        "Spread on a foil-lined pan, cover lightly with foil.",
+        "Bake about 1 hour, flipping occasionally until caramelized and tender."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Garlic Herb Chicken Roast",
+      "image": "chicken.jpg",
+      "ingredients": [
+        "Whole chicken",
+        "1/4 cup butter, melted",
+        "3 tbsp olive oil",
+        "1/4 cup dry white wine",
+        "1 lemon",
+        "Salt and pepper",
+        "Garlic Plus",
+        "2 tbsp fresh parsley, chopped",
+        "8 cloves garlic",
+        "3 fresh rosemary sprigs",
+        "3 fresh thyme sprigs"
+      ],
+      "instructions": [
+        "Preheat oven to 430°F and line a baking tray with foil.",
+        "Stir together olive oil, melted butter, wine, and juice from half a lemon.",
+        "Mix plenty of salt, pepper, and garlic seasoning; rub inside and outside of the chicken.",
+        "Mince half the garlic and rub under the skin and over the bird; sprinkle with chopped parsley.",
+        "Stuff cavity with remaining garlic cloves, the other lemon half, rosemary, and thyme sprigs.",
+        "Roast 1 hour 15 minutes, basting halfway; internal temp should reach 165°F. Baste once more and rest 10 minutes before serving."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Spinach Stuffed Salmon",
+      "image": "salmon.jpg",
+      "tag": "Unbeatable",
+      "ingredients": [
+        "2 salmon fillets",
+        "Salt and pepper",
+        "2 tbsp lemon juice",
+        "2 tbsp olive oil",
+        "1 tbsp butter",
+        "4 oz cream cheese",
+        "4 oz frozen spinach, warmed",
+        "1/4 cup Parmesan, grated",
+        "2 tsp garlic, minced",
+        "Garlic butter"
+      ],
+      "instructions": [
+        "Pat salmon dry; season both sides with salt, pepper, and a little olive oil.",
+        "Warm spinach in a pan until soft; mix with cream cheese, parmesan, and garlic.",
+        "Slice salmon lengthwise, cutting a slit 3/4 of the way through. Stuff with spinach mixture.",
+        "Sear salmon presentation side down in oil over medium-high heat until golden, about 5 minutes.",
+        "Flip, add butter and lemon juice, and baste until salmon reaches about 130°F. Finish with a squeeze of lemon and serve."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Baked Ziti",
+      "image": "baked_ziti.jpg",
+      "ingredients": [
+        "4 cups marinara sauce",
+        "2 cups ricotta cheese",
+        "2 garlic cloves, minced",
+        "1 tbsp lemon zest",
+        "1 tsp oregano",
+        "Salt and pepper",
+        "3 cups ziti pasta",
+        "1 lb spinach",
+        "1 1/2 cups smoked mozzarella, shredded",
+        "1/4 cup Parmesan cheese",
+        "12–16 meatballs, sliced",
+        "Fresh parsley or basil"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F.",
+        "Spread 1/2 cup marinara on the bottom of a 9x13 dish.",
+        "Combine ricotta, garlic, lemon zest, oregano, salt, and pepper in a bowl.",
+        "Cook ziti according to package; drain.",
+        "Sauté spinach until wilted, cool, and chop.",
+        "Toss pasta with sauce mixture, sliced meatballs, and spinach; season.",
+        "Add half the pasta to the pan, dollop ricotta mixture, then add remaining pasta. Top with mozzarella and parmesan.",
+        "Bake 16–22 minutes until bubbly; garnish with basil or parsley."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Scalloped Potatoes",
+      "image": "scalloped_potatoes.jpg",
+      "ingredients": [
+        "1/4 cup butter",
+        "4 medium potatoes, thinly sliced",
+        "1 medium onion, diced",
+        "2 cloves garlic, minced",
+        "1/4 cup flour",
+        "1 1/2 cups milk",
+        "1 cup chicken broth",
+        "Salt and pepper"
+      ],
+      "instructions": [
+        "Peel and slice potatoes 1/8–1/4 inch thick; keep in water.",
+        "Preheat oven to 350°F.",
+        "Melt butter; cook onion and garlic about 3 minutes.",
+        "Stir in flour and cook 2 minutes, then reduce heat.",
+        "Whisk milk and broth together; add to pan with salt and pepper and bring to a boil for 1 minute.",
+        "Grease a 9x9 dish. Layer 1/3 potatoes, season, then 1/3 sauce; repeat for 3 layers.",
+        "Cover with foil and bake 45 minutes; uncover and bake another 35–45 minutes. Rest 15 minutes before serving."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Chicken Pesto Pasta",
+      "image": "chicken_pesto_pasta.jpg",
+      "ingredients": [
+        "Olive oil",
+        "1 cup onion, diced",
+        "4 cloves garlic, minced",
+        "2 chicken breasts, sliced",
+        "1 cup light cream",
+        "1/4 cup Parmesan, grated",
+        "1/4 cup pesto",
+        "1/2 teaspoon salt",
+        "4 cups pasta",
+        "2 cups broccoli"
+      ],
+      "instructions": [
+        "Cook pasta and broccoli together in boiling water until pasta is al dente; drain.",
+        "Sauté onion in oil until caramelized; add garlic and sliced chicken, season with salt and pepper.",
+        "Stir in cream and parmesan; let simmer briefly.",
+        "Fold in pasta and broccoli, then mix in pesto. Remove from heat and finish with parmesan or green onions."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Kale Pesto Pasta",
+      "image": "kale_pesto_pasta.jpg",
+      "ingredients": [
+        "2–3 cups pasta",
+        "5–8 kale leaves",
+        "Butter",
+        "1/2 cup onion, diced",
+        "4 garlic cloves, minced",
+        "2 tbsp pesto",
+        "1 cup mozzarella, shredded",
+        "1/2 cup Parmesan, shredded",
+        "Slivered almonds, toasted",
+        "Green onion"
+      ],
+      "instructions": [
+        "Cook pasta according to package instructions; reserve.",
+        "In butter, wilt kale on medium heat, then cook onion until caramelized; add garlic.",
+        "Blend kale, onion, garlic, pesto, and a splash of cream if desired until smooth.",
+        "Return sauce to pan, add pasta, mozzarella, and parmesan; stir on low heat for a minute.",
+        "Garnish with toasted slivered almonds, green onion, and extra parmesan."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Pad Thai",
+      "image": "pad_thai.jpg",
+      "ingredients": [
+        {
+          "title": "Main",
+          "items": [
+            "6 chicken thighs, sliced",
+            "3 cloves garlic, minced",
+            "3 eggs",
+            "1/3 onion, sliced",
+            "1/2 pkg Pad Thai rice noodles",
+            "6 tbsp crushed peanuts"
+          ]
+        },
+        {
+          "title": "Sauce",
+          "items": [
+            "6 tbsp fish sauce",
+            "3 tbsp brown sugar",
+            "4 tbsp rice vinegar",
+            "4 tbsp soy sauce"
+          ]
+        }
+      ],
+      "instructions": [
+        "Cook Pad Thai noodles per package; set aside.",
+        "Pan-fry chicken in a little olive oil until cooked through; stir in garlic.",
+        "Push chicken aside, scramble eggs in the pan until just set.",
+        "Add noodles and toss together.",
+        "Whisk sauce ingredients and pour over noodles; add onions and peanuts and stir to coat.",
+        "Simmer a few minutes until sauce reduces and clings. Serve with extra peanuts, green onion, and lemon wedges."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Korean Ground Beef with Greek Salad",
+      "image": "korean_ground_beef.jpg",
+      "tag": "Unbeatable",
+      "ingredients": [
+        "1 lb lean ground beef",
+        "3 garlic cloves, minced",
+        "1/4 cup brown sugar, packed",
+        "1/4 cup soy sauce",
+        "2 teaspoons sesame oil",
+        "1/4 teaspoon ground ginger",
+        "1/4 teaspoon paprika",
+        "1/4 teaspoon black pepper",
+        "2 cups white rice"
+      ],
+      "instructions": [
+        "Cook ground beef and garlic over medium heat, breaking into crumbles, until no longer pink; drain grease.",
+        "Whisk brown sugar, soy sauce, sesame oil, ginger, paprika, and pepper; pour over beef and simmer 1–2 minutes.",
+        "Serve over hot rice. Garnish with green onions, sesame seeds, and toasted almonds. Add cucumber, tomato, and avocado with feta on top if desired."
+      ]
+    },
+    {
+      "section": "Meals",
+      "title": "Doubles",
+      "image": "doubles.jpg",
+      "ingredients": [
+        {
+          "title": "Chickpeas",
+          "items": [
+            "1/2 lb chickpeas, dried",
+            "1 teaspoon baking soda",
+            "3 garlic cloves, minced",
+            "1/8–1 teaspoon turmeric",
+            "1/2 teaspoon roasted cumin",
+            "Salt"
+          ]
+        },
+        {
+          "title": "Sweet Sauce",
+          "items": [
+            "1 1/4 cup water",
+            "1/2 cup brown sugar",
+            "2 garlic cloves",
+            "1/2 teaspoon geera",
+            "1/2 teaspoon cumin",
+            "1/4 teaspoon turmeric",
+            "2–3 minced cilantro leaves"
+          ]
+        }
+      ],
+      "instructions": [
+        "Soak chickpeas overnight with baking soda; drain and rinse well.",
+        "In a pot add water, chickpeas, salt, and a bit more baking soda; bring to a boil and skim.",
+        "Cook until tender, about 1 hour; add garlic and turmeric and stir without mashing.",
+        "Cook 15–20 minutes more, stirring until thickened.",
+        "Adjust salt and finish with roasted cumin."
+      ]
+    },
+    {
+      "section": "Appetizers",
+      "title": "Cheese Wontons",
+      "image": "cheese_wontons.jpg",
+      "ingredients": [
+        "8 oz cream cheese, softened",
+        "2 teaspoons sugar",
+        "1/2 teaspoon onion powder",
+        "1/2 teaspoon garlic powder",
+        "24 wonton skins",
+        "1 egg, beaten",
+        "Cooking oil for frying"
+      ],
+      "instructions": [
+        "Mix cream cheese, sugar, onion powder, and garlic powder until smooth.",
+        "Separate wonton skins and place equal filling in the center of each.",
+        "Preheat oil in a deep pan or Dutch oven to about 350°F.",
+        "Brush edges with beaten egg and seal the wontons.",
+        "Fry 5–6 at a time for 2–3 minutes until golden; drain and serve warm."
+      ]
+    },
+    {
+      "section": "Appetizers",
+      "title": "Frickles",
+      "image": "frickles.jpg",
+      "ingredients": [
+        {
+          "title": "Pickles",
+          "items": [
+            "20 pickle, sliced",
+            "1/2 cups breadcrumbs",
+            "Oil for frying"
+          ]
+        },
+        {
+          "title": "Batter",
+          "items": [
+            "1 cup flour",
+            "1 cup milk",
+            "1 teaspoon baking powder",
+            "1 egg",
+            "1 teaspoon paprika",
+            "1/2 teaspoon black pepper"
+          ]
+        }
+      ],
+      "instructions": [
+        "Heat oil to about 360°F.",
+        "Whisk all batter ingredients together.",
+        "Pat pickle slices dry; spread breadcrumbs on a plate.",
+        "Dip pickles in batter, then breadcrumbs; let sit briefly.",
+        "Fry in small batches 3–4 minutes until brown and crispy. Serve with ranch."
+      ]
+    },
+    {
+      "section": "Appetizers",
+      "title": "Smoked Brisket Sandwich",
+      "image": "smoked_brisket_sandwhich.jpg",
+      "ingredients": [
+        "Brioche bun",
+        "Pickles",
+        "Onion",
+        "Tomato slice",
+        "New York–style brisket",
+        "Mayo",
+        "Salt and pepper"
+      ],
+      "instructions": [
+        "Layer brisket, pickles, onion, tomato, and mayo on a brioche bun; season with salt and pepper.",
+        "Toast assembled sandwich for about 1 minute and serve warm."
+      ]
+    },
+    {
+      "section": "Appetizers",
+      "title": "Mini Quiches",
+      "image": "mini_quiche.jpg",
+      "ingredients": [
+        "6 eggs",
+        "Puff pastry",
+        "2 cups Monterey Jack, shredded",
+        "2–4 bacon strips, cooked and diced",
+        "1 1/2 cup broccoli, diced",
+        "1 small onion, diced"
+      ],
+      "instructions": [
+        "Preheat oven to 350°F.",
+        "Cut puff pastry into 12 pieces and press into a muffin tray.",
+        "Prebake shells 5 minutes until golden and puffed.",
+        "Scramble eggs, then mix in bacon, broccoli, onion, and just under half the cheese.",
+        "Fill shells with egg mixture and top with remaining cheese.",
+        "Bake until cheese is melted and egg is set."
+      ]
+    },
+    {
+      "section": "Appetizers",
+      "title": "Ham and Cheese Sliders",
+      "image": "ham_and_cheese_sliders.jpg",
+      "ingredients": [
+        "12 brioche buns",
+        "Mayonnaise",
+        "12 thin slices of ham",
+        "Mozzarella cheese",
+        "1/4 cup butter, melted",
+        "1 tbsp Worcestershire sauce",
+        "1 tbsp garlic powder",
+        "2 tbsp Dijon mustard",
+        "1/2 teaspoon salt",
+        "Pepper",
+        "Sesame seeds"
+      ],
+      "instructions": [
+        "Preheat oven to 350°F and lightly butter a pan.",
+        "Slice connected brioche buns in half and place in pan; spread mayo.",
+        "Layer with ham and cheese; close buns.",
+        "Mix melted butter, Worcestershire, garlic powder, Dijon, salt, and pepper; brush over tops and sprinkle seeds.",
+        "Bake about 10 minutes until hot and melty; slice while warm and serve."
+      ]
+    },
+    {
+      "section": "Appetizers",
+      "title": "Sourdough Crackers",
+      "image": "crackers.jpg",
+      "ingredients": [
+        "1/2 cup sourdough discard",
+        "1 cup flour",
+        "4 tbsp butter, melted",
+        "Salt",
+        "Everything bagel seasoning"
+      ],
+      "instructions": [
+        "Preheat oven to 350°F.",
+        "Mix discard, flour, melted butter, and salt into a dough.",
+        "Roll very thin with pasta maker or rolling pin (nearly see-through).",
+        "Place on baking sheet, brush with oil, cut to cracker size, bake ~15 minutes, turning halfway; watch closely to avoid burning."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Chocolate Chip Cookies",
+      "image": "chocolate_chip_cookies.jpg",
+      "ingredients": [
+        "1/2 cup butter",
+        "1/2 cup white sugar",
+        "1/4 cup brown sugar",
+        "1 teaspoon vanilla",
+        "1 egg",
+        "1 1/2 cups flour",
+        "1/2 teaspoon baking soda",
+        "1/2 teaspoon salt",
+        "3/4 cup chocolate chips"
+      ],
+      "instructions": [
+        "Preheat oven to 350°F.",
+        "Barely melt butter so it is soft but not hot.",
+        "Mix butter with sugars until combined.",
+        "Stir in vanilla and egg until smooth.",
+        "Add flour, baking soda, and salt; mix just until dough forms, adding a little flour if needed.",
+        "Fold in chocolate chips, roll into 12–15 large balls, and place on a baking sheet.",
+        "Bake about 10 minutes until just set and barely cooked on top."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Ginger Cookies",
+      "image": "ginger_cookie.jpg",
+      "tag": "Unbeatable",
+      "ingredients": [
+        "3/4 cup butter, warm",
+        "1 egg",
+        "3/4 cup sugar, extra for rolling",
+        "1/4 cup molasses",
+        "2 cups flour",
+        "2 teaspoons baking soda",
+        "1/4 teaspoon salt",
+        "1 teaspoon cinnamon",
+        "3/4 teaspoon cloves, ground",
+        "3/4 teaspoon ginger"
+      ],
+      "instructions": [
+        "Preheat oven to 350°F.",
+        "Mix all ingredients together in order until dough forms.",
+        "Roll into balls and coat in sugar.",
+        "Bake 8–10 minutes until they just start cracking and still look slightly underdone."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Pumpkin Scones",
+      "image": "pumpkin_scone.jpg",
+      "ingredients": [
+        {
+          "title": "Scone",
+          "items": [
+            "2 cups flour",
+            "1/3 cup brown sugar",
+            "2 teaspoons pumpkin spice",
+            "1 teaspoon baking powder",
+            "1/2 teaspoon baking soda",
+            "1/4 teaspoon salt",
+            "1/2 cup cold butter, cubed",
+            "1/2 cup pumpkin purée",
+            "2 tablespoons milk",
+            "1 egg",
+            "1 tablespoon vanilla extract"
+          ]
+        },
+        {
+          "title": "Glaze",
+          "items": [
+            "1 1/2 cup powdered sugar",
+            "~2 tbsp milk",
+            "1 teaspoon vanilla"
+          ]
+        },
+        {
+          "title": "Spice Drizzle",
+          "items": [
+            "1 teaspoon pumpkin spice mix"
+          ]
+        }
+      ],
+      "instructions": [
+        "Preheat oven to 400°F.",
+        "In a large bowl mix flour, sugar, spices, baking powder, baking soda, and salt.",
+        "Cut in cold butter until the mixture is crumbly.",
+        "Add pumpkin purée, milk, egg, and vanilla; mix until a soft sticky dough forms.",
+        "Lightly flour a surface and briefly knead until it holds together; pat into a 1-inch disc and cut into 8 wedges.",
+        "Bake 14–16 minutes; cool before glazing.",
+        "Mix powdered sugar with milk for a white glaze; mix remaining sugar, milk, vanilla, and spices for a second drizzle; glaze scones."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Peach Crumble Bars",
+      "image": "peach_bars.jpg",
+      "ingredients": [
+        {
+          "title": "Crust",
+          "items": [
+            "1 cup sugar",
+            "3 cups flour",
+            "1 teaspoon baking powder",
+            "1/2 teaspoon salt",
+            "1/4 teaspoon cinnamon",
+            "1 cup cold butter, cubed",
+            "1 large egg, beaten"
+          ]
+        },
+        {
+          "title": "Peach Layer",
+          "items": [
+            "1/2 cup sugar",
+            "1 tablespoon cornstarch",
+            "1/4 teaspoon cinnamon",
+            "4 cups peaches, drained",
+            "1 teaspoon lemon juice"
+          ]
+        },
+        {
+          "title": "Glaze",
+          "items": [
+            "1 cup powdered sugar",
+            "1/4 teaspoon almond extract",
+            "1 tablespoon milk"
+          ]
+        }
+      ],
+      "instructions": [
+        "Whisk sugar, flour, baking powder, salt, and cinnamon.",
+        "Cut in cold butter until crumbly, then mix in egg so crumbs hold together.",
+        "Press slightly over half the crumbs into the pan as the crust.",
+        "Preheat oven to 350°F.",
+        "Mix sugar, cornstarch, cinnamon, and lemon juice; toss with peaches.",
+        "Pour peach mixture over crust, top with remaining crumbs, and bake 50–55 minutes until golden.",
+        "Whisk powdered sugar, almond extract, and milk; drizzle over cooled bars."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Mini Cinnamon Cheesecakes",
+      "image": "cinnamon_cheesecakes.jpg",
+      "ingredients": [
+        {
+          "title": "Crust",
+          "items": [
+            "1 cup cookie crumbs",
+            "2 tbsp sugar",
+            "1/2 teaspoon cinnamon",
+            "3 tbsp butter, melted"
+          ]
+        },
+        {
+          "title": "Filling",
+          "items": [
+            "12 oz cream cheese, warm",
+            "1/2 cup sugar",
+            "3 tbsp flour",
+            "1/2 teaspoon cinnamon",
+            "1/2 cup sour cream",
+            "1 teaspoon vanilla extract",
+            "2 eggs"
+          ]
+        },
+        {
+          "title": "Layer Mix",
+          "items": [
+            "1 1/2 tbsp cinnamon",
+            "1/4 cup sugar"
+          ]
+        },
+        {
+          "title": "Frosting",
+          "items": [
+            "3 tbsp butter, melted",
+            "1/4 teaspoon vanilla extract",
+            "2/3 cup powdered sugar",
+            "1/2 tablespoon milk"
+          ]
+        }
+      ],
+      "instructions": [
+        "Preheat oven to 325°F; line a cupcake pan with 12 liners.",
+        "Combine crust ingredients and divide among liners; press down and bake 5 minutes. Reduce oven to 300°F.",
+        "Beat cream cheese, sugar, flour, and cinnamon. On low, mix in sour cream and vanilla, then beat in eggs one at a time.",
+        "Layer cheesecake batter and cinnamon sugar in liners, ending with cinnamon sugar (3 layers each).",
+        "Bake 15 minutes; turn oven off and let sit 7 minutes before removing to cool.",
+        "Mix frosting ingredients and pipe onto cooled cheesecakes. Serve warm or chilled."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Cookie Dough Ice Cream Cake",
+      "image": "icecream_cake.jpg",
+      "tag": "Unbeatable",
+      "ingredients": [
+        {
+          "title": "Base",
+          "items": [
+            "Brownie box mix (baked in 9-inch springform)",
+            "Whipped cream",
+            "3 kg vanilla frozen yogurt"
+          ]
+        },
+        {
+          "title": "Chocolate Cookie Crunch",
+          "items": [
+            "3/4 cup Oreo crumbs",
+            "1 1/2 tbsp butter"
+          ]
+        },
+        {
+          "title": "Chocolate Fudge",
+          "items": [
+            "1 cup semi-sweet chips",
+            "3 tbsp maple syrup or honey",
+            "1/2 teaspoon vanilla",
+            "1/2 cup heavy whipping cream"
+          ]
+        },
+        {
+          "title": "Cookie Dough Balls",
+          "items": [
+            "3 tbsp butter, warmed",
+            "1/4 cup brown sugar",
+            "1 teaspoon vanilla",
+            "1 teaspoon milk",
+            "1/2 cup pasteurized flour",
+            "1/4 cup mini chocolate chips"
+          ]
+        }
+      ],
+      "instructions": [
+        "Bake brownie mix in a 9-inch springform pan; cool completely.",
+        "For cookie dough balls, cream butter and brown sugar; mix in vanilla, milk, and flour, then chocolate chips. Roll tiny balls and chill.",
+        "Spread half the ice cream over brownie base.",
+        "Mix Oreo crumbs with melted butter; sprinkle over ice cream layer.",
+        "Make fudge by heating cream to a boil, pouring over chocolate chips, maple syrup, and vanilla; whisk smooth, cool slightly, and pour over crumbs. Freeze 1–2 hours.",
+        "Spread remaining ice cream, folding in cookie dough balls. Decorate with extra dough balls and whipped cream. Freeze overnight before serving."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Fake Sourdough",
+      "image": "sourdough.jpg",
+      "ingredients": [
+        "3 cups flour",
+        "1 teaspoon salt",
+        "1 teaspoon sugar",
+        "1/4 teaspoon yeast",
+        "1 1/2 cup water"
+      ],
+      "instructions": [
+        "Mix dry ingredients together.",
+        "Add about half the water and stir; add more as needed until a shaggy dough forms.",
+        "Cover and let rest in a warm spot for at least 10 hours.",
+        "Preheat oven to 400°F.",
+        "Transfer dough to an oven-safe dish with a lid.",
+        "Bake 30 minutes covered, then 15 more minutes uncovered until browned."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Focaccia",
+      "image": "focaccia.jpg",
+      "ingredients": [
+        "4 cups flour",
+        "2 teaspoons salt",
+        "2 teaspoons instant yeast",
+        "2 cups warm water",
+        "Olive oil",
+        "Flaky sea salt",
+        "Rosemary leaves"
+      ],
+      "instructions": [
+        "Whisk together dry ingredients; add warm water and form a rough sticky dough ball.",
+        "Rub dough with olive oil, cover with a damp towel, and refrigerate overnight.",
+        "Oil a baking dish, place dough on it, and use a fork to loosen from the bowl.",
+        "Cover with a damp towel and rest 3–4 hours.",
+        "Preheat oven to 425°F.",
+        "Lightly oil hands and dough; dimple and stretch to fill the pan. Sprinkle with sea salt and rosemary.",
+        "Bake 25–30 minutes; cool on a rack for about 10 minutes."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Coconut Cream Pie",
+      "image": "coconut_cream_pie.jpg",
+      "ingredients": [
+        "1 pie crust",
+        "1/2 cup sugar",
+        "1/4 cup cornstarch",
+        "1/2 teaspoon salt",
+        "1 1/2 cups coconut milk",
+        "1 1/4 cups half and half",
+        "4 egg yolks",
+        "1 teaspoon vanilla extract",
+        "1 teaspoon coconut extract",
+        "Whipped cream",
+        "1/2 cup sweet coconut flakes, toasted"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F; bake pie crust 10 minutes with pie weights or rice.",
+        "In a saucepan whisk sugar, cornstarch, and salt to remove clumps. Add coconut milk and half-and-half; whisk in egg yolks until smooth.",
+        "Cook over medium heat, whisking constantly, until thickened (about 7 minutes).",
+        "If needed, strain for smoothness; stir in vanilla and coconut extracts.",
+        "Pour warm filling into baked crust and refrigerate 4 hours or overnight.",
+        "Top with whipped cream and toasted coconut before serving."
+      ]
+    },
+    {
+      "section": "Baking",
+      "title": "Sticky Toffee Pudding",
+      "image": "sticky_toffee_pudding.jpg",
+      "ingredients": [
+        {
+          "title": "Toffee Sauce",
+          "items": [
+            "3/4 cup light brown sugar",
+            "6 tbsp butter",
+            "1/3 cup maple syrup or honey",
+            "1 3/4 cups heavy cream, divided"
+          ]
+        },
+        {
+          "title": "Cake",
+          "items": [
+            "1/2 cup pitted dates",
+            "1/2 cup water",
+            "3/4 cup flour",
+            "1/2 teaspoon baking powder",
+            "1/4 teaspoon baking soda",
+            "1/8 teaspoon kosher salt",
+            "1/2 cup light brown sugar",
+            "3 tbsp butter, softened",
+            "1 egg",
+            "1/2 teaspoon vanilla"
+          ]
+        }
+      ],
+      "instructions": [
+        "Make sauce: simmer brown sugar, butter, syrup, and 1 cup cream 5 minutes; cook on medium-low, stirring, until deep amber (30–35 minutes).",
+        "Whisk in remaining 3/4 cup cream until smooth; strain sauce.",
+        "Simmer dates with water until nearly absorbed (6–8 minutes); puree in food processor until mostly smooth.",
+        "Preheat oven to 350°F; butter six 6-oz ramekins on a tray.",
+        "Whisk flour, baking powder, baking soda, and salt.",
+        "Beat brown sugar and softened butter until fluffy; beat in egg, vanilla, then date puree. Mix in dry ingredients just to combine.",
+        "Divide batter into ramekins 6 and bake 20–25 minutes until a toothpick is clean.",
+        "Remove cake from ramekins and cut in half, and 1  spoon of sauce into each ramekin, add bottom of cake, spoon more sauce, top with remaining cake and more sauce.",
+        "Bake ramekins 10–15 minutes until sauce bubbles at edges. Cool slightly; serve warm with ice cream."
+      ]
+    }
+  ]
+}

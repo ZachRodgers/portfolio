@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Github, Mail, Linkedin, ArrowUp, FolderOpen, FileText } from 'lucide-react';
+import { Github, Mail, Linkedin, ArrowUp, FolderOpen, FileText, CookingPot } from 'lucide-react';
 import PDFModal from './modals/PDFModal';
 import './Footer.css';
 
@@ -21,7 +21,11 @@ interface BrandingProject {
     content: string;
 }
 
-const Footer: React.FC = () => {
+type FooterProps = {
+    variant?: 'default' | 'light';
+};
+
+const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [brandingProjects, setBrandingProjects] = useState<BrandingProject[]>([]);
     const [loading, setLoading] = useState(true);
@@ -56,7 +60,28 @@ const Footer: React.FC = () => {
             });
     }, []);
 
+    const isRecipesPage = () => {
+        const normalizedPath = window.location.pathname.replace(/\/+$/, '') || '/';
+        return normalizedPath === '/recipes' || normalizedPath.endsWith('/recipes');
+    };
+
+    const getPortfolioBaseUrl = () => {
+        const publicUrl = (process.env.PUBLIC_URL || '').replace(/\/$/, '');
+        return `${window.location.origin}${publicUrl}`;
+    };
+
+    const navigateToPortfolioSection = (sectionId?: string) => {
+        const base = getPortfolioBaseUrl();
+        const target = sectionId ? `${base}/#${sectionId}` : `${base}/`;
+        window.location.href = target;
+    };
+
     const scrollToSection = (sectionId: string) => {
+        if (isRecipesPage()) {
+            navigateToPortfolioSection(sectionId);
+            return;
+        }
+
         const element = document.getElementById(sectionId);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
@@ -64,6 +89,11 @@ const Footer: React.FC = () => {
     };
 
     const scrollToTop = () => {
+        if (isRecipesPage()) {
+            navigateToPortfolioSection();
+            return;
+        }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -92,7 +122,7 @@ const Footer: React.FC = () => {
     };
 
     return (
-        <footer className="footer">
+        <footer className={`footer ${variant === 'light' ? 'footer-light' : ''}`}>
             <div className="footer-container">
                 <div className="footer-content">
                     <div className="footer-section">
@@ -213,6 +243,15 @@ const Footer: React.FC = () => {
                                     <FileText size={16} />
                                     <span>Resume</span>
                                 </button>
+                            </li>
+                            <li>
+                                <a
+                                    href="/recipes"
+                                    className="footer-link footer-link-with-icon"
+                                >
+                                    <CookingPot size={16} />
+                                    <span>Recipes</span>
+                                </a>
                             </li>
                         </ul>
                     </div>
