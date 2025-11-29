@@ -22,6 +22,8 @@ import {
     PrinterCheck,
     CopyCheck,
     Check,
+    ListIndentIncrease,
+    ListIndentDecrease,
     LucideProps
 } from 'lucide-react';
 import Footer from '../components/Footer';
@@ -33,6 +35,7 @@ type Recipe = {
     section: string;
     ingredients?: string[] | string | IngredientSection[];
     instructions?: string[] | string;
+    instructionIngredients?: number[][];
     tag?: string;
     time?: string;
     amount?: number | string;
@@ -375,6 +378,8 @@ const Recipes: React.FC = () => {
     const [openMultiplier, setOpenMultiplier] = useState<string | null>(null);
     const [openShareFor, setOpenShareFor] = useState<string | null>(null);
     const [closingShare, setClosingShare] = useState<string | null>(null);
+    const [usedIngredients, setUsedIngredients] = useState<Record<string, Record<string, boolean>>>({});
+    const [showStepIngredients, setShowStepIngredients] = useState<Record<string, boolean>>({});
     const [searchResults, setSearchResults] = useState<
         { anchorId: string; title: string; image: string; section?: string; snippet?: string; type: 'title' | 'text' }[]
     >([]);
@@ -455,6 +460,39 @@ const Recipes: React.FC = () => {
         return sections;
     }, [anchoredRecipes]);
 
+    const ingredientMatchMap = useMemo(() => {
+        const map: Record<string, { matches: string[][] }> = {};
+
+        anchoredRecipes.forEach((recipe) => {
+            const sections = formatIngredientSections(recipe.ingredients);
+            const ingredientKeys: { key: string }[] = [];
+
+            sections.forEach((section, secIdx) => {
+                section.items.forEach((_, itemIdx) => {
+                    const key = `${recipe.anchorId}-${secIdx}-${itemIdx}`;
+                    ingredientKeys.push({ key });
+                });
+            });
+
+            const steps = normalizeList(recipe.instructions);
+
+            const explicit = recipe.instructionIngredients;
+            const hasExplicit = Array.isArray(explicit) && explicit.length > 0;
+
+            const matches = hasExplicit
+                ? steps.map((_, idx) =>
+                      (explicit[idx] || [])
+                          .map((ingredientIndex) => ingredientKeys[ingredientIndex]?.key)
+                          .filter(Boolean)
+                  )
+                : steps.map(() => []);
+
+            map[recipe.anchorId] = { matches };
+        });
+
+        return map;
+    }, [anchoredRecipes]);
+
     const resolveImagePath = (image: string) => {
         if (!image) return '';
         if (image.startsWith('http')) return image;
@@ -478,6 +516,70 @@ const Recipes: React.FC = () => {
         const anchorId = anchoredRecipes[nextIndex].anchorId;
         handleTileClick(anchorId);
     };
+
+    const parseIngredientKey = (key: string) => {
+        const parts = key.split('-');
+        const secIdx = parseInt(parts[parts.length - 2], 10);
+        const itemIdx = parseInt(parts[parts.length - 1], 10);
+        return { secIdx, itemIdx };
+    };
+
+    const getIngredientLabel = (recipe: Recipe & { anchorId: string }, key: string) => {
+        const { secIdx, itemIdx } = parseIngredientKey(key);
+        const sections = formatIngredientSections(recipe.ingredients);
+        const item = sections[secIdx]?.items?.[itemIdx];
+        if (!item) return '';
+        const multiplier = multipliers[recipe.anchorId] || 1;
+        const scaledItem = scaleIngredientText(item, multiplier);
+        const { label, detail } = splitIngredientLabel(scaledItem);
+        const { main } = splitDetailNote(detail);
+        const combined = `${label ? `${label} ` : ''}${main}`.trim();
+        return formatFractions(combined);
+    };
+
+    useEffect(() => {
+        const updated: Record<string, Record<string, boolean>> = {};
+        Object.entries(completedSteps).forEach(([anchorId, steps]) => {
+            const matches = ingredientMatchMap[anchorId]?.matches || [];
+            const used: Record<string, boolean> = {};
+            steps.forEach((done, idx) => {
+                if (done) {
+                    (matches[idx] || []).forEach((key) => {
+                        used[key] = true;
+                    });
+                }
+            });
+            updated[anchorId] = used;
+        });
+        setUsedIngredients((prev) => ({ ...prev, ...updated }));
+    }, [ingredientMatchMap, completedSteps]);
+
+    useEffect(() => {
+        setCollapsedSections((prev) => {
+            const next: Record<string, boolean[]> = { ...prev };
+
+            anchoredRecipes.forEach((recipe) => {
+                const sections = formatIngredientSections(recipe.ingredients);
+                if (!sections.length) return;
+                const hasTitles = sections.some((section) => !!section.title);
+                if (!hasTitles) return;
+
+                const sectionStates = next[recipe.anchorId] ? [...next[recipe.anchorId]] : Array(sections.length).fill(false);
+                sections.forEach((section, secIdx) => {
+                    const allUsed = section.items.every((_, itemIdx) => {
+                        const key = `${recipe.anchorId}-${secIdx}-${itemIdx}`;
+                        return usedIngredients[recipe.anchorId]?.[key];
+                    });
+                    if (allUsed) {
+                        sectionStates[secIdx] = true;
+                    }
+                });
+                next[recipe.anchorId] = sectionStates;
+            });
+
+            return next;
+        });
+    }, [anchoredRecipes, usedIngredients]);
 
     useEffect(() => {
         const updateScrollState = () => {
@@ -572,6 +674,18 @@ const Recipes: React.FC = () => {
             const existing = prev[anchorId] || Array(totalSteps).fill(false);
             const next = [...existing];
             next[stepIndex] = !next[stepIndex];
+
+            const matches = ingredientMatchMap[anchorId]?.matches || [];
+            const used: Record<string, boolean> = {};
+            next.forEach((done, idx) => {
+                if (done) {
+                    (matches[idx] || []).forEach((key) => {
+                        used[key] = true;
+                    });
+                }
+            });
+            setUsedIngredients((prevUsed) => ({ ...prevUsed, [anchorId]: used }));
+
             return { ...prev, [anchorId]: next };
         });
     };
@@ -883,6 +997,7 @@ const Recipes: React.FC = () => {
             const isHeat = step.trim().toLowerCase().startsWith('preheat');
             const displayNumber = isHeat ? null : ++displayCounter;
             const scaledStep = scaleInstructionText(step, multiplier);
+            const stepIngredients = ingredientMatchMap[recipe.anchorId]?.matches[index] || [];
 
             return (
                 <li key={index} className={`instruction-step ${isDone ? 'step-done' : ''}`}>
@@ -907,7 +1022,23 @@ const Recipes: React.FC = () => {
                             <span>{displayNumber}</span>
                         )}
                     </button>
-                    <p>{formatFractions(scaledStep)}</p>
+                    <div className="instruction-text">
+                        <p>{formatFractions(scaledStep)}</p>
+                        {showStepIngredients[recipe.anchorId] && stepIngredients.length > 0 && (
+                            <div className="instruction-ingredients">
+                                {stepIngredients.map((key, idx) => {
+                                    const label = getIngredientLabel(recipe, key);
+                                    const isUsed = usedIngredients[recipe.anchorId]?.[key];
+                                    return (
+                                        <span key={key} className={isUsed ? 'ingredient-used' : ''}>
+                                            {label}
+                                            {idx < stepIngredients.length - 1 ? ', ' : ''}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
                 </li>
             );
         });
@@ -1255,8 +1386,10 @@ const Recipes: React.FC = () => {
                                                             const scaledItem = scaleIngredientText(item, multiplier);
                                                             const { label, detail } = splitIngredientLabel(scaledItem);
                                                             const { main, note } = splitDetailNote(detail);
+                                                            const ingredientKey = `${recipe.anchorId}-${secIdx}-${index}`;
+                                                            const isUsed = usedIngredients[recipe.anchorId]?.[ingredientKey];
                                                             return (
-                                                                <li key={index}>
+                                                                <li key={ingredientKey} className={isUsed ? 'ingredient-used' : ''}>
                                                                     {label && <span className="ingredient-label">{label}:</span>}{' '}
                                                                     <span className="ingredient-detail">{formatFractions(main)}</span>
                                                                     {note && <span className="ingredient-note"> {formatFractions(note)}</span>}
@@ -1268,7 +1401,27 @@ const Recipes: React.FC = () => {
                                             ))}
                                         </div>
                                         <div className="recipe-instructions">
-                                            <h2>Instructions</h2>
+                                            <div className="instructions-header">
+                                                <h2>Instructions</h2>
+                                                <button
+                                                    type="button"
+                                                    className="instruction-toggle"
+                                                    onClick={() =>
+                                                        setShowStepIngredients((prev) => ({
+                                                            ...prev,
+                                                            [recipe.anchorId]: !prev[recipe.anchorId]
+                                                        }))
+                                                    }
+                                                    aria-pressed={!!showStepIngredients[recipe.anchorId]}
+                                                    title="Toggle ingredient usage"
+                                                >
+                                                    {showStepIngredients[recipe.anchorId] ? (
+                                                        <ListIndentDecrease size={16} />
+                                                    ) : (
+                                                        <ListIndentIncrease size={16} />
+                                                    )}
+                                                </button>
+                                            </div>
                                             <ul className="instruction-list">
                                                 {renderInstructionItems(recipe, multipliers[recipe.anchorId] || 1)}
                                             </ul>

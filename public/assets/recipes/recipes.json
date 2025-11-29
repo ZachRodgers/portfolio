@@ -26,7 +26,34 @@
         "Create 3 layers, starting with meat sauce, then lasagna noodles, then 1/3 cheese mixture. Top with mozzarella.",
         "Cover with foil and bake 45 minutes. Remove foil and bake another 15 minutes."
       ],
-      "time": "1h 30m"
+      "time": "1h 30m",
+      "instructionIngredients": [
+        [
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          9,
+          10,
+          11
+        ],
+        [],
+        [
+          0,
+          8,
+          9,
+          10,
+          11
+        ],
+        []
+      ]
     },
     {
       "section": "Meals",
@@ -61,7 +88,29 @@
         "Layer noodles, 1/3 cheese mixture, spinach, and zucchini; repeat twice. Top with remaining mozzarella.",
         "Cover with foil and bake 45 minutes. Remove foil and bake 15 minutes more."
       ],
-      "time": "1h 45m"
+      "time": "1h 45m",
+      "instructionIngredients": [
+        [
+          0,
+          1,
+          2
+        ],
+        [],
+        [
+          3,
+          4,
+          5,
+          6,
+          7,
+          2
+        ],
+        [],
+        [
+          8,
+          9
+        ],
+        []
+      ]
     },
     {
       "section": "Meals",
@@ -87,7 +136,28 @@
         "Spread on a foil-lined pan, cover lightly with foil.",
         "Bake about 1 hour, flipping occasionally until caramelized and tender."
       ],
-      "time": "1h 15m"
+      "time": "1h 15m",
+      "instructionIngredients": [
+        [],
+        [
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        [],
+        []
+      ]
     },
     {
       "section": "Meals",
@@ -114,7 +184,33 @@
         "Stuff cavity with remaining garlic cloves, the other lemon half, rosemary, and thyme sprigs.",
         "Roast 1 hour 15 minutes, basting halfway; internal temp should reach 165°F. Baste once more and rest 10 minutes before serving."
       ],
-      "time": "2h 15m"
+      "time": "2h 15m",
+      "instructionIngredients": [
+        [],
+        [
+          2,
+          1,
+          3,
+          4
+        ],
+        [
+          0,
+          5,
+          6
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          0,
+          4,
+          8,
+          9,
+          10
+        ],
+        []
+      ]
     },
     {
       "section": "Meals",
@@ -140,7 +236,27 @@
         "Sear salmon presentation side down in oil over medium-high heat until golden, about 5 minutes.",
         "Flip, add butter and lemon juice, and baste until salmon reaches about 130°F. Finish with a squeeze of lemon and serve."
       ],
-      "time": "30 mins"
+      "time": "30 mins",
+      "instructionIngredients": [
+        [
+          0,
+          1,
+          3
+        ],
+        [
+          6,
+          5,
+          7,
+          8
+        ],
+        [
+        ],
+        [
+
+        ],
+        [
+        ]
+      ]
     },
     {
       "section": "Meals",
@@ -165,12 +281,46 @@
         "Spread 1/2 cup marinara on the bottom of a 9x13 dish.",
         "Combine ricotta, garlic, lemon zest, oregano, salt, and pepper in a bowl.",
         "Cook ziti according to package; drain.",
-        "Saut\u00e9 spinach until wilted, cool, and chop.",
+        "Sauté spinach until wilted, cool, and chop.",
         "Toss pasta with sauce mixture, sliced meatballs, and spinach; season.",
         "Add half the pasta to the pan, dollop ricotta mixture, then add remaining pasta. Top with mozzarella and parmesan.",
         "Bake 16-22 minutes until bubbly; garnish with basil or parsley."
       ],
-      "time": "45 mins"
+      "time": "45 mins",
+      "instructionIngredients": [
+        [],
+        [
+          0
+        ],
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          6
+        ],
+        [
+          7
+        ],
+        [
+          6,
+          0,
+          10,
+          7,
+          5
+        ],
+        [
+          1,
+          8,
+          9
+        ],
+        [
+          11
+        ]
+      ]
     },
     {
       "section": "Meals",
@@ -195,7 +345,31 @@
         "Grease a 9x9 dish. Layer 1/3 potatoes, season, then 1/3 sauce; repeat for 3 layers.",
         "Cover with foil and bake 45 minutes; uncover and bake another 35-45 minutes. Rest 15 minutes before serving."
       ],
-      "time": "60 mins"
+      "time": "60 mins",
+      "instructionIngredients": [
+        [
+          1
+        ],
+        [],
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          1,
+          7
+        ],
+        []
+      ]
     },
     {
       "section": "Meals",
@@ -215,11 +389,34 @@
       ],
       "instructions": [
         "Cook pasta and broccoli together in boiling water until pasta is al dente; drain.",
-        "Saut\u00e9 onion in oil until caramelized; add garlic and sliced chicken, season with salt and pepper.",
+        "Sauté onion in oil until caramelized; add garlic and sliced chicken, season with salt and pepper.",
         "Stir in cream and parmesan; let simmer briefly.",
         "Fold in pasta and broccoli, then mix in pesto. Remove from heat and finish with parmesan or green onions."
       ],
-      "time": "30 mins"
+      "time": "30 mins",
+      "instructionIngredients": [
+        [
+          8,
+          9
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          7
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          8,
+          9,
+          6,
+          5
+        ]
+      ]
     },
     {
       "section": "Meals",
@@ -244,7 +441,34 @@
         "Return sauce to pan, add pasta, mozzarella, and parmesan; stir on low heat for a minute.",
         "Garnish with toasted slivered almonds, green onion, and extra parmesan."
       ],
-      "time": "30 mins"
+      "time": "30 mins",
+      "instructionIngredients": [
+        [
+          0
+        ],
+        [
+          2,
+          1,
+          3,
+          4
+        ],
+        [
+          1,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          7
+        ]
+      ]
     },
     {
       "section": "Meals",
@@ -280,7 +504,31 @@
         "Whisk sauce ingredients and pour over noodles; add onions and peanuts and stir to coat.",
         "Simmer a few minutes until sauce reduces and clings. Serve with extra peanuts, green onion, and lemon wedges."
       ],
-      "time": "25 mins"
+      "time": "25 mins",
+      "instructionIngredients": [
+        [
+          4
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6,
+          7,
+          8,
+          9,
+          3,
+          5
+        ],
+        []
+      ]
     },
     {
       "section": "Meals",
@@ -303,7 +551,24 @@
         "Whisk brown sugar, soy sauce, sesame oil, ginger, paprika, and pepper; pour over beef and simmer 1-2 minutes.",
         "Serve over hot rice. Garnish with green onions, sesame seeds, and toasted almonds. Add cucumber, tomato, and avocado with feta on top if desired."
       ],
-      "time": "20 mins"
+      "time": "20 mins",
+      "instructionIngredients": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          8
+        ]
+      ]
     },
     {
       "section": "Meals",
@@ -341,7 +606,28 @@
         "Cook 15-20 minutes more, stirring until thickened.",
         "Adjust salt and finish with roasted cumin."
       ],
-      "time": "40 mins"
+      "time": "40 mins",
+      "instructionIngredients": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          6,
+          5
+        ],
+        [
+          2,
+          3
+        ],
+        [],
+        [
+          5,
+          4
+        ]
+      ]
     },
     {
       "section": "Appetizers",
@@ -365,7 +651,28 @@
       ],
       "time": "30 mins",
       "amount": 24,
-      "icon": "croissant"
+      "icon": "croissant",
+      "instructionIngredients": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          6
+        ]
+      ]
     },
     {
       "section": "Appetizers",
@@ -399,7 +706,31 @@
         "Dip pickles in batter, then breadcrumbs; let sit briefly.",
         "Fry in small batches 3-4 minutes until brown and crispy. Serve with ranch."
       ],
-      "time": "25 mins"
+      "time": "25 mins",
+      "instructionIngredients": [
+        [
+          2
+        ],
+        [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ]
+      ]
     },
     {
       "section": "Appetizers",
@@ -418,7 +749,19 @@
         "Layer brisket, pickles, onion, tomato, and mayo on a brioche bun; season with salt and pepper.",
         "Toast assembled sandwich for about 1 minute and serve warm."
       ],
-      "time": "5 mins"
+      "time": "5 mins",
+      "instructionIngredients": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        []
+      ]
     },
     {
       "section": "Appetizers",
@@ -442,7 +785,28 @@
       ],
       "time": "40 mins",
       "amount": 12,
-      "icon": "egg-fried"
+      "icon": "egg-fried",
+      "instructionIngredients": [
+        [],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          3,
+          4,
+          5,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        []
+      ]
     },
     {
       "section": "Appetizers",
@@ -470,7 +834,30 @@
       ],
       "time": "25 mins",
       "amount": 12,
-      "icon": "hamburger"
+      "icon": "hamburger",
+      "instructionIngredients": [
+        [
+          4
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        []
+      ]
     },
     {
       "section": "Appetizers",
@@ -491,7 +878,18 @@
       ],
       "time": "40 mins",
       "amount": "~100",
-      "icon": "popcorn"
+      "icon": "popcorn",
+      "instructionIngredients": [
+        [],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [],
+        []
+      ]
     },
     {
       "section": "Baking",
@@ -519,7 +917,31 @@
       ],
       "time": "25 mins",
       "amount": 15,
-      "icon": "cookie"
+      "icon": "cookie",
+      "instructionIngredients": [
+        [],
+        [
+          0
+        ],
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          8
+        ],
+        []
+      ]
     },
     {
       "section": "Baking",
@@ -546,7 +968,26 @@
       ],
       "time": "20 mins",
       "amount": 20,
-      "icon": "cookie"
+      "icon": "cookie",
+      "instructionIngredients": [
+        [],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        [
+          2
+        ],
+        []
+      ]
     },
     {
       "section": "Baking",
@@ -563,7 +1004,7 @@
             "1/2 teaspoon baking soda",
             "1/4 teaspoon salt",
             "1/2 cup cold butter, cubed",
-            "1/2 cup pumpkin pur\u00e9e",
+            "1/2 cup pumpkin purée",
             "2 tablespoons milk",
             "1 egg",
             "1 tablespoon vanilla extract"
@@ -588,14 +1029,42 @@
         "Preheat oven to 400°F.",
         "In a large bowl mix flour, sugar, spices, baking powder, baking soda, and salt.",
         "Cut in cold butter until the mixture is crumbly.",
-        "Add pumpkin pur\u00e9e, milk, egg, and vanilla; mix until a soft sticky dough forms.",
+        "Add pumpkin purée, milk, egg, and vanilla; mix until a soft sticky dough forms.",
         "Lightly flour a surface and briefly knead until it holds together; pat into a 1-inch disc and cut into 8 wedges.",
         "Bake 14-16 minutes; cool before glazing.",
         "Mix powdered sugar with milk for a white glaze; mix remaining sugar, milk, vanilla, and spices for a second drizzle; glaze scones."
       ],
       "time": "30 mins",
       "amount": 8,
-      "icon": "cake-slice"
+      "icon": "cake-slice",
+      "instructionIngredients": [
+        [],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          6
+        ],
+        [
+          7,
+          8,
+          9,
+          10
+        ],
+        [],
+        [],
+        [
+          11,
+          12,
+          13,
+          14
+        ]
+      ]
     },
     {
       "section": "Baking",
@@ -644,7 +1113,35 @@
       ],
       "time": "1h 30m",
       "amount": 24,
-      "icon": "cake-slice"
+      "icon": "cake-slice",
+      "instructionIngredients": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          6
+        ],
+        [],
+        [],
+        [
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        [],
+        [
+          12,
+          13,
+          14
+        ]
+      ]
     },
     {
       "section": "Baking",
@@ -699,7 +1196,36 @@
       ],
       "time": "60 mins",
       "amount": 12,
-      "icon": "cake-slice"
+      "icon": "cake-slice",
+      "instructionIngredients": [
+        [],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        [
+          11,
+          12
+        ],
+        [],
+        [
+          13,
+          14,
+          15,
+          16
+        ]
+      ]
     },
     {
       "section": "Baking",
@@ -753,7 +1279,43 @@
       ],
       "time": "3 hours",
       "amount": 1,
-      "icon": "cake"
+      "icon": "cake",
+      "instructionIngredients": [
+        [
+          0
+        ],
+        [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        [
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          8,
+          5,
+          6,
+          7
+        ],
+        [
+          2,
+          1,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      ]
     },
     {
       "section": "Baking",
@@ -774,7 +1336,22 @@
         "Transfer dough to an oven-safe dish with a lid.",
         "Bake 30 minutes covered, then 15 more minutes uncovered until browned."
       ],
-      "time": "1 night 1 hour"
+      "time": "1 night 1 hour",
+      "instructionIngredients": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4
+        ],
+        [],
+        [],
+        [],
+        []
+      ]
     },
     {
       "section": "Baking",
@@ -798,7 +1375,29 @@
         "Lightly oil hands and dough; dimple and stretch to fill the pan. Sprinkle with sea salt and rosemary.",
         "Bake 25-30 minutes; cool on a rack for about 10 minutes."
       ],
-      "time": "1 night 4 hours 45 mins"
+      "time": "1 night 4 hours 45 mins",
+      "instructionIngredients": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [],
+        [],
+        [
+          4,
+          5,
+          6
+        ],
+        []
+      ]
     },
     {
       "section": "Baking",
@@ -827,7 +1426,30 @@
       ],
       "time": "4 hours 30 mins",
       "amount": 1,
-      "icon": "cake"
+      "icon": "cake",
+      "instructionIngredients": [
+        [
+          0
+        ],
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [],
+        [
+          7,
+          8
+        ],
+        [],
+        [
+          9,
+          10
+        ]
+      ]
     },
     {
       "section": "Baking",
@@ -872,7 +1494,44 @@
       ],
       "time": "1 hour",
       "amount": 6,
-      "icon": "dessert"
+      "icon": "dessert",
+      "instructionIngredients": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [],
+        [
+          6,
+          7,
+          8,
+          9
+        ],
+        [
+          10,
+          11,
+          12,
+          13,
+          4
+        ],
+        [],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        []
+      ]
     }
   ]
 }
