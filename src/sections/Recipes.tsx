@@ -1,5 +1,29 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowUpToLine, ArrowUp, ArrowDown, ChevronDown, X } from 'lucide-react';
+import {
+    ArrowUpToLine,
+    ArrowUp,
+    ArrowDown,
+    ChevronDown,
+    X,
+    Timer,
+    Hash,
+    Croissant,
+    EggFried,
+    Hamburger,
+    Popcorn,
+    Cookie,
+    CakeSlice,
+    Cake,
+    Dessert,
+    Share,
+    Link as LinkIcon,
+    Printer,
+    Copy,
+    PrinterCheck,
+    CopyCheck,
+    Check,
+    LucideProps
+} from 'lucide-react';
 import Footer from '../components/Footer';
 import './Recipes.css';
 
@@ -10,6 +34,9 @@ type Recipe = {
     ingredients?: string[] | string | IngredientSection[];
     instructions?: string[] | string;
     tag?: string;
+    time?: string;
+    amount?: number | string;
+    icon?: string;
 };
 
 type IngredientSection = {
@@ -188,6 +215,12 @@ const reduceFractionString = (text: string) => {
     return cleaned;
 };
 
+const formatNumber = (value: number) => {
+    const rounded = Math.round(value * 100) / 100;
+    if (Number.isInteger(rounded)) return `${rounded}`;
+    return `${rounded}`.replace(/\.0+$/, '');
+};
+
 const formatQuantity = (value: number) => {
     const denominators = [2, 3, 4, 8];
     const whole = Math.floor(value + 1e-6);
@@ -271,6 +304,61 @@ const scaleInstructionText = (text: string, multiplier: number) => {
     return reduceFractionString(scaled);
 };
 
+type LucideIcon = React.ComponentType<LucideProps>;
+const iconMap: Record<string, LucideIcon> = {
+    timer: Timer,
+    hash: Hash,
+    croissant: Croissant,
+    'egg-fried': EggFried,
+    hamburger: Hamburger,
+    popcorn: Popcorn,
+    cookie: Cookie,
+    'cake-slice': CakeSlice,
+    cake: Cake,
+    dessert: Dessert
+};
+
+const formatAmountValue = (amount: number | string | undefined, multiplier: number) => {
+    if (amount === undefined || amount === null) return null;
+    if (typeof amount === 'number' && !Number.isNaN(amount)) {
+        return formatNumber(amount * multiplier);
+    }
+    const match = `${amount}`.match(/([0-9]+(?:\.[0-9]+)?)/);
+    if (match) {
+        const num = parseFloat(match[1]);
+        const scaled = formatNumber(num * multiplier);
+        return `${amount}`.replace(match[1], scaled);
+    }
+    return `${amount}`;
+};
+
+const renderMeta = (recipe: Recipe & { anchorId: string }, multiplier: number) => {
+    const iconKey = recipe.icon?.toLowerCase?.() || 'hash';
+    const Icon = iconMap[iconKey] || Hash;
+    const time = recipe.time;
+
+    const scaledAmount = formatAmountValue(recipe.amount, multiplier);
+
+    if (!time && !scaledAmount) return null;
+
+    return (
+        <div className="recipe-meta">
+            {time && (
+                <span className="meta-chip">
+                    <Timer size={16} />
+                    <span>{time}</span>
+                </span>
+            )}
+            {scaledAmount && (
+                <span className="meta-chip">
+                    <Icon size={16} />
+                    <span>{scaledAmount}</span>
+                </span>
+            )}
+        </div>
+    );
+};
+
 const Recipes: React.FC = () => {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -285,10 +373,15 @@ const Recipes: React.FC = () => {
     const hideResultsTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [multipliers, setMultipliers] = useState<Record<string, number>>({});
     const [openMultiplier, setOpenMultiplier] = useState<string | null>(null);
+    const [openShareFor, setOpenShareFor] = useState<string | null>(null);
+    const [closingShare, setClosingShare] = useState<string | null>(null);
     const [searchResults, setSearchResults] = useState<
         { anchorId: string; title: string; image: string; section?: string; snippet?: string; type: 'title' | 'text' }[]
     >([]);
     const gridRef = useRef<HTMLDivElement | null>(null);
+    const shareMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+    const initialHashHandled = useRef(false);
+    const [shareSuccess, setShareSuccess] = useState<Record<string, 'link' | 'print' | 'send' | null>>({});
 
     useEffect(() => {
         document.title = 'Recipes | Zach Rodgers';
@@ -374,6 +467,9 @@ const Recipes: React.FC = () => {
 
         if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (window.location.hash !== `#${anchorId}`) {
+                history.replaceState(null, '', `#${anchorId}`);
+            }
         }
     };
 
@@ -423,6 +519,49 @@ const Recipes: React.FC = () => {
     const handleScrollTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+
+    const closeShareMenu = (anchorId: string, delay: number = 160) => {
+        setOpenShareFor((prev) => (prev === anchorId ? null : prev));
+        setClosingShare(anchorId);
+        setTimeout(() => {
+            setClosingShare((prev) => (prev === anchorId ? null : prev));
+        }, delay);
+    };
+
+    const toggleShareMenu = (anchorId: string) => {
+        if (openShareFor === anchorId) {
+            closeShareMenu(anchorId);
+        } else {
+            setClosingShare(null);
+            setOpenShareFor(anchorId);
+        }
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (!openShareFor) return;
+            const ref = shareMenuRefs.current[openShareFor];
+            if (ref && !ref.contains(event.target as Node)) {
+                closeShareMenu(openShareFor);
+            }
+        };
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                if (openShareFor) {
+                    closeShareMenu(openShareFor);
+                }
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [openShareFor]);
 
     const handleSearchSelect = (anchorId: string) => {
         handleTileClick(anchorId);
@@ -554,6 +693,188 @@ const Recipes: React.FC = () => {
         setSearchResults(textMatches.slice(0, 5));
     }, [searchQuery, anchoredRecipes]);
 
+    const buildRecipeLink = (anchorId: string) => `${window.location.origin}/recipes#${anchorId}`;
+
+    const copyToClipboard = async (text: string) => {
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+        return false;
+    };
+
+    const handleCopyLink = async (recipe: Recipe & { anchorId: string }) => {
+        const link = buildRecipeLink(recipe.anchorId);
+        const copied = await copyToClipboard(link);
+        if (!copied) {
+            window.prompt('Copy link', link);
+        }
+        setShareSuccess((prev) => ({ ...prev, [recipe.anchorId]: 'link' }));
+        setTimeout(() => {
+            setShareSuccess((prev) => ({ ...prev, [recipe.anchorId]: null }));
+            closeShareMenu(recipe.anchorId);
+        }, 300);
+    };
+
+    const getScaledIngredients = (recipe: Recipe & { anchorId: string }) => {
+        const multiplier = multipliers[recipe.anchorId] || 1;
+        return formatIngredientSections(recipe.ingredients).flatMap((section) =>
+            section.items.map((item) => {
+                const scaledItem = scaleIngredientText(item, multiplier);
+                const { label, detail } = splitIngredientLabel(scaledItem);
+                const { main, note } = splitDetailNote(detail);
+                const parts = [formatFractions(main)];
+                if (note) parts.push(formatFractions(note));
+                return label ? `${label}: ${parts.join(' ')}` : parts.join(' ');
+            })
+        );
+    };
+
+    const getScaledInstructions = (recipe: Recipe & { anchorId: string }) => {
+        const multiplier = multipliers[recipe.anchorId] || 1;
+        return normalizeList(recipe.instructions).map((step) => formatFractions(scaleInstructionText(step, multiplier)));
+    };
+
+    const handlePrint = (recipe: Recipe & { anchorId: string }) => {
+        const ingredients = getScaledIngredients(recipe);
+        const instructions = getScaledInstructions(recipe);
+        const multiplier = multipliers[recipe.anchorId] || 1;
+        const time = recipe.time ? `<p><strong>Time:</strong> ${recipe.time}</p>` : '';
+        const scaledAmount = formatAmountValue(recipe.amount, multiplier);
+        const amount = scaledAmount ? `<p><strong>Amount:</strong> ${scaledAmount}</p>` : '';
+
+        const printable = window.open('', '_blank');
+        if (!printable) return;
+
+        printable.document.write(`
+            <html>
+                <head>
+                    <title>${recipe.title}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; color: #111; }
+                        h1 { margin-bottom: 6px; }
+                        img { display: block; max-width: 100%; }
+                        .print-image {
+                            width: 100%;
+                            aspect-ratio: 1 / 1;
+                            object-fit: cover;
+                            border-radius: 8px;
+                            margin: 12px 0;
+                        }
+                        .print-top {
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 16px;
+                            align-items: start;
+                        }
+                        .print-ingredients h2 { margin-top: 0; }
+                        @media (max-width: 720px) {
+                            .print-top { grid-template-columns: 1fr; }
+                        }
+                        ul { padding-left: 20px; }
+                        ol { padding-left: 22px; }
+                        .meta { margin-bottom: 12px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>${recipe.title}</h1>
+                    <div class="meta">
+                        ${time}
+                        ${amount}
+                    </div>
+                    <div class="print-top">
+                        ${
+                            recipe.image
+                                ? `<img class="print-image" src="${resolveImagePath(recipe.image)}" alt="${recipe.title}" />`
+                                : ''
+                        }
+                        <div class="print-ingredients">
+                            <h2>Ingredients</h2>
+                            <ul>
+                                ${ingredients.map((item) => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <h2>Instructions</h2>
+                    <ol>
+                        ${instructions.map((step) => `<li>${step}</li>`).join('')}
+                    </ol>
+                </body>
+            </html>
+        `);
+        printable.document.close();
+        printable.focus();
+        printable.print();
+        setShareSuccess((prev) => ({ ...prev, [recipe.anchorId]: 'print' }));
+        setTimeout(() => {
+            setShareSuccess((prev) => ({ ...prev, [recipe.anchorId]: null }));
+            closeShareMenu(recipe.anchorId);
+        }, 300);
+    };
+
+    const handleSend = async (recipe: Recipe & { anchorId: string }) => {
+        const ingredients = getScaledIngredients(recipe)
+            .map((item) => `- ${item}`)
+            .join('\n');
+        const instructions = getScaledInstructions(recipe)
+            .map((step, idx) => `${idx + 1}. ${step}`)
+            .join('\n');
+
+        const text = `${recipe.title}\n\nIngredients:\n${ingredients}\n\nInstructions:\n${instructions}`;
+
+        const shareData = {
+            title: recipe.title,
+            text,
+            url: buildRecipeLink(recipe.anchorId)
+        };
+
+        const canUseNativeShare =
+            typeof navigator !== 'undefined' &&
+            typeof navigator.share === 'function' &&
+            (typeof navigator.canShare !== 'function' || navigator.canShare(shareData));
+        const isApple =
+            typeof navigator !== 'undefined' &&
+            /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent || '') &&
+            !(navigator as any).userAgentData?.mobile === false;
+
+        if (canUseNativeShare) {
+            try {
+                await navigator.share(shareData);
+                setShareSuccess((prev) => ({ ...prev, [recipe.anchorId]: 'send' }));
+                setTimeout(() => {
+                    setShareSuccess((prev) => ({ ...prev, [recipe.anchorId]: null }));
+                    closeShareMenu(recipe.anchorId);
+                }, 300);
+                return;
+            } catch (err: any) {
+                // User canceled share; do not auto-copy.
+                if (err?.name === 'AbortError') {
+                    closeShareMenu(recipe.anchorId);
+                    return;
+                }
+                window.alert('Sharing failed. Please try again from your native share menu.');
+                closeShareMenu(recipe.anchorId);
+                return;
+            }
+        }
+
+        if (isApple) {
+            window.alert('Sharing is not available in this browser. Please open in Safari/Chrome and try the Share option.');
+            closeShareMenu(recipe.anchorId);
+            return;
+        }
+
+        const copied = await copyToClipboard(text);
+        if (!copied) {
+            window.prompt('Copy recipe details', text);
+        }
+        setShareSuccess((prev) => ({ ...prev, [recipe.anchorId]: 'send' }));
+        setTimeout(() => {
+            setShareSuccess((prev) => ({ ...prev, [recipe.anchorId]: null }));
+            closeShareMenu(recipe.anchorId);
+        }, 300);
+    };
+
     const renderInstructionItems = (recipe: Recipe & { anchorId: string }, multiplier: number) => {
         let displayCounter = 0;
 
@@ -592,8 +913,29 @@ const Recipes: React.FC = () => {
         });
     };
 
-        return (
-            <div className="recipes-page">
+    useEffect(() => {
+        if (!anchoredRecipes.length) return;
+
+        const scrollToHash = () => {
+            const hash = window.location.hash.replace('#', '');
+            if (!hash) return;
+            const target = document.getElementById(hash);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+
+        if (!initialHashHandled.current) {
+            initialHashHandled.current = true;
+            setTimeout(scrollToHash, 100);
+        }
+
+        window.addEventListener('hashchange', scrollToHash);
+        return () => window.removeEventListener('hashchange', scrollToHash);
+    }, [anchoredRecipes]);
+
+    return (
+        <div className="recipes-page">
                 <div className="component-container recipes-header">
                 </div>
 
@@ -787,10 +1129,68 @@ const Recipes: React.FC = () => {
                             <h2 className="recipe-section-title">{section.name}</h2>
                             {section.recipes.map((recipe) => (
                                 <article key={recipe.anchorId} id={recipe.anchorId} className="recipe-detail">
-                                    <h1 className="recipe-title">
-                                        {recipe.tag && <span className="unbeatable-badge">{recipe.tag}</span>}
-                                        {recipe.title}
-                                    </h1>
+                                    <div className="recipe-title-row">
+                                        <div className="recipe-title-group">
+                                            <h1 className="recipe-title">
+                                                {recipe.tag && <span className="unbeatable-badge">{recipe.tag}</span>}
+                                                <span className="recipe-title-text">{recipe.title}</span>
+                                                <span className="recipe-meta-inline">
+                                                    {renderMeta(recipe, multipliers[recipe.anchorId] || 1)}
+                                                </span>
+                                            </h1>
+                                        </div>
+                                        <div
+                                            className="recipe-title-actions"
+                                            ref={(node) => {
+                                                if (node) {
+                                                    shareMenuRefs.current[recipe.anchorId] = node;
+                                                } else {
+                                                    delete shareMenuRefs.current[recipe.anchorId];
+                                                }
+                                            }}
+                                        >
+                                            <button
+                                                type="button"
+                                                className="share-button"
+                                                onClick={() => toggleShareMenu(recipe.anchorId)}
+                                                aria-expanded={openShareFor === recipe.anchorId}
+                                                aria-haspopup="menu"
+                                            >
+                                                <Share size={18} />
+                                            </button>
+                                            {(openShareFor === recipe.anchorId || closingShare === recipe.anchorId) && (
+                                                <div
+                                                    className={`share-menu ${openShareFor === recipe.anchorId ? 'open' : ''}`}
+                                                    role="menu"
+                                                >
+                                                    <button type="button" onClick={() => handleCopyLink(recipe)} role="menuitem">
+                                                        {shareSuccess[recipe.anchorId] === 'link' ? (
+                                                            <Check size={16} />
+                                                        ) : (
+                                                            <LinkIcon size={16} />
+                                                        )}
+                                                        <span>Link</span>
+                                                    </button>
+                                                    <button type="button" onClick={() => handlePrint(recipe)} role="menuitem">
+                                                        {shareSuccess[recipe.anchorId] === 'print' ? (
+                                                            <PrinterCheck size={16} />
+                                                        ) : (
+                                                            <Printer size={16} />
+                                                        )}
+                                                        <span>Print</span>
+                                                    </button>
+                                                    <button type="button" onClick={() => handleSend(recipe)} role="menuitem">
+                                                        {shareSuccess[recipe.anchorId] === 'send' ? (
+                                                            <CopyCheck size={16} />
+                                                        ) : (
+                                                            <Copy size={16} />
+                                                        )}
+                                                        <span>Send</span>
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                     <div className="recipe-detail-grid">
                                         <div className="recipe-image">
                                             <img src={resolveImagePath(recipe.image)} alt={recipe.title} loading="lazy" />
