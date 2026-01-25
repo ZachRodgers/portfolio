@@ -19,8 +19,8 @@
         "id": "company-store-branding",
         "type": "pdf",
         "pdfDirectory": "CompanyStore",
-        "pageCount": 1,
-        "title": "Company Store Re-Brand",
-        "content": "Full company rebrand."
+        "pageCount": 15,
+        "title": "CompanyStore Re-Brand",
+        "content": "The complete rebrand for CompanyStore, a merchandiser for high end gifts and businesses."
     }
 ]
