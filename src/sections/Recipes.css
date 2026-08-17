@@ -15,11 +15,21 @@
     box-sizing: border-box;
 }
 
+.recipes-search-icon {
+    position: absolute;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    pointer-events: none;
+}
+
 .recipes-search-input {
     flex: 1;
     padding: 0.65rem 0.75rem;
+    padding-left: 2.6rem;
     padding-right: 2.6rem;
-    border-radius: 10px;
+    border-radius: 200px;
     border: 1px solid #dcdcdc;
     font-size: 15px;
     outline: none;

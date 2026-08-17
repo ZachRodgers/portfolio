@@ -4,6 +4,7 @@ import {
     ArrowUp,
     ArrowDown,
     ChevronDown,
+    Search,
     X,
     Timer,
     Hash,
@@ -1071,6 +1072,7 @@ const Recipes: React.FC = () => {
                 </div>
 
                 <div className="component-container recipes-search-bar">
+                    <Search className="recipes-search-icon" size={16} aria-hidden="true" />
                     <input
                         type="text"
                         className="recipes-search-input"
