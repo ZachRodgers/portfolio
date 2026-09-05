@@ -81,17 +81,26 @@
     border: none;
     color: var(--text-secondary);
     text-decoration: none;
+    font-family: inherit;
     font-size: 14px;
     font-weight: 300;
+    line-height: inherit;
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 0;
     display: inline-block;
+    appearance: none;
 }
 
 .footer-link:hover {
     color: var(--text-primary);
+    text-decoration: none;
     transform: translateX(4px);
+}
+
+.footer a.footer-link,
+.footer a.footer-link:hover {
+    text-decoration: none;
 }
 
 .footer-link-with-icon {
