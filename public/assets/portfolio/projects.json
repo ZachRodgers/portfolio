@@ -70,7 +70,7 @@
             "description": "AI-Powered Parking Platform",
             "animation-scale": 1.05,
             "animation-rotate": 0,
-            "animation-origin": "center"
+            "animation-origin": "bottom center"
         }
     }
 }
