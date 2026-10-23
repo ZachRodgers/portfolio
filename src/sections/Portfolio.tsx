@@ -48,7 +48,7 @@ const Portfolio: React.FC = () => {
             .then(response => response.json())
             .then(data => {
                 const imageFiles = data.images;
-                const parsedImages: PortfolioImage[] = imageFiles.map((fileName: string) => {
+                const parsedImages: PortfolioImage[] = imageFiles.map((fileName: string, imageIndex: number) => {
                     // Handle both dash and underscore separators
                     const separator = fileName.includes('-') ? '-' : '_';
                     const parts = fileName.replace('.jpg', '').split(separator);
@@ -65,9 +65,9 @@ const Portfolio: React.FC = () => {
 
                             // Extract page number and name
                             const pageMatch = pagePart.match(/^(\d+)([A-Za-z]+.*)$/);
-                            if (pageMatch) {
-                                const pageNumber = parseInt(pageMatch[1]);
-                                const pageName = pageMatch[2];
+                            if (pageMatch || pagePart) {
+                                const pageNumber = pageMatch ? parseInt(pageMatch[1]) : imageIndex + 1;
+                                const pageName = pageMatch ? pageMatch[2] : parts.slice(1).join('_');
 
                                 // Convert underscores to spaces in project name
                                 projectName = projectName.replace(/_/g, ' ');

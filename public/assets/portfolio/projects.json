@@ -27,7 +27,14 @@
         "4Batterola_2Research.jpg",
         "4Batterola_3Ideation.jpg",
         "4Batterola_4Usage.jpg",
-        "4Batterola_5Technical.jpg"
+        "4Batterola_5Technical.jpg",
+        "5Parallel_Hero.jpg",
+        "5Parallel_Research.jpg",
+        "5Parallel_Development.jpg",
+        "5Parallel_App.jpg",
+        "5Parallel_App_Store.jpg",
+        "5Parallel_Operator.jpg",
+        "5Parallel_AI.jpg"
     ],
     "projects": {
         "1": {
@@ -57,6 +64,13 @@
             "animation-scale": 1.07,
             "animation-rotate": 2,
             "animation-origin": "left"
+        },
+        "5": {
+            "name": "Parallel",
+            "description": "AI-Powered Parking Platform",
+            "animation-scale": 1.05,
+            "animation-rotate": 0,
+            "animation-origin": "center"
         }
     }
 }

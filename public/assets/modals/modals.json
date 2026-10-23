@@ -113,6 +113,24 @@
             "targetLocation": "mid_right"
         },
         {
+            "id": "parallel-hero",
+            "type": "text",
+            "title": "Parallel",
+            "content": "Parallel is an AI-powered parking platform designed to make finding and managing parking simpler.",
+            "link": "https://www.parkwithparallel.com/",
+            "targetImage": "5Parallel_Hero.jpg",
+            "targetLocation": "mid_mid"
+        },
+        {
+            "id": "parallel-operator",
+            "type": "video",
+            "video": "https://youtu.be/oJN5gcN4r4s",
+            "title": "Parallel Operator",
+            "content": "A look at Parallel Operator, the platform that helps parking teams manage their operations.",
+            "targetImage": "5Parallel_Operator.jpg",
+            "targetLocation": "mid_mid"
+        },
+        {
             "id": "spark-iteration",
             "type": "image",
             "image": "spark_concepts.jpg",

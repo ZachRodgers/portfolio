@@ -16,6 +16,7 @@ interface ModalConfig {
     pageCount?: number;
     title: string;
     content: string;
+    link?: string;
     targetImage: string;
     targetLocation?: 'top_left' | 'top_mid' | 'top_right' | 'mid_left' | 'mid_mid' | 'mid_right' | 'bottom_left' | 'bottom_mid' | 'bottom_right';
 }
@@ -93,6 +94,7 @@ const ModalManager: React.FC<ModalManagerProps> = ({ targetImage }) => {
                             onClose={handleModalClose}
                             title={activeModal.title}
                             content={activeModal.content}
+                            link={activeModal.link}
                         />
                     )}
                     {activeModal.type === 'pdf' && (

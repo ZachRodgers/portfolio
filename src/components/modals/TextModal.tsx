@@ -7,9 +7,10 @@ interface TextModalProps {
     onClose: () => void;
     title?: string;
     content?: string;
+    link?: string;
 }
 
-const TextModal: React.FC<TextModalProps> = ({ isOpen, onClose, title, content }) => {
+const TextModal: React.FC<TextModalProps> = ({ isOpen, onClose, title, content, link }) => {
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
@@ -47,6 +48,16 @@ const TextModal: React.FC<TextModalProps> = ({ isOpen, onClose, title, content }
                             <div className="modal-text-container">
                                 <h2 className="modal-title">{title || 'Text Modal'}</h2>
                                 <p className="modal-description">{content || 'Text content goes here'}</p>
+                                {link && (
+                                    <a
+                                        className="modal-link"
+                                        href={link}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        Visit Parallel ↗
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </div>
