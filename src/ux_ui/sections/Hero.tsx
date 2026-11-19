@@ -6,6 +6,7 @@ import './Hero.css';
 
 const waitingPalette: [string, string, string, string] = ['#101010', '#121019', '#201948', '#362a80'];
 const params = { speed: 2.8, warp: 1.5, sphere: 1.5, detail: 1.9, grain: 0.17, pulse: 0.57, highlight: 0.33, exposure: 0, saturation: 1.04, fluid: 0.21 };
+const waitingParams = { ...params, speed: 1.1, warp: 1.1, detail: 1.4, grain: .09 };
 export function introText(time: number) {
     const type = (text: string, start: number) => text.slice(0, Math.floor(Math.max(0, Math.min(1, (time - start) / .75)) * text.length));
     const erase = (text: string, end: number) => text.slice(0, Math.ceil(Math.max(0, Math.min(1, (end - time) / .25)) * text.length));
@@ -177,7 +178,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
         <section id="hero" className="ux-hero" aria-label="Engineering, design, and AI">
             <div className={`ux-intro ${ready ? 'is-ready' : ''} ${time >= 10.1 ? 'is-complete' : ''}`}>
                 {time < 10.6 && <><div ref={orb} className={`ux-orb ${!started ? 'is-waiting' : ''}`}><VoiceOrb palette="midnight" variant="painted" state={ready ? "talking" : "ready"} voice={typingLevels.current} seed={0.5} params={activeParams} size="clamp(200px, 30vw, 350px)" />
-                <div className={`ux-orb-waiting ${started ? 'is-fading' : ''}`}><VoiceOrb palette={waitingPalette} variant="painted" state="ready" seed={0.5} params={params} size="clamp(200px, 30vw, 350px)" /></div>
+                <div className={`ux-orb-waiting ${started ? 'is-fading' : ''}`}><VoiceOrb palette={waitingPalette} variant="painted" state="ready" seed={0.5} params={waitingParams} size="clamp(200px, 30vw, 350px)" /></div>
                 {ready && <button className={`ux-play ${started ? 'is-fading' : ''}`} onClick={() => void start()} disabled={started} tabIndex={started ? -1 : 0} aria-hidden={started} aria-label="Play introduction with sound"><span className="ux-play-shape" aria-hidden="true">
                     <svg className="ux-play-arrow" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true">
                         <defs><linearGradient id="ux-arrow-gradient" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#8264ff" /><stop offset=".5" stopColor="#e8dcff" /><stop offset="1" stopColor="#6d49ff" /></linearGradient></defs>

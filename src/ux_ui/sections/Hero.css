@@ -13,7 +13,9 @@
 .ux-sound { top: 24px; bottom: auto; right: 24px; z-index: 10; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; }
 
 .ux-sound:focus-visible { outline: 2px solid #bfbaff; outline-offset: 3px; }
-.ux-orb { position: relative; }
+.ux-orb { position: relative; isolation: isolate; }
+.ux-orb::before { content: ""; position: absolute; inset: -65%; z-index: -1; pointer-events: none; background: radial-gradient(circle, rgba(255, 255, 255, .035) 0%, rgba(255, 255, 255, .018) 27%, rgba(255, 255, 255, .006) 48%, transparent 70%); opacity: 1; transition: opacity .5s ease; }
+.ux-orb.is-waiting::before { opacity: 0; }
 .ux-orb-waiting { position: absolute; inset: 0; transition: opacity .5s ease; pointer-events: none; }
 .ux-orb-waiting.is-fading { opacity: 0; }
 .ux-play:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
