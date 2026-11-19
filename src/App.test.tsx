@@ -22,8 +22,38 @@ test.each([
     ['/industrial_design?source=footer#resume', 'Industrial portfolio'],
     ['/recipes', 'Recipes'],
     ['/recipes/', 'Recipes'],
-    ['/missing', 'Page not found'],
 ])('%s renders the expected page', (path, content) => {
     window.history.replaceState(null, '', path);
     expect(renderToStaticMarkup(<App />)).toContain(content);
+});
+
+test.each(['/missing', '/missing/nested/', '/constructor', '/toString'])(
+    '%s resolves to the default portfolio without adding a history entry',
+    path => {
+        window.history.replaceState(null, '', path + '?source=test#resume-section');
+        const historyLength = window.history.length;
+        expect(renderToStaticMarkup(<App />)).toContain('UX/UI portfolio');
+        expect(window.location.pathname).toBe(DEFAULT_ROUTE);
+        expect(window.location.search).toBe('?source=test');
+        expect(window.location.hash).toBe('#resume-section');
+        expect(window.history.length).toBe(historyLength);
+    }
+);
+
+test.each([
+    ['/design', '/industrial_design', 'Industrial portfolio'],
+    ['/id', '/industrial_design', 'Industrial portfolio'],
+    ['/ux', '/ux_ui', 'UX/UI portfolio'],
+    ['/ui', '/ux_ui', 'UX/UI portfolio'],
+    ['/uxui', '/ux_ui', 'UX/UI portfolio'],
+])('%s resolves to %s and preserves query, hash, and history', (alias, route, content) => {
+    for (const suffix of ['', '/']) {
+        window.history.replaceState(null, '', alias + suffix + '?source=alias#resume-section');
+        const historyLength = window.history.length;
+        expect(renderToStaticMarkup(<App />)).toContain(content);
+        expect(window.location.pathname).toBe(route);
+        expect(window.location.search).toBe('?source=alias');
+        expect(window.location.hash).toBe('#resume-section');
+        expect(window.history.length).toBe(historyLength);
+    }
 });

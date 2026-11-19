@@ -20,12 +20,16 @@ The Portfolio and DynamicNav components automatically load from `projects.json` 
 ## Routes and content
 
 Routing lives in `src/App.tsx`. Change `DEFAULT_ROUTE` there to choose where
-`/` resolves (currently `/ux_ui`). Query parameters and section hashes are retained.
+`/` resolves (currently `/ux_ui`). Unknown URLs also resolve to that default page. Query parameters and section hashes are retained.
 The hosting server must serve `index.html` for direct visits to these routes.
 
 - `/industrial_design`: existing industrial portfolio in `src/industrial_design`.
 - `/ux_ui`: UX/UI page in `src/ux_ui`, with empty hero, contents, and portfolio divs.
 - `/recipes`: recipes in `src/recipes`.
+
+Aliases `/design` and `/id` resolve to `/industrial_design`; `/ux`, `/ui`, and
+`/uxui` resolve to `/ux_ui`. Alias mappings live alongside routing in `src/App.tsx`.
+
 - `src/shared`: resume, branding, footer, navigation, loading screen, and modals.
 
 UX/UI configuration is in `src/ux_ui/content/page.json`. Its resume uses

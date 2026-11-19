@@ -4,25 +4,34 @@ import IndustrialDesign from './industrial_design/IndustrialDesign';
 import UxUi from './ux_ui/UxUi';
 import Recipes from './recipes/Recipes';
 
-export const DEFAULT_ROUTE = '/ux_ui';
+const pages = {
+    '/industrial_design': IndustrialDesign,
+    '/ux_ui': UxUi,
+    '/recipes': Recipes,
+};
+
+const aliases: Record<string, keyof typeof pages> = {
+    '/design': '/industrial_design',
+    '/id': '/industrial_design',
+    '/ux': '/ux_ui',
+    '/ui': '/ux_ui',
+    '/uxui': '/ux_ui',
+};
+
+export const DEFAULT_ROUTE: keyof typeof pages = '/ux_ui';
 
 function App() {
     const path = window.location.pathname.replace(/\/+$/, '') || '/';
+    const isKnownRoute = Object.prototype.hasOwnProperty.call(pages, path);
+    const alias = Object.prototype.hasOwnProperty.call(aliases, path) ? aliases[path] : undefined;
+    const route = isKnownRoute ? path as keyof typeof pages : alias || DEFAULT_ROUTE;
 
-    if (path === '/') {
-        window.history.replaceState(null, '', DEFAULT_ROUTE + window.location.search + window.location.hash);
+    if (!isKnownRoute) {
+        window.history.replaceState(null, '', route + window.location.search + window.location.hash);
     }
 
-    switch (path === '/' ? DEFAULT_ROUTE : path) {
-        case '/industrial_design':
-            return <IndustrialDesign />;
-        case '/recipes':
-            return <Recipes />;
-        case '/ux_ui':
-            return <UxUi />;
-        default:
-            return <main><h1>Page not found</h1><a href={DEFAULT_ROUTE}>View portfolio</a></main>;
-    }
+    const Page = pages[route];
+    return <Page />;
 }
 
 export default App;
