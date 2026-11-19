@@ -4,12 +4,16 @@ import PDFModal from './modals/PDFModal';
 import './Footer.css';
 
 interface Project {
+    id: string;
     name: string;
-    description: string;
+    icon?: string;
 }
 
-interface ProjectsData {
-    projects: { [key: string]: Project };
+interface ProjectSource {
+    route: string;
+    dataUrl?: string;
+    icons?: Record<string, string>;
+    items?: Project[];
 }
 
 interface BrandingProject {
@@ -23,16 +27,15 @@ interface BrandingProject {
 
 type FooterProps = {
     variant?: 'default' | 'light';
-    homeHref?: string;
-    projectSource: {
-        dataUrl: string;
-        route: string;
-        icons: Record<string, string>;
-    };
+    currentRoute: string;
+    mainRoute: string;
+    resumeRoute: string;
+    pages: Array<{ route: string; label: string }>;
+    projectSource: ProjectSource;
 };
 
-const Footer: React.FC<FooterProps> = ({ variant = 'default', projectSource, homeHref }) => {
-    const [projects, setProjects] = useState<Project[]>([]);
+const Footer: React.FC<FooterProps> = ({ variant = 'default', projectSource, currentRoute, mainRoute, resumeRoute, pages }) => {
+    const [projects, setProjects] = useState<Project[]>(projectSource.items || []);
     const [brandingProjects, setBrandingProjects] = useState<BrandingProject[]>([]);
     const [loading, setLoading] = useState(true);
     const [brandingLoading, setBrandingLoading] = useState(true);
@@ -40,18 +43,30 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default', projectSource, hom
     const [isBrandingModalOpen, setIsBrandingModalOpen] = useState(false);
 
     useEffect(() => {
+        let cancelled = false;
+        setProjects(projectSource.items || []);
+        setLoading(!!projectSource.dataUrl);
+        if (!projectSource.dataUrl) return;
         fetch(projectSource.dataUrl)
-            .then(response => response.json())
-            .then((data: ProjectsData) => {
-                const projectList = Object.values(data.projects);
-                setProjects(projectList);
-                setLoading(false);
+            .then(response => {
+                if (!response.ok) throw new Error(`Project request failed: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                if (cancelled) return;
+                setProjects(Object.entries(data.projects).map(([number, project]) => ({
+                    id: `project-${number}`,
+                    name: (project as { name: string }).name,
+                })));
             })
             .catch(error => {
-                console.error('Error loading projects:', error);
-                setLoading(false);
+                if (!cancelled) console.error('Error loading projects:', error);
+            })
+            .finally(() => {
+                if (!cancelled) setLoading(false);
             });
-    }, [projectSource.dataUrl]);
+        return () => { cancelled = true; };
+    }, [projectSource.dataUrl, projectSource.items]);
 
     useEffect(() => {
         fetch('/assets/shared/branding/branding.json')
@@ -66,45 +81,16 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default', projectSource, hom
             });
     }, []);
 
-    const getPortfolioBaseUrl = () => {
-        const publicUrl = (process.env.PUBLIC_URL || '').replace(/\/$/, '');
-        return `${window.location.origin}${publicUrl}${projectSource.route}`;
-    };
+    const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    const navigateToPortfolioSection = (sectionId?: string) => {
-        const base = getPortfolioBaseUrl();
-        const target = sectionId ? `${base}/#${sectionId}` : `${base}/`;
-        window.location.href = target;
-    };
-
-    const scrollToSection = (sectionId: string) => {
-        if (!document.getElementById(sectionId)) {
-            navigateToPortfolioSection(sectionId);
-            return;
+    const scrollToSection = (event: React.MouseEvent<HTMLAnchorElement>, route: string, id: string) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (route !== currentRoute) return;
+        const target = document.getElementById(id);
+        if (target) {
+            event.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
         }
-
-        const element = document.getElementById(sectionId);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    const scrollToProject = (sectionId: string) => {
-        const path = window.location.pathname.replace(/\/+$/, '');
-        if (path !== projectSource.route) {
-            navigateToPortfolioSection(sectionId);
-            return;
-        }
-        scrollToSection(sectionId);
-    };
-
-    const scrollToTop = () => {
-        if (homeHref) {
-            window.location.href = homeHref;
-            return;
-        }
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const getCurrentYear = () => {
@@ -121,9 +107,6 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default', projectSource, hom
         setSelectedBrandingProject(null);
     };
 
-    const getProjectIcon = (projectName: string) => {
-        return projectSource.icons[projectName] || '/assets/shared/icons/More.svg';
-    };
 
     return (
         <footer className={`footer ${variant === 'light' ? 'footer-light' : ''}`}>
@@ -135,19 +118,20 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default', projectSource, hom
                             {loading ? (
                                 <li>Loading projects...</li>
                             ) : (
-                                projects.map((project, index) => (
-                                    <li key={index}>
-                                        <button
-                                            onClick={() => scrollToProject(`project-${index + 1}`)}
+                                projects.map((project) => (
+                                    <li key={project.id}>
+                                        <a
+                                            href={`${projectSource.route}#${project.id}`}
+                                            onClick={event => scrollToSection(event, projectSource.route, project.id)}
                                             className="footer-link footer-link-with-icon"
                                         >
                                             <img
-                                                src={getProjectIcon(project.name)}
+                                                src={project.icon || projectSource.icons?.[project.name] || '/assets/shared/icons/More.svg'}
                                                 alt={`${project.name} icon`}
                                                 className="footer-project-icon"
                                             />
                                             <span>{project.name}</span>
-                                        </button>
+                                        </a>
                                     </li>
                                 ))
                             )}
@@ -222,41 +206,29 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default', projectSource, hom
                         <h3>Navigation</h3>
                         <ul className="footer-links">
                             <li>
-                                <button
-                                    onClick={scrollToTop}
-                                    className="footer-link footer-link-with-icon"
-                                >
+                                <button onClick={scrollToTop} className="footer-link footer-link-with-icon">
                                     <ArrowUp size={16} />
-                                    <span>Home</span>
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => scrollToProject('project-1')}
-                                    className="footer-link footer-link-with-icon"
-                                >
-                                    <FolderOpen size={16} />
-                                    <span>Projects</span>
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => scrollToSection('resume-section')}
-                                    className="footer-link footer-link-with-icon"
-                                >
-                                    <FileText size={16} />
-                                    <span>Resume</span>
+                                    <span>{currentRoute === mainRoute ? 'Home' : 'Top'}</span>
                                 </button>
                             </li>
                             <li>
                                 <a
-                                    href="/recipes"
+                                    href={`${resumeRoute}#resume-section`}
+                                    onClick={event => scrollToSection(event, resumeRoute, 'resume-section')}
                                     className="footer-link footer-link-with-icon"
                                 >
-                                    <CookingPot size={16} />
-                                    <span>Recipes</span>
+                                    <FileText size={16} />
+                                    <span>Resume</span>
                                 </a>
                             </li>
+                            {pages.filter(page => page.route !== currentRoute).map(page => (
+                                <li key={page.route}>
+                                    <a href={page.route} className="footer-link footer-link-with-icon">
+                                        {page.route === '/recipes' ? <CookingPot size={16} /> : <FolderOpen size={16} />}
+                                        <span>{page.label}</span>
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>

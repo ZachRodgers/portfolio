@@ -30,7 +30,7 @@ Configure hosting to serve `index.html` for page routes.
 - Assets: `public/assets/{ux_ui,industrial_design,recipes,shared}/`.
 - Resumes: `public/assets/{ux_ui,industrial_design}/resume/resume.json`.
 - UX/UI navigation: `src/ux_ui/content/page.json`.
-- Footer project selection: `src/siteContent.ts`.
+- Footer configuration: `src/siteContent.ts`; UX/UI project placeholders: `src/ux_ui/content/page.json`.
 
 Industrial project images and metadata live in `public/assets/industrial_design/portfolio/`.
 Add images using the existing filename pattern, update `projects.json`, and add matching

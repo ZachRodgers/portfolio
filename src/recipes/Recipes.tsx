@@ -1,4 +1,4 @@
-import { footerProjects } from '../siteContent';
+import { industrialFooterProjects, uxFooterProjects, footerPages, PageProps } from '../siteContent';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
     ArrowUpToLine,
@@ -364,7 +364,7 @@ const renderMeta = (recipe: Recipe & { anchorId: string }, multiplier: number) =
     );
 };
 
-const Recipes: React.FC = () => {
+const Recipes: React.FC<PageProps> = ({ mainRoute }) => {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -1436,7 +1436,7 @@ const Recipes: React.FC = () => {
                     ))}
                 </div>
             )}
-            <Footer variant="light" projectSource={footerProjects} homeHref={footerProjects.route} />
+            <Footer variant="light" projectSource={mainRoute === industrialFooterProjects.route ? industrialFooterProjects : uxFooterProjects} currentRoute="/recipes" mainRoute={mainRoute} resumeRoute={mainRoute} pages={footerPages} />
         </div>
     );
 };

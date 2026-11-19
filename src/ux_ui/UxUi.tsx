@@ -1,4 +1,4 @@
-import { footerProjects } from '../siteContent';
+import { uxFooterProjects, footerPages, PageProps } from '../siteContent';
 import useHashScroll from '../shared/hooks/useHashScroll';
 import React from 'react';
 import Hero from './sections/Hero';
@@ -10,7 +10,7 @@ import Footer from '../shared/components/Footer';
 import DynamicNav from '../shared/components/DynamicNav';
 import content from './content/page.json';
 
-const UxUi: React.FC = () => {
+const UxUi: React.FC<PageProps> = ({ mainRoute }) => {
     useHashScroll();
     return (
         <div className="App">
@@ -20,7 +20,7 @@ const UxUi: React.FC = () => {
             <Contents />
             <Portfolio />
             <Branding />
-            <Footer projectSource={footerProjects} />
+            <Footer projectSource={uxFooterProjects} currentRoute="/ux_ui" mainRoute={mainRoute} resumeRoute="/ux_ui" pages={footerPages} />
         </div>
     );
 };

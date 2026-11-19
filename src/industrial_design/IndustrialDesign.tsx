@@ -1,4 +1,4 @@
-import { footerProjects } from '../siteContent';
+import { industrialFooterProjects, footerPages, PageProps } from '../siteContent';
 import useNavigationProjects from './hooks/useNavigationProjects';
 import useHashScroll from '../shared/hooks/useHashScroll';
 import React from 'react';
@@ -19,7 +19,7 @@ import LoadingScreen from '../shared/components/LoadingScreen';
 // Import hooks
 import useAssetLoading from './hooks/useAssetLoading';
 
-function IndustrialDesign() {
+function IndustrialDesign({ mainRoute }: PageProps) {
     const { isLoading } = useAssetLoading();
     const projects = useNavigationProjects();
 
@@ -36,7 +36,7 @@ function IndustrialDesign() {
                     <Contents />
                     <Portfolio />
                     <Branding />
-                    <Footer projectSource={footerProjects} />
+                    <Footer projectSource={industrialFooterProjects} currentRoute="/industrial_design" mainRoute={mainRoute} resumeRoute="/industrial_design" pages={footerPages} />
                 </>
             )}
         </div>

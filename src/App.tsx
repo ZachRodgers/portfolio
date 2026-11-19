@@ -31,7 +31,7 @@ function App() {
     }
 
     const Page = pages[route];
-    return <Page />;
+    return <Page mainRoute={DEFAULT_ROUTE} />;
 }
 
 export default App;
