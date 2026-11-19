@@ -18,13 +18,13 @@ const cutCues = [
     { start: 12.06, text: 'But', size: 'regular' },
     { start: 13.08, text: 'What about all that', size: 'regular' },
     { start: 14.35, text: 'In 1', size: 'regular' },
-    { start: 15.10, text: 'In 1', size: 'large' },
-    { start: 15.24, text: '1', size: 'larger' },
-    { start: 15.36, text: '1', size: 'huge' },
+    { start: 15.10, text: '1', size: 'large' },
+    { start: 15.40, text: '1', size: 'larger' },
+    { start: 15.70, text: '1', size: 'huge' },
     { start: 16.00, text: 'Person', size: 'regular' },
 ];
 export function cutText(time: number) {
-    return time >= 16.40 ? undefined : [...cutCues].reverse().find(cue => time >= cue.start);
+    return time >= 17.00 ? undefined : [...cutCues].reverse().find(cue => time >= cue.start);
 }
 
 // A repeatable cadence keeps the text and orb on the same audio clock.
@@ -146,6 +146,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
     };
 
     useEffect(() => {
+        void document.fonts?.load('400 16px Asset');
         const timer = setTimeout(() => setReady(true), 500);
         return () => {
             clearTimeout(timer);
@@ -208,7 +209,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                 const beat = cue === undefined ? 0 : (1 + Math.sin(progress * Math.PI * 10)) / 2;
                 orb.current.style.transform = `scale(${1 + bass * .025 + swell * (.045 + beat * .01) + finalAccent(current) * .06})`;
             }
-            if (current < 16.40) frame = requestAnimationFrame(tick);
+            if (current < 17.00) frame = requestAnimationFrame(tick);
         };
         frame = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(frame);
@@ -284,7 +285,17 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                     </p>
                 </div>
             </div>
-            {cut && <p className={`ux-cut-text ux-cut-text--${cut.size}`} aria-hidden="true">{cut.text}</p>}
+            {cut && <p className={`ux-cut-text ux-cut-text--${cut.size}`} aria-hidden="true">{cut.size === 'large' || cut.size === 'larger' || cut.size === 'huge' ? <span className="ux-cut-numeral"><span className="ux-numeral-measure">{cut.text}</span><svg className="ux-numeral-svg" aria-hidden="true">
+                        {(cut.size === 'larger' || cut.size === 'huge') && Array.from({ length: cut.size === 'huge' ? 6 : 2 }, (_, index) => {
+                            const ring = (cut.size === 'huge' ? 6 : 2) - index;
+                            const shade = Math.round(16 + 239 * 0.5 / Math.pow(2, ring - 1));
+                            return <React.Fragment key={ring}>
+                                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fill="none" stroke={`rgb(${shade}, ${shade}, ${shade})`} strokeWidth={ring * 100 + 4} strokeLinejoin="miter">1</text>
+                                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fill="none" stroke="#101010" strokeWidth={ring * 100} strokeLinejoin="miter">1</text>
+                            </React.Fragment>;
+                        })}
+                        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fill="white">{cut.text}</text>
+                    </svg></span> : cut.text}</p>}
             </div>
             <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI. But what about all that in one person?</span>
 

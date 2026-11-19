@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Asset&family=Merriweather:wght@400&display=swap');
 .ux-hero { position: relative; height: 100svh; min-height: 520px; background: #101010; color: white; overflow: hidden; }
 .ux-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding-bottom: clamp(80px, 14svh, 150px); box-sizing: border-box; opacity: 0; transition: opacity .5s ease; }
 .ux-intro.is-ready { opacity: 1; }
@@ -54,7 +54,12 @@
 .ux-glitch-defs { position: absolute; width: 0; height: 0; pointer-events: none; }
 .ux-intro.is-complete, .ux-caption-content.is-complete, .ux-intro-text.is-complete { visibility: hidden; transition: none; }
 .ux-cut-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; margin: 0; padding: 24px; text-align: center; font-family: 'Merriweather', Georgia, serif; font-weight: 400; font-size: clamp(24px, 4.2vw, 60px); line-height: 1.1; }
-.ux-cut-text--large { font-size: clamp(64px, 12vw, 180px); }
-.ux-cut-text--larger { font-size: clamp(140px, 28vw, 360px); }
-.ux-cut-text--huge { font-size: min(65vw, 85svh); }
+.ux-cut-text--large { font-size: clamp(60px, 11.4vw, 171px); }
+.ux-cut-text--larger { font-size: clamp(133px, 26.6vw, 342px); }
+.ux-cut-text--huge { font-size: min(61.75vw, 80.75svh); }
 @media (prefers-reduced-motion: reduce) { .ux-hero-scene.is-glitching { filter: none; } }
+
+.ux-cut-numeral { position: relative; display: inline-block; font-family: Asset, Georgia, serif; transform: scaleX(.72); }
+
+.ux-numeral-measure { visibility: hidden; }
+.ux-numeral-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; font: inherit; }
