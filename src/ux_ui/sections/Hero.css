@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400&display=swap');
+.ux-hero { position: relative; height: 100svh; min-height: 520px; background: #101010; color: white; overflow: hidden; }
+.ux-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .5s ease; }
+.ux-intro.is-ready { opacity: 1; }
+.ux-intro.is-complete { opacity: 0; }
+.ux-orb { will-change: transform; }
+.ux-intro-text { position: absolute; top: calc(50% + clamp(100px, 15vw, 175px) + 32px); margin: 0; padding: 0 20px; text-align: center; font-family: 'Merriweather', Georgia, serif; font-size: clamp(18px, 2.3vw, 28px); font-weight: 400; line-height: 1.6; }
+.ux-intro-start, .ux-sound { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: white; background: #1d1d1d; border: 1px solid #555; border-radius: 999px; padding: 12px 24px; font: inherit; cursor: pointer; }
+.ux-sound { left: auto; right: 24px; transform: none; }
+.ux-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (prefers-reduced-motion: reduce) { .ux-intro { transition: none; } }
+
+.ux-sound { top: 24px; bottom: auto; right: 24px; z-index: 10; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; }
+
+.ux-sound:focus-visible { outline: 2px solid #bfbaff; outline-offset: 3px; }
