@@ -67,7 +67,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
 
     const getPortfolioBaseUrl = () => {
         const publicUrl = (process.env.PUBLIC_URL || '').replace(/\/$/, '');
-        return `${window.location.origin}${publicUrl}`;
+        return `${window.location.origin}${publicUrl}/industrial_design`;
     };
 
     const navigateToPortfolioSection = (sectionId?: string) => {
@@ -77,7 +77,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
     };
 
     const scrollToSection = (sectionId: string) => {
-        if (isRecipesPage()) {
+        if (isRecipesPage() || !document.getElementById(sectionId)) {
             navigateToPortfolioSection(sectionId);
             return;
         }

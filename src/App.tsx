@@ -1,60 +1,28 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
+import IndustrialDesign from './industrial_design/IndustrialDesign';
+import UxUi from './ux_ui/UxUi';
+import Recipes from './recipes/Recipes';
 
-// Import sections
-import Hero from './sections/Hero';
-import Resume from './sections/Resume';
-import Contents from './sections/Contents';
-import Portfolio from './sections/Portfolio';
-import Branding from './sections/Branding';
-
-// Import components
-import Footer from './components/Footer';
-import DynamicNav from './components/DynamicNav';
-import LoadingScreen from './components/LoadingScreen';
-
-// Import hooks
-import useAssetLoading from './hooks/useAssetLoading';
+export const DEFAULT_ROUTE = '/ux_ui';
 
 function App() {
-    const { isLoading } = useAssetLoading();
+    const path = window.location.pathname.replace(/\/+$/, '') || '/';
 
-    useEffect(() => {
-        if (isLoading) return;
+    if (path === '/') {
+        window.history.replaceState(null, '', DEFAULT_ROUTE + window.location.search + window.location.hash);
+    }
 
-        const hash = window.location.hash.replace('#', '');
-        if (!hash) return;
-
-        const scrollToHash = () => {
-            const target = document.getElementById(hash);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        };
-
-        // Attempt immediately and once more after a tick to account for layout
-        scrollToHash();
-        const timeoutId = setTimeout(scrollToHash, 150);
-
-        return () => clearTimeout(timeoutId);
-    }, [isLoading]);
-
-    return (
-        <div className="App">
-            <LoadingScreen isLoading={isLoading} />
-            {!isLoading && (
-                <>
-                    <DynamicNav />
-                    <Hero />
-                    <Resume />
-                    <Contents />
-                    <Portfolio />
-                    <Branding />
-                    <Footer />
-                </>
-            )}
-        </div>
-    );
+    switch (path === '/' ? DEFAULT_ROUTE : path) {
+        case '/industrial_design':
+            return <IndustrialDesign />;
+        case '/recipes':
+            return <Recipes />;
+        case '/ux_ui':
+            return <UxUi />;
+        default:
+            return <main><h1>Page not found</h1><a href={DEFAULT_ROUTE}>View portfolio</a></main>;
+    }
 }
 
 export default App;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DynamicNav.css';
 
-interface PortfolioImage {
+export interface PortfolioImage {
     projectNumber: number;
     projectName: string;
     pageNumber: number;
@@ -10,14 +10,18 @@ interface PortfolioImage {
     fullPath: string;
 }
 
-interface Project {
+export interface Project {
     number: number;
     name: string;
     iconName: string;
     pages: PortfolioImage[];
 }
 
-const DynamicNav: React.FC = () => {
+interface DynamicNavProps {
+    projects?: Project[];
+}
+
+const DynamicNav: React.FC<DynamicNavProps> = ({ projects: suppliedProjects }) => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [activeProject, setActiveProject] = useState<number | null>(null);
     const [activePage, setActivePage] = useState<string | null>(null);
@@ -38,6 +42,10 @@ const DynamicNav: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        if (suppliedProjects) {
+            setProjects(suppliedProjects);
+            return;
+        }
         fetch('/assets/portfolio/projects.json')
             .then(response => response.json())
             .then(data => {
@@ -112,7 +120,7 @@ const DynamicNav: React.FC = () => {
             .catch(error => {
                 console.error('Error loading portfolio images:', error);
             });
-    }, []);
+    }, [suppliedProjects]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -211,7 +219,7 @@ const DynamicNav: React.FC = () => {
         }
     };
 
-    if (!isVisible) return null;
+    if (!isVisible || projects.length === 0) return null;
 
     return (
         <nav className="dynamic-nav">

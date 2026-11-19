@@ -40,7 +40,11 @@ interface ResumeData {
     };
 }
 
-const Resume: React.FC = () => {
+interface ResumeProps {
+    dataUrl?: string;
+}
+
+const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' }) => {
     const [resumeData, setResumeData] = useState<ResumeData | null>(null);
     const [loading, setLoading] = useState(true);
     const [sectionsInView, setSectionsInView] = useState({
@@ -60,7 +64,7 @@ const Resume: React.FC = () => {
     useEffect(() => {
         const loadResumeData = async () => {
             try {
-                const response = await fetch('/assets/resume/resume.json');
+                const response = await fetch(dataUrl);
                 const data = await response.json();
                 setResumeData(data);
             } catch (error) {
@@ -71,7 +75,7 @@ const Resume: React.FC = () => {
         };
 
         loadResumeData();
-    }, []);
+    }, [dataUrl]);
 
     useEffect(() => {
         const checkSectionsInView = () => {

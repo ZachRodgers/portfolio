@@ -27,7 +27,7 @@ import {
     ListIndentDecrease,
     LucideProps
 } from 'lucide-react';
-import Footer from '../components/Footer';
+import Footer from '../shared/components/Footer';
 import './Recipes.css';
 
 type Recipe = {

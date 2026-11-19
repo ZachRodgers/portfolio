@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Portfolio.css';
-import ModalManager from '../components/modals/ModalManager';
+import ModalManager from '../../shared/components/modals/ModalManager';
 
 interface PortfolioImage {
     projectNumber: number;
