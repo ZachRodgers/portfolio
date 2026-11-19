@@ -14,8 +14,8 @@
 
 .ux-sound:focus-visible { outline: 2px solid #bfbaff; outline-offset: 3px; }
 .ux-orb { position: relative; }
-.ux-orb > div { transition: opacity .5s ease; }
-.ux-orb.is-waiting > div { opacity: .45; }
+.ux-orb-waiting { position: absolute; inset: 0; transition: opacity .5s ease; pointer-events: none; }
+.ux-orb-waiting.is-fading { opacity: 0; }
 .ux-play:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
 
 .ux-play { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; display: grid; place-items: center; padding: 0; border: 0; color: #e4ddff; background: transparent; cursor: pointer; transition: opacity .5s ease; }
