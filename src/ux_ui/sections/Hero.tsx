@@ -7,15 +7,44 @@ import './Hero.css';
 const waitingPalette: [string, string, string, string] = ['#101010', '#121019', '#201948', '#362a80'];
 const params = { speed: 2.8, warp: 1.5, sphere: 1.5, detail: 1.9, grain: 0.17, pulse: 0.57, highlight: 0.33, exposure: 0, saturation: 1.04, fluid: 0.21 };
 const waitingParams = { ...params, speed: 1.1, warp: 1.1, detail: 1.4, grain: .09 };
+const introCues = [
+    { text: 'First there was engineering...', start: 0, erase: 2.89, end: 3.14 },
+    { text: 'Then there was design...', start: 3.14, erase: 6.5, end: 6.75 },
+    { text: 'The world changed with', start: 6.75, erase: Infinity, end: Infinity },
+    { text: ' AI', start: 9.0, erase: Infinity, end: Infinity },
+];
+
+// A repeatable cadence keeps the text and orb on the same audio clock.
+function characterTimes(text: string, pace = 1) {
+    let elapsed = 0;
+    return Array.from(text).map((character, index) => {
+        elapsed += /[.,]/.test(character) ? .10 : character === ' ' ? .10 : [.06, .075, .05, .07, .085][index % 5];
+        return elapsed * pace;
+    });
+}
+const typingCues = introCues.map((cue, index) => ({
+    ...cue,
+    // Final letters land on the soundtrack attacks at 9.00s and 9.31s.
+    characters: index === 3 ? [0, 0, .31] : characterTimes(cue.text, index === 0 ? .85 : 1),
+}));
+function cueText(cue: typeof typingCues[number], time: number) {
+    const count = cue.characters.filter(at => time - cue.start >= at).length;
+    const remaining = time < cue.erase ? count : Math.ceil(cue.text.length * Math.max(0, (cue.end - time) / (cue.end - cue.erase)));
+    return remaining ? cue.text.slice(0, remaining) : '';
+}
 export function introText(time: number) {
-    const type = (text: string, start: number) => text.slice(0, Math.floor(Math.max(0, Math.min(1, (time - start) / .75)) * text.length));
-    const erase = (text: string, end: number) => text.slice(0, Math.ceil(Math.max(0, Math.min(1, (end - time) / .25)) * text.length));
-    if (time < 2.89) return type('First there was engineering...', 0);
-    if (time < 3.14) return erase('First there was engineering...', 3.14);
-    if (time < 6) return type('Then there was design', 3.14);
-    if (time < 6.25) return erase('Then there was design', 6.25);
-    if (time < 9.11) return type('The world changed with', 6.25);
-    return 'The world changed with' + type(' AI', 9.11);
+    if (time < introCues[0].end) return cueText(typingCues[0], time);
+    if (time < introCues[1].end) return cueText(typingCues[1], time);
+    return cueText(typingCues[2], time) + cueText(typingCues[3], time);
+}
+function activeTypingCue(time: number) {
+    return typingCues.find(cue => time >= cue.start && time < cue.start + cue.characters[cue.characters.length - 1]);
+}
+
+function finalAccent(time: number) {
+    const cue = typingCues[3];
+    const hit = [cue.start, cue.start + cue.characters[2]].filter(at => at <= time).pop();
+    return hit === undefined ? 0 : Math.exp(-(time - hit) * 14);
 }
 
 const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ audioElement, failed }) => {
@@ -37,9 +66,9 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
         read: () => {
             if (!timelineActive.current) return { bands: [0, 0, 0, 0], level: 0 };
             const t = timeline.current;
-            const cue = [0, 3.14, 6.25, 9.11].find(start => t >= start && t < start + .75);
-            const phase = cue === undefined ? 0 : (t - cue) % .15;
-            const pulse = cue === undefined ? 0 : .55 + .45 * Math.exp(-phase * 12);
+            const cue = activeTypingCue(t);
+            const phase = cue === undefined ? 0 : (t - cue.start) % .18;
+            const pulse = Math.max(finalAccent(t), cue === undefined ? 0 : .55 + .45 * Math.exp(-phase * 12));
             return { bands: [pulse * .75, pulse, pulse * .55, pulse * .25], level: pulse };
         },
     });
@@ -158,11 +187,11 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                     graph.current.analyser.getByteFrequencyData(samples);
                     bass = samples.slice(0, 12).reduce((sum, value) => sum + value, 0) / (12 * 255);
                 }
-                const cue = [0, 3.14, 6.25, 9.11].find(start => current >= start && current < start + .9);
-                const progress = cue === undefined ? 0 : (current - cue) / .9;
+                const cue = activeTypingCue(current);
+                const progress = cue === undefined ? 0 : (current - cue.start) / cue.characters[cue.characters.length - 1];
                 const swell = cue === undefined ? 0 : Math.sin(Math.PI * progress);
                 const beat = cue === undefined ? 0 : (1 + Math.sin(progress * Math.PI * 10)) / 2;
-                orb.current.style.transform = `scale(${1 + bass * .025 + swell * (.045 + beat * .01)})`;
+                orb.current.style.transform = `scale(${1 + bass * .025 + swell * (.045 + beat * .01) + finalAccent(current) * .06})`;
             }
             if (current < 10.6) frame = requestAnimationFrame(tick);
         };
@@ -170,9 +199,11 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
         return () => cancelAnimationFrame(frame);
     }, [playing, silentClock]);
 
-    const typingCue = [0, 3.14, 6.25, 9.11].find(start => time >= start && time < start + .9);
-    const typingMotion = typingCue === undefined ? 0 : Math.sin(Math.PI * (time - typingCue) / .9);
+    const typingCue = activeTypingCue(time);
+    const typingMotion = typingCue === undefined ? 0 : Math.sin(Math.PI * (time - typingCue.start) / typingCue.characters[typingCue.characters.length - 1]);
     const activeParams = { ...params, speed: .2 + typingMotion * 1.3 };
+
+    const phrase = time < introCues[0].end ? introCues[0].text : time < introCues[1].end ? introCues[1].text : introCues[2].text + introCues[3].text;
 
     return (
         <section id="hero" className="ux-hero" aria-label="Engineering, design, and AI">
@@ -188,7 +219,12 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
 
                 </span></button>}
                 </div>
-                <p className="ux-intro-text" aria-hidden="true">{introText(time)}</p></>}
+                <p className="ux-intro-text" aria-hidden="true">
+                    <span className="ux-text-slot">
+                        <span className="ux-text-measure">{phrase}</span>
+                        <span className="ux-text-reveal">{introText(time)}{started && <span className="ux-typing-caret" />}</span>
+                    </span>
+                </p></>}
             </div>
             <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI.</span>
             
