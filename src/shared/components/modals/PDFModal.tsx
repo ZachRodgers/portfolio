@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import './PDFModal.css';
 
@@ -30,10 +30,14 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
     const [previewDragStartScroll, setPreviewDragStartScroll] = useState(0);
     const [previewContainer, setPreviewContainer] = useState<HTMLDivElement | null>(null);
     const [isNavigating, setIsNavigating] = useState(false);
-    const [navigationTimeout, setNavigationTimeout] = useState<NodeJS.Timeout | null>(null);
+    const navigationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [previewNeedsScroll, setPreviewNeedsScroll] = useState(false);
     const [imagesLoaded, setImagesLoaded] = useState(0);
     const [allImagesLoaded, setAllImagesLoaded] = useState(false);
+
+    useEffect(() => () => {
+        if (navigationTimeout.current) clearTimeout(navigationTimeout.current);
+    }, []);
 
 
     useEffect(() => {
@@ -47,7 +51,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
     useEffect(() => {
         if (pages.length > 0 && imagesLoaded === pages.length) {
             setAllImagesLoaded(true);
-            setTimeout(() => {
+            const timeout = setTimeout(() => {
                 if (displayContainer) {
                     const { scrollHeight, clientHeight } = displayContainer;
                     if (scrollHeight > clientHeight) {
@@ -62,6 +66,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
                     }
                 }
             }, 100);
+            return () => clearTimeout(timeout);
         }
     }, [imagesLoaded, pages.length, displayContainer, previewContainer]);
 
@@ -129,8 +134,8 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
         setCurrentPage(pageNumber);
 
         // Clear any existing timeout
-        if (navigationTimeout) {
-            clearTimeout(navigationTimeout);
+        if (navigationTimeout.current) {
+            clearTimeout(navigationTimeout.current);
         }
 
         // Scroll main display to page
@@ -160,8 +165,8 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
         const timeout = setTimeout(() => {
             setIsNavigating(false);
         }, 600);
-        setNavigationTimeout(timeout);
-    }, [isNavigating, pageCount, navigationTimeout, displayContainer, previewContainer]);
+        navigationTimeout.current = timeout;
+    }, [isNavigating, pageCount, displayContainer, previewContainer]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -287,11 +292,11 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
 
     useEffect(() => {
         return () => {
-            if (navigationTimeout) {
-                clearTimeout(navigationTimeout);
+            if (navigationTimeout.current) {
+                clearTimeout(navigationTimeout.current);
             }
         };
-    }, [navigationTimeout]);
+    }, []);
 
     const handleImageLoad = () => {
         setImagesLoaded(prev => prev + 1);
