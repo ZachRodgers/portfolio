@@ -45,3 +45,22 @@
 .fallback[style*="--orb-art"]::before {
   background: var(--orb-art) center / cover;
 }
+
+/* Keep the hit area steady while the surface follows nearby pointers. */
+.canvas,
+.fallback::before {
+  transform: perspective(600px)
+    rotateX(calc(var(--orb-cursor-y, 0) * -16deg))
+    rotateY(calc(var(--orb-cursor-x, 0) * 16deg))
+    rotateZ(calc(var(--orb-cursor-x, 0) * 10deg))
+    translate(calc(var(--orb-cursor-x, 0) * 7px), calc(var(--orb-cursor-y, 0) * 7px));
+  transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas,
+  .fallback::before {
+    transform: none;
+    transition: none;
+  }
+}

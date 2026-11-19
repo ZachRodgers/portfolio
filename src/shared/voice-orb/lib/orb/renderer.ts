@@ -32,6 +32,7 @@ import { FRAGMENTS, VERTEX, type OrbShader } from "./shaders";
  */
 
 export interface OrbFrame {
+  cursor?: [number, number];
   variant: OrbShader;
   /** The image the artwork shader samples; ignored by the other types. */
   image?: HTMLImageElement | null;
@@ -67,7 +68,7 @@ type Program = {
 };
 
 const UNIFORMS = [
-  "uResolution", "uTime", "uDrift", "uPulse", "uBands", "uLevel", "uInput", "uThink",
+  "uCursor", "uResolution", "uTime", "uDrift", "uPulse", "uBands", "uLevel", "uInput", "uThink",
   "uScale", "uDim", "uSeed", "uC0", "uC1", "uC2", "uC3", "uWarp", "uSphere", "uDetail",
   "uGrain", "uPulseAmt", "uHighlight", "uExposure", "uSaturation", "uImage",
   "uFlow", "uFlowVelocity", "uFlowAmt", "uFlowDebug",
@@ -324,6 +325,7 @@ class OrbRenderer {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.useProgram(entry.program);
 
+    gl.uniform2f(loc.uCursor, ...(f.cursor ?? [0, 0] as [number, number]));
     gl.uniform2f(loc.uResolution, w, h);
     gl.uniform1f(loc.uTime, f.time);
     gl.uniform1f(loc.uDrift, f.drift);

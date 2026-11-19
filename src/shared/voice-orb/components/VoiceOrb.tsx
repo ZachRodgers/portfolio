@@ -138,6 +138,8 @@ export default function VoiceOrb({
   onFrame,
   artwork,
 }: VoiceOrbProps) {
+  const cursorRef = useRef({ x: 0, y: 0 });
+  const orbRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const viewRef = useRef<OrbView | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -148,6 +150,63 @@ export default function VoiceOrb({
     return (ORB_PALETTES.find((p) => p.id === palette) ?? ORB_PALETTES[0]).stops;
   }, [palette]);
   const resolvedSeed = seed ?? seedFor(Array.isArray(palette) ? palette.join() : palette);
+
+  // Move the painted surface independently of audio and the dormant render loop.
+  useEffect(() => {
+    const orb = orbRef.current;
+    if (!orb) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    let pointer: { x: number; y: number } | null = null;
+    const reset = () => {
+      cursorRef.current = { x: 0, y: 0 };
+      const view = viewRef.current;
+      if (view) view.dirty = true;
+      getOrbRenderer()?.wake();
+      pointer = null;
+      cancelAnimationFrame(frame);
+      frame = 0;
+      orb.style.setProperty("--orb-cursor-x", "0");
+      orb.style.setProperty("--orb-cursor-y", "0");
+    };
+    const update = () => {
+      frame = 0;
+      if (!pointer || reducedMotion.matches) return;
+      const rect = orb.getBoundingClientRect();
+      const radius = Math.max(rect.width * 1.6, 180);
+      const dx = pointer.x - rect.left - rect.width / 2;
+      const dy = pointer.y - rect.top - rect.height / 2;
+      const distance = Math.hypot(dx, dy);
+      const outside = Math.max(0, distance - rect.width / 2);
+      const proximity = 1 - smoothstep(0, radius * 1.5, outside);
+      const influence = Math.max(0, 1 - distance / (radius * 3)) * proximity * proximity;
+      const divisor = Math.max(radius, distance);
+      cursorRef.current = { x: dx / divisor * influence, y: -dy / divisor * influence };
+      const view = viewRef.current;
+      if (view) view.dirty = true;
+      getOrbRenderer()?.wake();
+      orb.style.setProperty("--orb-cursor-x", String(dx / divisor * influence));
+      orb.style.setProperty("--orb-cursor-y", String(dy / divisor * influence));
+    };
+    const move = (event: PointerEvent) => {
+      if (event.pointerType === "touch" || reducedMotion.matches) return;
+      pointer = { x: event.clientX, y: event.clientY };
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    window.addEventListener("pointermove", move, { passive: true });
+    document.documentElement.addEventListener("pointerleave", reset);
+    window.addEventListener("blur", reset);
+    window.addEventListener("scroll", reset, { passive: true });
+    reducedMotion.addEventListener("change", reset);
+    return () => {
+      reset();
+      window.removeEventListener("pointermove", move);
+      document.documentElement.removeEventListener("pointerleave", reset);
+      window.removeEventListener("blur", reset);
+      window.removeEventListener("scroll", reset);
+      reducedMotion.removeEventListener("change", reset);
+    };
+  }, []);
 
   // The latest props, read by the render loop without restarting it.
   const props = useRef({ variant, state, voice, caller, stops, params, seed: resolvedSeed, onFrame });
@@ -164,6 +223,8 @@ export default function VoiceOrb({
 
     const start = TARGETS[props.current.state];
     const cur = {
+      cursorX: 0,
+      cursorY: 0,
       time: 0,
       drift: resolvedSeed * 40,
       pulse: 0,
@@ -188,6 +249,8 @@ export default function VoiceOrb({
         if (t.speed > 0) return true;
         // A still state is only live while easing into it.
         return (
+          Math.abs(cur.cursorX - cursorRef.current.x) > 0.0001 ||
+          Math.abs(cur.cursorY - cursorRef.current.y) > 0.0001 ||
           Math.abs(cur.speed - t.speed) > SETTLED ||
           Math.abs(cur.dim - t.dim) > SETTLED ||
           Math.abs(cur.scale - t.scale) > SETTLED ||
@@ -199,6 +262,9 @@ export default function VoiceOrb({
         const p = props.current;
         const t = TARGETS[p.state];
         const k = 1 - Math.exp(-dt * EASE);
+        const cursorEase = dt > 0 ? 1 - Math.exp(-dt * 5) : 1;
+        cur.cursorX += (cursorRef.current.x - cur.cursorX) * cursorEase;
+        cur.cursorY += (cursorRef.current.y - cur.cursorY) * cursorEase;
         const talking = t.voice && Boolean(p.voice);
         cur.talk = talking ? cur.talk + dt : 0;
         // Hold the drift where it is for a moment after Play, then speed up.
@@ -239,6 +305,7 @@ export default function VoiceOrb({
         p.onFrame?.({ bands: [...cur.bands] as Bands, level: cur.level, input: cur.input });
 
         return {
+          cursor: [cur.cursorX, cur.cursorY],
           variant: imageRef.current ? "artwork" : p.variant,
           image: imageRef.current,
           stops: p.stops,
@@ -332,6 +399,7 @@ export default function VoiceOrb({
 
   return (
     <div
+      ref={orbRef}
       className={`${styles.orb} ${fallback ? styles.fallback : ""} ${className ?? ""}`.trim()}
       style={style}
       data-state={state}

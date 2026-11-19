@@ -44,6 +44,7 @@ in vec2 vUv;
 out vec4 outColor;
 
 uniform vec2 uResolution;
+uniform vec2 uCursor;
 uniform float uTime;
 uniform float uDrift;
 uniform float uPulse;
@@ -127,7 +128,14 @@ vec2 flowUv(vec2 p) {
    offset in grid units (half the ball's -1..1 span, hence the 2). Applied
    before the sphere mapping, so carried colour still bends like a ball. */
 vec2 carried(vec2 p) {
-  return p - texture(uFlow, flowUv(p)).xy * 2.0 * uFlowAmt;
+  // Pull the interior toward the pointer and curl it around that direction.
+  // The rim stays fixed, making the colour stretch inside the sphere.
+  float interior = max(0.0, 1.0 - dot(p, p));
+  vec2 delta = p - uCursor * 0.8;
+  float curl = (uCursor.x * p.y - uCursor.y * p.x) * 1.3;
+  vec2 drag = uCursor * interior * 0.8;
+  drag += vec2(-delta.y, delta.x) * curl * interior;
+  return p - drag - texture(uFlow, flowUv(p)).xy * 2.0 * uFlowAmt;
 }
 
 /* A point of the frame, -1..1 across the ball, to the field's coordinates:
