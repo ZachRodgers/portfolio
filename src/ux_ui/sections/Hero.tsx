@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import VoiceOrb from '../../shared/voice-orb/components/VoiceOrb';
 import type { LevelSource } from '../../shared/voice-orb/lib/orb/audio';
@@ -50,6 +50,8 @@ function finalAccent(time: number) {
 const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ audioElement, failed }) => {
     const audio = useRef(audioElement);
     const orb = useRef<HTMLDivElement>(null);
+    const soundButton = useRef<HTMLButtonElement>(null);
+    const previousSoundLeft = useRef<number>();
     const graph = useRef<{ context: AudioContext; analyser: AnalyserNode }>();
 
     const [ready, setReady] = useState(false);
@@ -205,6 +207,19 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
 
     const phrase = time < introCues[0].end ? introCues[0].text : time < introCues[1].end ? introCues[1].text : introCues[2].text + introCues[3].text;
 
+    useLayoutEffect(() => {
+        const button = soundButton.current;
+        if (!button) return;
+        const left = button.getBoundingClientRect().left;
+        const previous = previousSoundLeft.current;
+        previousSoundLeft.current = left;
+        if (previous === undefined || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const distance = previous - left;
+        if (Math.abs(distance) > 1) {
+            button.animate([{ translate: `${distance}px 0` }, { translate: '0 0' }], { duration: 350, easing: 'ease-out' });
+        }
+    }, [phrase, failed]);
+
     return (
         <section id="hero" className="ux-hero" aria-label="Engineering, design, and AI">
             <div className={`ux-intro ${ready ? 'is-ready' : ''} ${time >= 10.1 ? 'is-complete' : ''}`}>
@@ -219,16 +234,21 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
 
                 </span></button>}
                 </div>
-                <p className="ux-intro-text" aria-hidden="true">
-                    <span className="ux-text-slot">
-                        <span className="ux-text-measure">{phrase}</span>
-                        <span className="ux-text-reveal">{introText(time)}{started && <span className="ux-typing-caret" />}</span>
-                    </span>
-                </p></>}
+                </>}
+            </div>
+            <div className="ux-intro-caption">
+                <div className={`ux-caption-content ${time >= 10.1 ? 'is-complete' : ''}`}>
+                    {!failed && <button ref={soundButton} className={`ux-sound ${started ? 'is-visible' : ''}`} onClick={toggleSound} disabled={!started || time >= 10.1} aria-label={muted ? 'Turn sound on' : 'Turn sound off'} aria-pressed={!muted} tabIndex={started && time < 10.1 ? 0 : -1} aria-hidden={!started || time >= 10.1}>{muted ? <VolumeX size={22} /> : <Volume2 size={22} />}</button>}
+                    <p className={`ux-intro-text ${ready ? 'is-ready' : ''} ${time >= 10.1 ? 'is-complete' : ''}`} aria-hidden="true">
+                        <span className="ux-text-slot">
+                            <span className="ux-text-measure">{phrase}</span>
+                            <span className="ux-text-reveal">{introText(time)}{started && <span className="ux-typing-caret" />}</span>
+                        </span>
+                    </p>
+                </div>
             </div>
             <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI.</span>
-            
-            {started && !failed && <button className="ux-sound" onClick={toggleSound} aria-label={muted ? 'Turn sound on' : 'Turn sound off'} aria-pressed={!muted}>{muted ? <VolumeX size={22} /> : <Volume2 size={22} />}</button>}
+
         </section>
     );
 };

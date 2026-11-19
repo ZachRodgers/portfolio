@@ -4,20 +4,29 @@
 .ux-intro.is-ready { opacity: 1; }
 .ux-intro.is-complete { opacity: 0; }
 .ux-orb { will-change: transform; }
-.ux-intro-text { position: absolute; top: calc(50% - clamp(40px, 7svh, 75px) + clamp(100px, 15vw, 175px) + 24px); left: 0; right: 0; margin: 0; padding: 0 24px; text-align: center; font-family: 'Merriweather', Georgia, serif; font-size: clamp(12px, 3.2vw, 42px); font-weight: 400; line-height: 1.5; }
-.ux-text-slot { position: relative; display: inline-block; white-space: nowrap; }
-.ux-text-measure { visibility: hidden; }
-.ux-text-reveal { position: absolute; inset: 0; text-align: left; white-space: pre; }
+.ux-intro-caption { position: absolute; top: calc(50% - clamp(40px, 7svh, 75px) + clamp(100px, 15vw, 175px) + 24px); left: 0; right: 0; padding: 0 24px; text-align: center; }
+.ux-caption-content { position: relative; display: inline-grid; grid-template-columns: 44px max-content; align-items: center; column-gap: 24px; transform: translateX(10px); transition: transform .35s ease, opacity .5s ease; }
+.ux-caption-content.is-complete { opacity: 0; pointer-events: none; }
+.ux-intro-text { grid-column: 2; margin: 0; font-family: 'Merriweather', Georgia, serif; font-size: clamp(12px, 3.2vw, 42px); font-weight: 400; line-height: 1.5; opacity: 0; transition: opacity .5s ease; }
+.ux-intro-text.is-ready { opacity: 1; }
+.ux-intro-text.is-complete { opacity: 0; }
+
+.ux-text-slot { position: relative; display: inline-block; min-width: max-content; white-space: nowrap; }
+.ux-text-measure { display: block; visibility: hidden; }
+.ux-text-reveal { position: absolute; top: 0; left: 0; width: max-content; text-align: left; white-space: pre; }
 .ux-typing-caret { display: inline-block; width: 2px; height: 1em; margin-left: .12em; vertical-align: -.12em; background: #e4ddff; animation: ux-caret-blink 1s steps(1, end) infinite; }
 @keyframes ux-caret-blink { 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .ux-typing-caret { animation: none; } }
 
-.ux-intro-start, .ux-sound { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: white; background: #1d1d1d; border: 1px solid #555; border-radius: 999px; padding: 12px 24px; font: inherit; cursor: pointer; }
-.ux-sound { left: auto; right: 24px; transform: none; }
 .ux-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 @media (prefers-reduced-motion: reduce) { .ux-intro { transition: none; } }
 
-.ux-sound { top: 24px; bottom: auto; right: 24px; z-index: 10; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; }
+.ux-sound { grid-column: 1; grid-row: 1; position: relative; flex: 0 0 44px; transform: translateX(0); z-index: 10; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; color: var(--text-secondary, #a0a0a0); background: rgba(255, 255, 255, .04); opacity: 0; pointer-events: none; cursor: pointer; transition: background .2s ease, color .2s ease, opacity .3s ease, transform .35s ease, flex-basis .35s ease, margin .35s ease; }
+
+.ux-sound.is-visible { opacity: 1; pointer-events: auto; }
+.ux-sound:hover { color: var(--text-primary, #fff); background: rgba(255, 255, 255, .08); }
+@media (prefers-reduced-motion: reduce) { .ux-intro-text, .ux-sound { transition: none; } }
+
 
 .ux-sound:focus-visible { outline: 2px solid #bfbaff; outline-offset: 3px; }
 .ux-orb { position: relative; isolation: isolate; }
