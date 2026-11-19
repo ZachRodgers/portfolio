@@ -14,6 +14,19 @@ const introCues = [
     { text: ' AI', start: 9.0, erase: Infinity, end: Infinity },
 ];
 
+const cutCues = [
+    { start: 12.06, text: 'But', size: 'regular' },
+    { start: 13.08, text: 'What about all that', size: 'regular' },
+    { start: 14.35, text: 'In 1', size: 'regular' },
+    { start: 15.10, text: 'In 1', size: 'large' },
+    { start: 15.24, text: '1', size: 'larger' },
+    { start: 15.36, text: '1', size: 'huge' },
+    { start: 16.00, text: 'Person', size: 'regular' },
+];
+export function cutText(time: number) {
+    return time >= 16.40 ? undefined : [...cutCues].reverse().find(cue => time >= cue.start);
+}
+
 // A repeatable cadence keeps the text and orb on the same audio clock.
 function characterTimes(text: string, pace = 1) {
     let elapsed = 0;
@@ -195,7 +208,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                 const beat = cue === undefined ? 0 : (1 + Math.sin(progress * Math.PI * 10)) / 2;
                 orb.current.style.transform = `scale(${1 + bass * .025 + swell * (.045 + beat * .01) + finalAccent(current) * .06})`;
             }
-            if (current < 10.6) frame = requestAnimationFrame(tick);
+            if (current < 16.40) frame = requestAnimationFrame(tick);
         };
         frame = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(frame);
@@ -220,10 +233,34 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
         }
     }, [phrase, failed]);
 
+    const cut = cutText(time);
+    const glitch = time >= 11.30 && time < 12.30;
+    const glitchFrame = Math.floor(time * 24);
+
     return (
         <section id="hero" className="ux-hero" aria-label="Engineering, design, and AI">
-            <div className={`ux-intro ${ready ? 'is-ready' : ''} ${time >= 10.1 ? 'is-complete' : ''}`}>
-                {time < 10.6 && <><div ref={orb} className={`ux-orb ${!started ? 'is-waiting' : ''}`}><VoiceOrb palette="midnight" variant="painted" state={ready ? "talking" : "ready"} voice={typingLevels.current} seed={0.5} params={activeParams} size="clamp(200px, 30vw, 350px)" />
+            <svg className="ux-glitch-defs" aria-hidden="true">
+                <defs>
+                    <filter id="ux-hero-glitch" x="-10%" y="-5%" width="120%" height="110%" colorInterpolationFilters="sRGB">
+                        <feTurbulence type="fractalNoise" baseFrequency="0 .018" numOctaves="1" seed={glitchFrame} result="noise" />
+                        <feComponentTransfer in="noise" result="bands">
+                            <feFuncR type="discrete" tableValues="0.1 0.25 0.4 0.6 0.75 0.9" />
+                            <feFuncG type="linear" slope="0" intercept="0.5" />
+                        </feComponentTransfer>
+                        <feDisplacementMap in="SourceGraphic" in2="bands" scale={glitchFrame % 3 === 0 ? 100 : 38} xChannelSelector="R" yChannelSelector="G" result="shifted" />
+                        <feColorMatrix in="shifted" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
+                        <feOffset in="red" dx={glitchFrame % 2 ? 9 : -12} result="redShift" />
+                        <feColorMatrix in="shifted" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green" />
+                        <feColorMatrix in="shifted" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
+                        <feOffset in="blue" dx={glitchFrame % 2 ? -9 : 12} result="blueShift" />
+                        <feComposite in="redShift" in2="green" operator="arithmetic" k2="1" k3="1" result="rg" />
+                        <feComposite in="rg" in2="blueShift" operator="arithmetic" k2="1" k3="1" />
+                    </filter>
+                </defs>
+            </svg>
+            <div className={`ux-hero-scene ${glitch ? 'is-glitching' : ''}`}>
+            <div className={`ux-intro ${ready ? 'is-ready' : ''} ${time >= 12.06 ? 'is-complete' : ''}`}>
+                {time < 12.06 && <><div ref={orb} className={`ux-orb ${!started ? 'is-waiting' : ''}`}><VoiceOrb palette="midnight" variant="painted" state={ready ? "talking" : "ready"} voice={typingLevels.current} seed={0.5} params={activeParams} size="clamp(200px, 30vw, 350px)" />
                 <div className={`ux-orb-waiting ${started ? 'is-fading' : ''}`}><VoiceOrb palette={waitingPalette} variant="painted" state="ready" seed={0.5} params={waitingParams} size="clamp(200px, 30vw, 350px)" /></div>
                 {ready && <button className={`ux-play ${started ? 'is-fading' : ''}`} onClick={() => void start()} disabled={started} tabIndex={started ? -1 : 0} aria-hidden={started} aria-label="Play introduction with sound"><span className="ux-play-shape" aria-hidden="true">
                     <svg className="ux-play-arrow" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true">
@@ -237,9 +274,9 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                 </>}
             </div>
             <div className="ux-intro-caption">
-                <div className={`ux-caption-content ${time >= 10.1 ? 'is-complete' : ''}`}>
-                    {!failed && <button ref={soundButton} className={`ux-sound ${started ? 'is-visible' : ''}`} onClick={toggleSound} disabled={!started || time >= 10.1} aria-label={muted ? 'Turn sound on' : 'Turn sound off'} aria-pressed={!muted} tabIndex={started && time < 10.1 ? 0 : -1} aria-hidden={!started || time >= 10.1}>{muted ? <VolumeX size={22} /> : <Volume2 size={22} />}</button>}
-                    <p className={`ux-intro-text ${ready ? 'is-ready' : ''} ${time >= 10.1 ? 'is-complete' : ''}`} aria-hidden="true">
+                <div className={`ux-caption-content ${time >= 12.06 ? 'is-complete' : ''}`}>
+                    {!failed && <button ref={soundButton} className={`ux-sound ${started ? 'is-visible' : ''}`} onClick={toggleSound} disabled={!started || time >= 12.06} aria-label={muted ? 'Turn sound on' : 'Turn sound off'} aria-pressed={!muted} tabIndex={started && time < 12.06 ? 0 : -1} aria-hidden={!started || time >= 12.06}>{muted ? <VolumeX size={22} /> : <Volume2 size={22} />}</button>}
+                    <p className={`ux-intro-text ${ready ? 'is-ready' : ''} ${time >= 12.06 ? 'is-complete' : ''}`} aria-hidden="true">
                         <span className="ux-text-slot">
                             <span className="ux-text-measure">{phrase}</span>
                             <span className="ux-text-reveal">{introText(time)}{started && <span className="ux-typing-caret" />}</span>
@@ -247,7 +284,9 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                     </p>
                 </div>
             </div>
-            <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI.</span>
+            {cut && <p className={`ux-cut-text ux-cut-text--${cut.size}`} aria-hidden="true">{cut.text}</p>}
+            </div>
+            <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI. But what about all that in one person?</span>
 
         </section>
     );

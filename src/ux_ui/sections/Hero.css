@@ -48,3 +48,13 @@
 .ux-arrow-glow { stroke-width: 3.5; filter: blur(2px); opacity: .7; }
 @keyframes ux-arrow-travel { to { stroke-dashoffset: -110; } }
 @media (prefers-reduced-motion: reduce) { .ux-arrow-light { animation: none; } }
+
+.ux-hero-scene { position: absolute; inset: 0; background: #101010; }
+.ux-hero-scene.is-glitching { filter: url(#ux-hero-glitch); }
+.ux-glitch-defs { position: absolute; width: 0; height: 0; pointer-events: none; }
+.ux-intro.is-complete, .ux-caption-content.is-complete, .ux-intro-text.is-complete { visibility: hidden; transition: none; }
+.ux-cut-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; margin: 0; padding: 24px; text-align: center; font-family: 'Merriweather', Georgia, serif; font-weight: 400; font-size: clamp(24px, 4.2vw, 60px); line-height: 1.1; }
+.ux-cut-text--large { font-size: clamp(64px, 12vw, 180px); }
+.ux-cut-text--larger { font-size: clamp(140px, 28vw, 360px); }
+.ux-cut-text--huge { font-size: min(65vw, 85svh); }
+@media (prefers-reduced-motion: reduce) { .ux-hero-scene.is-glitching { filter: none; } }
