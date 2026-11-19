@@ -6,12 +6,13 @@ interface PDFModalProps {
     isOpen: boolean;
     onClose: () => void;
     pdfDirectory?: string;
+    basePath?: string;
     pageCount?: number;
     title?: string;
     content?: string;
 }
 
-const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, pageCount, title, content }) => {
+const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, pageCount, title, content, basePath = '/assets/shared/branding/pdfs' }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pages, setPages] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
             setAllImagesLoaded(false);
             loadPages();
         }
-    }, [isOpen, pdfDirectory, pageCount]);
+    }, [isOpen, pdfDirectory, pageCount, basePath]);
 
     useEffect(() => {
         if (pages.length > 0 && imagesLoaded === pages.length) {
@@ -309,7 +310,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
         try {
             const pagePaths: string[] = [];
             for (let i = 1; i <= pageCount; i++) {
-                pagePaths.push(`/assets/modals/pdfs/${pdfDirectory}/page${i}.jpg`);
+                pagePaths.push(`${basePath}/${pdfDirectory}/page${i}.jpg`);
             }
             setPages(pagePaths);
             setCurrentPage(1);
@@ -396,7 +397,7 @@ const PDFModal: React.FC<PDFModalProps> = ({ isOpen, onClose, pdfDirectory, page
 
                 <div className="pdf-modal-header">
                     <img
-                        src="/assets/modals/icons/modal_pdf.svg"
+                        src="/assets/shared/modals/icons/modal_pdf.svg"
                         alt="PDF icon"
                         className="pdf-modal-icon"
                     />

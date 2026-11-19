@@ -23,9 +23,15 @@ interface BrandingProject {
 
 type FooterProps = {
     variant?: 'default' | 'light';
+    homeHref?: string;
+    projectSource: {
+        dataUrl: string;
+        route: string;
+        icons: Record<string, string>;
+    };
 };
 
-const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
+const Footer: React.FC<FooterProps> = ({ variant = 'default', projectSource, homeHref }) => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [brandingProjects, setBrandingProjects] = useState<BrandingProject[]>([]);
     const [loading, setLoading] = useState(true);
@@ -34,7 +40,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
     const [isBrandingModalOpen, setIsBrandingModalOpen] = useState(false);
 
     useEffect(() => {
-        fetch('/assets/portfolio/projects.json')
+        fetch(projectSource.dataUrl)
             .then(response => response.json())
             .then((data: ProjectsData) => {
                 const projectList = Object.values(data.projects);
@@ -45,10 +51,10 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
                 console.error('Error loading projects:', error);
                 setLoading(false);
             });
-    }, []);
+    }, [projectSource.dataUrl]);
 
     useEffect(() => {
-        fetch('/assets/branding/branding.json')
+        fetch('/assets/shared/branding/branding.json')
             .then(response => response.json())
             .then((data: BrandingProject[]) => {
                 setBrandingProjects(data);
@@ -60,14 +66,9 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
             });
     }, []);
 
-    const isRecipesPage = () => {
-        const normalizedPath = window.location.pathname.replace(/\/+$/, '') || '/';
-        return normalizedPath === '/recipes' || normalizedPath.endsWith('/recipes');
-    };
-
     const getPortfolioBaseUrl = () => {
         const publicUrl = (process.env.PUBLIC_URL || '').replace(/\/$/, '');
-        return `${window.location.origin}${publicUrl}/industrial_design`;
+        return `${window.location.origin}${publicUrl}${projectSource.route}`;
     };
 
     const navigateToPortfolioSection = (sectionId?: string) => {
@@ -77,7 +78,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
     };
 
     const scrollToSection = (sectionId: string) => {
-        if (isRecipesPage() || !document.getElementById(sectionId)) {
+        if (!document.getElementById(sectionId)) {
             navigateToPortfolioSection(sectionId);
             return;
         }
@@ -88,9 +89,18 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
         }
     };
 
+    const scrollToProject = (sectionId: string) => {
+        const path = window.location.pathname.replace(/\/+$/, '');
+        if (path !== projectSource.route) {
+            navigateToPortfolioSection(sectionId);
+            return;
+        }
+        scrollToSection(sectionId);
+    };
+
     const scrollToTop = () => {
-        if (isRecipesPage()) {
-            navigateToPortfolioSection();
+        if (homeHref) {
+            window.location.href = homeHref;
             return;
         }
 
@@ -112,13 +122,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
     };
 
     const getProjectIcon = (projectName: string) => {
-        const iconMap: { [key: string]: string } = {
-            'Spark': '/assets/icons/project_icons/Spark.svg',
-            'Obsidian': '/assets/icons/project_icons/Obsidian.svg',
-            'Vital': '/assets/icons/project_icons/Vital.svg',
-            'Batterola': '/assets/icons/project_icons/Batterola.svg'
-        };
-        return iconMap[projectName] || '/assets/icons/project_icons/More.svg';
+        return projectSource.icons[projectName] || '/assets/shared/icons/More.svg';
     };
 
     return (
@@ -134,7 +138,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
                                 projects.map((project, index) => (
                                     <li key={index}>
                                         <button
-                                            onClick={() => scrollToSection(`project-${index + 1}`)}
+                                            onClick={() => scrollToProject(`project-${index + 1}`)}
                                             className="footer-link footer-link-with-icon"
                                         >
                                             <img
@@ -163,7 +167,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
                                             className="footer-link footer-link-with-icon"
                                         >
                                             <img
-                                                src="/assets/modals/icons/modal_pdf.svg"
+                                                src="/assets/shared/modals/icons/modal_pdf.svg"
                                                 alt="PDF icon"
                                                 className="footer-pdf-icon"
                                             />
@@ -228,7 +232,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
                             </li>
                             <li>
                                 <button
-                                    onClick={() => scrollToSection('project-1')}
+                                    onClick={() => scrollToProject('project-1')}
                                     className="footer-link footer-link-with-icon"
                                 >
                                     <FolderOpen size={16} />
@@ -263,7 +267,7 @@ const Footer: React.FC<FooterProps> = ({ variant = 'default' }) => {
                     </div>
                     <div className="footer-logo">
                         <img
-                            src="/assets/icons/project_icons/ZR.svg"
+                            src="/assets/shared/icons/ZR.svg"
                             alt="Zach Rodgers Logo"
                             className="footer-logo-img"
                         />

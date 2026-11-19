@@ -1,3 +1,4 @@
+import { footerProjects } from '../siteContent';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
     ArrowUpToLine,
@@ -1435,7 +1436,7 @@ const Recipes: React.FC = () => {
                     ))}
                 </div>
             )}
-            <Footer variant="light" />
+            <Footer variant="light" projectSource={footerProjects} homeHref={footerProjects.route} />
         </div>
     );
 };

@@ -43,7 +43,7 @@ const Contents: React.FC = () => {
     const [isMobile, setIsMobile] = useState(false);
 
     const getImagePath = (folder: string, name: string): string => {
-        return `/assets/contents/${folder}/${name}.png`;
+        return `/assets/industrial_design/contents/${folder}/${name}.png`;
     };
 
     const handleProjectClick = (projectNumber: number) => {
@@ -64,7 +64,7 @@ const Contents: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        fetch('/assets/portfolio/projects.json')
+        fetch('/assets/industrial_design/portfolio/projects.json')
             .then(response => response.json())
             .then(data => {
                 const imageFiles = data.images;
@@ -118,8 +118,8 @@ const Contents: React.FC = () => {
                             number: i,
                             name: 'Placeholder',
                             description: 'Coming Soon',
-                            backgroundImage: '/assets/contents/background/Placeholder.png',
-                            overlayImage: '/assets/contents/overlay/Placeholder.png',
+                            backgroundImage: '/assets/industrial_design/contents/background/Placeholder.png',
+                            overlayImage: '/assets/industrial_design/contents/overlay/Placeholder.png',
                             animationScale: 1.05,
                             animationRotate: 3,
                             animationOrigin: 'center'
@@ -147,7 +147,7 @@ const Contents: React.FC = () => {
                             >
                                 <div className="mobile-project-icon">
                                     <img
-                                        src={`/assets/icons/project_icons/${project.name}.svg`}
+                                        src={`/assets/industrial_design/icons/project_icons/${project.name}.svg`}
                                         alt={project.name}
                                         onError={(e) => {
                                             console.error(`Failed to load icon: ${project.name}.svg`);
@@ -181,7 +181,7 @@ const Contents: React.FC = () => {
                                         <ProjectImage
                                             src={project.backgroundImage}
                                             alt={`${project.name} background`}
-                                            fallbackSrc="/assets/contents/background/Placeholder.png"
+                                            fallbackSrc="/assets/industrial_design/contents/background/Placeholder.png"
                                         />
                                     </div>
                                     <div
@@ -195,7 +195,7 @@ const Contents: React.FC = () => {
                                         <ProjectImage
                                             src={project.overlayImage}
                                             alt={`${project.name} overlay`}
-                                            fallbackSrc="/assets/contents/overlay/Placeholder.png"
+                                            fallbackSrc="/assets/industrial_design/contents/overlay/Placeholder.png"
                                         />
                                     </div>
                                 </div>

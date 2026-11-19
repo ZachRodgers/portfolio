@@ -6,7 +6,7 @@ const Hero: React.FC = () => {
     const SCROLL_HEIGHT = 1000; // Height in pixels to play through the video
     const STATIC_VIDEO = 'cube_static';
     const EXPLODE_VIDEO = 'cube_explode';
-    const VIDEO_PATH = '/assets/hero/';
+    const VIDEO_PATH = '/assets/industrial_design/hero/';
 
     const staticVideoRef = useRef<HTMLVideoElement>(null);
     const explodeVideoRef = useRef<HTMLVideoElement>(null);

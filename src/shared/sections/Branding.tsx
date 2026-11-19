@@ -20,7 +20,7 @@ const Branding: React.FC = () => {
     useEffect(() => {
         const loadBrandingProjects = async () => {
             try {
-                const response = await fetch('/assets/branding/branding.json');
+                const response = await fetch('/assets/shared/branding/branding.json');
                 const data = await response.json();
                 setProjects(data);
             } catch (error) {
@@ -68,13 +68,13 @@ const Branding: React.FC = () => {
                         >
                             <div className="branding-card-image-container">
                                 <img
-                                    src={`/assets/modals/pdfs/${project.pdfDirectory}/page1.jpg`}
+                                    src={`/assets/shared/branding/pdfs/${project.pdfDirectory}/page1.jpg`}
                                     alt={project.title}
                                     className="branding-card-image"
                                 />
                                 <div className="branding-card-overlay">
                                     <img
-                                        src="/assets/modals/icons/modal_pdf.svg"
+                                        src="/assets/shared/modals/icons/modal_pdf.svg"
                                         alt="PDF icon"
                                         className="branding-pdf-icon"
                                     />

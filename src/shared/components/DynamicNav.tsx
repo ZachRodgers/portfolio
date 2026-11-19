@@ -18,11 +18,11 @@ export interface Project {
 }
 
 interface DynamicNavProps {
-    projects?: Project[];
+    projects: Project[];
+    iconBasePath: string;
 }
 
-const DynamicNav: React.FC<DynamicNavProps> = ({ projects: suppliedProjects }) => {
-    const [projects, setProjects] = useState<Project[]>([]);
+const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
     const [activeProject, setActiveProject] = useState<number | null>(null);
     const [activePage, setActivePage] = useState<string | null>(null);
     const [passedPages, setPassedPages] = useState<Set<string>>(new Set());
@@ -41,86 +41,6 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects: suppliedProjects }) =
         return () => window.removeEventListener('resize', checkVisibility);
     }, []);
 
-    useEffect(() => {
-        if (suppliedProjects) {
-            setProjects(suppliedProjects);
-            return;
-        }
-        fetch('/assets/portfolio/projects.json')
-            .then(response => response.json())
-            .then(data => {
-                const imageFiles = data.images;
-                const parsedImages: PortfolioImage[] = imageFiles.map((fileName: string, imageIndex: number) => {
-                    const separator = fileName.includes('-') ? '-' : '_';
-                    const parts = fileName.replace('.jpg', '').split(separator);
-
-                    if (parts.length >= 2) {
-                        const projectPart = parts[0];
-                        const pagePart = parts[1];
-
-                        const projectMatch = projectPart.match(/^(\d+)([A-Za-z]+.*)$/);
-                        if (projectMatch) {
-                            const projectNumber = parseInt(projectMatch[1]);
-                            let projectName = projectMatch[2];
-
-                            const pageMatch = pagePart.match(/^(\d+)([A-Za-z]+.*)$/);
-                            if (pageMatch || pagePart) {
-                                const pageNumber = pageMatch ? parseInt(pageMatch[1]) : imageIndex + 1;
-                                const pageName = pageMatch ? pageMatch[2] : parts.slice(1).join('_');
-
-                                projectName = projectName.replace(/_/g, ' ');
-
-                                return {
-                                    projectNumber,
-                                    projectName,
-                                    pageNumber,
-                                    pageName,
-                                    fileName,
-                                    fullPath: `/assets/portfolio/${fileName}`
-                                };
-                            }
-                        }
-                    }
-                    return null;
-                }).filter(Boolean) as PortfolioImage[];
-
-                const groupedProjects: { [key: string]: PortfolioImage[] } = {};
-                parsedImages.forEach(image => {
-                    const projectKey = `${image.projectNumber}-${image.projectName}`;
-                    if (!groupedProjects[projectKey]) {
-                        groupedProjects[projectKey] = [];
-                    }
-                    groupedProjects[projectKey].push(image);
-                });
-
-                Object.keys(groupedProjects).forEach(projectKey => {
-                    groupedProjects[projectKey].sort((a, b) => a.pageNumber - b.pageNumber);
-                });
-
-                const projectList: Project[] = Object.keys(groupedProjects)
-                    .sort((a, b) => {
-                        const numA = parseInt(a.split('-')[0]);
-                        const numB = parseInt(b.split('-')[0]);
-                        return numA - numB;
-                    })
-                    .map(projectKey => {
-                        const [projectNum, projectName] = projectKey.split('-');
-                        const images = groupedProjects[projectKey];
-
-                        return {
-                            number: parseInt(projectNum),
-                            name: projectName,
-                            iconName: projectName,
-                            pages: images
-                        };
-                    });
-
-                setProjects(projectList);
-            })
-            .catch(error => {
-                console.error('Error loading portfolio images:', error);
-            });
-    }, [suppliedProjects]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -168,9 +88,6 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects: suppliedProjects }) =
             setActivePage(currentPage);
             setPassedPages(newPassedPages);
 
-            if (newPassedPages.size > 0) {
-                console.log('Passed pages:', Array.from(newPassedPages));
-            }
 
             if (!currentProject && !isDirectClick) {
                 setExpandedProject(null);
@@ -178,8 +95,9 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects: suppliedProjects }) =
         };
 
         window.addEventListener('scroll', handleScroll);
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [projects, isDirectClick]);
+    }, [projects, isDirectClick, targetProject]);
 
     const scrollToProject = (projectNumber: number) => {
         setIsDirectClick(true);
@@ -231,7 +149,7 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects: suppliedProjects }) =
                             onClick={() => scrollToProject(project.number)}
                         >
                             <img
-                                src={`/assets/icons/project_icons/${project.iconName}.svg`}
+                                src={`${iconBasePath}/${project.iconName}.svg`}
                                 alt={project.name}
                                 onError={(e) => {
                                     console.error(`Failed to load icon: ${project.iconName}.svg`);

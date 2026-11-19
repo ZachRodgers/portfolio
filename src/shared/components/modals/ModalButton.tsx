@@ -11,15 +11,15 @@ const ModalButton: React.FC<ModalButtonProps> = ({ modalType, onClick, location 
     const getIconSrc = () => {
         switch (modalType) {
             case 'video':
-                return '/assets/modals/icons/modal_video.svg';
+                return '/assets/shared/modals/icons/modal_video.svg';
             case 'image':
-                return '/assets/modals/icons/modal_photo.svg';
+                return '/assets/shared/modals/icons/modal_photo.svg';
             case 'text':
-                return '/assets/modals/icons/modal_info.svg';
+                return '/assets/shared/modals/icons/modal_info.svg';
             case 'pdf':
-                return '/assets/modals/icons/modal_pdf.svg';
+                return '/assets/shared/modals/icons/modal_pdf.svg';
             default:
-                return '/assets/modals/icons/modal_info.svg';
+                return '/assets/shared/modals/icons/modal_info.svg';
         }
     };
 

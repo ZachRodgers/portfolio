@@ -41,10 +41,10 @@ interface ResumeData {
 }
 
 interface ResumeProps {
-    dataUrl?: string;
+    dataUrl: string;
 }
 
-const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' }) => {
+const Resume: React.FC<ResumeProps> = ({ dataUrl }) => {
     const [resumeData, setResumeData] = useState<ResumeData | null>(null);
     const [loading, setLoading] = useState(true);
     const [sectionsInView, setSectionsInView] = useState({
@@ -62,19 +62,28 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' 
     const skillsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        let cancelled = false;
+        const controller = new AbortController();
+        setLoading(true);
+        setResumeData(null);
         const loadResumeData = async () => {
             try {
-                const response = await fetch(dataUrl);
+                const response = await fetch(dataUrl, { signal: controller.signal });
+                if (!response.ok) throw new Error(`Resume request failed: ${response.status}`);
                 const data = await response.json();
-                setResumeData(data);
+                if (!cancelled) setResumeData(data);
             } catch (error) {
-                console.error('Error loading resume data:', error);
+                if (!cancelled) console.error('Error loading resume data:', error);
             } finally {
-                setLoading(false);
+                if (!cancelled) setLoading(false);
             }
         };
 
         loadResumeData();
+        return () => {
+            cancelled = true;
+            controller.abort();
+        };
     }, [dataUrl]);
 
     useEffect(() => {
@@ -103,7 +112,6 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' 
                 }
             });
 
-            console.log('Resume In View: experience:', newSectionsInView.experience, 'education:', newSectionsInView.education, 'languages:', newSectionsInView.languages, 'achievements:', newSectionsInView.achievements, 'skills:', newSectionsInView.skills);
 
             setSectionsInView(newSectionsInView);
         };
@@ -123,7 +131,7 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' 
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleScroll);
         };
-    }, []);
+    }, [resumeData]);
 
     if (loading) {
         return <div className="component-container">Loading resume...</div>;
@@ -139,7 +147,7 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' 
                 <div className="resume-column" style={{ width: `${resumeData.columns.column1}%` }}>
                     <div className="profile-section">
                         <img
-                            src={`/assets/resume/${resumeData.profile.image}`}
+                            src={`/assets/shared/resume/${resumeData.profile.image}`}
                             alt={resumeData.profile.name}
                             className="profile-image"
                         />
@@ -155,7 +163,7 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' 
                             <div key={index} className="experience-item">
                                 <div className="experience-header">
                                     <img
-                                        src={`/assets/resume/${job.icon}`}
+                                        src={`/assets/shared/resume/${job.icon}`}
                                         alt={job.company}
                                         className="experience-icon"
                                         style={{
@@ -178,7 +186,7 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' 
                             <div key={index} className="education-item">
                                 <div className="education-header">
                                     <img
-                                        src={`/assets/resume/${edu.icon}`}
+                                        src={`/assets/shared/resume/${edu.icon}`}
                                         alt={edu.institution}
                                         className="education-icon"
                                         style={{
@@ -221,7 +229,7 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' 
                             <div key={index} className="achievement-item">
                                 <div className="achievement-header">
                                     <img
-                                        src={`/assets/resume/${achievement.icon}`}
+                                        src={`/assets/shared/resume/${achievement.icon}`}
                                         alt={achievement.title}
                                         className="achievement-icon"
                                         style={{
@@ -243,7 +251,7 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl = '/assets/resume/resume.json' 
                             {Array.from({ length: resumeData.skills.numberOfIcons }, (_, index) => (
                                 <img
                                     key={index}
-                                    src={`/assets/resume/app_icons/app${index + 1}.png`}
+                                    src={`/assets/shared/resume/app_icons/app${index + 1}.png`}
                                     alt={`Skill ${index + 1}`}
                                     className="skill-icon"
                                     style={{

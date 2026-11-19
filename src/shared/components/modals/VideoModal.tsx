@@ -56,7 +56,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoSrc, titl
                     <div className="modal-footer">
                         <div className="modal-header">
                             <img
-                                src="/assets/modals/icons/modal_video.svg"
+                                src="/assets/shared/modals/icons/modal_video.svg"
                                 alt="Video icon"
                                 className="modal-icon"
                             />

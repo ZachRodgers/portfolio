@@ -41,7 +41,7 @@ const TextModal: React.FC<TextModalProps> = ({ isOpen, onClose, title, content, 
                     <div className="modal-footer text-modal-content" style={{ flex: 1, borderTop: 'none' }}>
                         <div className="modal-header">
                             <img
-                                src="/assets/modals/icons/modal_info.svg"
+                                src="/assets/shared/modals/icons/modal_info.svg"
                                 alt="Info icon"
                                 className="modal-icon"
                             />

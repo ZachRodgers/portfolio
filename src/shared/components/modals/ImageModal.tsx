@@ -44,7 +44,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageSrc, titl
                     <div className="modal-footer">
                         <div className="modal-header">
                             <img
-                                src="/assets/modals/icons/modal_photo.svg"
+                                src="/assets/shared/modals/icons/modal_photo.svg"
                                 alt="Image icon"
                                 className="modal-icon"
                             />

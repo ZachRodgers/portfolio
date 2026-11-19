@@ -1,1 +1,5 @@
-{"resumeDataUrl": "/assets/resume/ux_ui.json", "projects": []}
+{
+  "resumeDataUrl": "/assets/ux_ui/resume/resume.json",
+  "projects": [],
+  "projectIconBasePath": "/assets/ux_ui/icons/project_icons"
+}

@@ -44,7 +44,7 @@ const Portfolio: React.FC = () => {
 
     useEffect(() => {
         // Load image list from JSON file
-        fetch('/assets/portfolio/projects.json')
+        fetch('/assets/industrial_design/portfolio/projects.json')
             .then(response => response.json())
             .then(data => {
                 const imageFiles = data.images;
@@ -78,7 +78,7 @@ const Portfolio: React.FC = () => {
                                     pageNumber,
                                     pageName,
                                     fileName,
-                                    fullPath: `/assets/portfolio/${fileName}`
+                                    fullPath: `/assets/industrial_design/portfolio/${fileName}`
                                 };
                             }
                         }
@@ -147,7 +147,7 @@ const Portfolio: React.FC = () => {
                                                 src={image.fullPath}
                                                 alt={`${formatProjectTitle(image.projectNumber)} - ${image.pageName}`}
                                             />
-                                            <ModalManager targetImage={image.fileName} />
+                                            <ModalManager targetImage={image.fileName} basePath="/assets/industrial_design/modals" />
                                         </div>
                                     );
                                 })}

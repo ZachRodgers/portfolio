@@ -23,15 +23,16 @@ interface ModalConfig {
 
 interface ModalManagerProps {
     targetImage: string;
+    basePath: string;
 }
 
-const ModalManager: React.FC<ModalManagerProps> = ({ targetImage }) => {
+const ModalManager: React.FC<ModalManagerProps> = ({ targetImage, basePath }) => {
     const [modals, setModals] = useState<ModalConfig[]>([]);
     const [activeModal, setActiveModal] = useState<ModalConfig | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
-        fetch('/assets/modals/modals.json')
+        fetch(`${basePath}/modals.json`)
             .then(response => response.json())
             .then(data => {
                 setModals(data.modals);
@@ -39,7 +40,7 @@ const ModalManager: React.FC<ModalManagerProps> = ({ targetImage }) => {
             .catch(error => {
                 console.error('Error loading modals:', error);
             });
-    }, []);
+    }, [basePath]);
 
     const handleModalOpen = (modal: ModalConfig) => {
         setActiveModal(modal);
@@ -83,7 +84,7 @@ const ModalManager: React.FC<ModalManagerProps> = ({ targetImage }) => {
                         <ImageModal
                             isOpen={isModalOpen}
                             onClose={handleModalClose}
-                            imageSrc={activeModal.image ? `/assets/modals/images/${activeModal.image}` : undefined}
+                            imageSrc={activeModal.image ? `${basePath}/images/${activeModal.image}` : undefined}
                             title={activeModal.title}
                             content={activeModal.content}
                         />
@@ -101,6 +102,7 @@ const ModalManager: React.FC<ModalManagerProps> = ({ targetImage }) => {
                         <PDFModal
                             isOpen={isModalOpen}
                             onClose={handleModalClose}
+                            basePath={`${basePath}/pdfs`}
                             pdfDirectory={activeModal.pdfDirectory}
                             pageCount={activeModal.pageCount}
                             title={activeModal.title}

@@ -23,7 +23,7 @@ const useAssetLoading = () => {
 
       // Load portfolio images data
       promises.push(
-        fetch("/assets/portfolio/projects.json")
+        fetch("/assets/industrial_design/portfolio/projects.json")
           .then((response) => {
             if (!response.ok)
               throw new Error(`HTTP error! status: ${response.status}`);
@@ -40,7 +40,7 @@ const useAssetLoading = () => {
 
       // Load resume data
       promises.push(
-        fetch("/assets/resume/resume.json")
+        fetch("/assets/industrial_design/resume/resume.json")
           .then((response) => {
             if (!response.ok)
               throw new Error(`HTTP error! status: ${response.status}`);
@@ -57,7 +57,7 @@ const useAssetLoading = () => {
 
       // Load branding data
       promises.push(
-        fetch("/assets/branding/branding.json")
+        fetch("/assets/shared/branding/branding.json")
           .then((response) => {
             if (!response.ok)
               throw new Error(`HTTP error! status: ${response.status}`);

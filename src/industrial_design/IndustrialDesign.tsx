@@ -1,4 +1,7 @@
-import React, { useEffect } from 'react';
+import { footerProjects } from '../siteContent';
+import useNavigationProjects from './hooks/useNavigationProjects';
+import useHashScroll from '../shared/hooks/useHashScroll';
+import React from 'react';
 
 
 // Import sections
@@ -18,39 +21,22 @@ import useAssetLoading from './hooks/useAssetLoading';
 
 function IndustrialDesign() {
     const { isLoading } = useAssetLoading();
+    const projects = useNavigationProjects();
 
-    useEffect(() => {
-        if (isLoading) return;
-
-        const hash = window.location.hash.replace('#', '');
-        if (!hash) return;
-
-        const scrollToHash = () => {
-            const target = document.getElementById(hash);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        };
-
-        // Attempt immediately and once more after a tick to account for layout
-        scrollToHash();
-        const timeoutId = setTimeout(scrollToHash, 150);
-
-        return () => clearTimeout(timeoutId);
-    }, [isLoading]);
+    useHashScroll();
 
     return (
         <div className="App">
             <LoadingScreen isLoading={isLoading} />
             {!isLoading && (
                 <>
-                    <DynamicNav />
+                    <DynamicNav projects={projects} iconBasePath="/assets/industrial_design/icons/project_icons" />
                     <Hero />
-                    <Resume />
+                    <Resume dataUrl="/assets/industrial_design/resume/resume.json" />
                     <Contents />
                     <Portfolio />
                     <Branding />
-                    <Footer />
+                    <Footer projectSource={footerProjects} />
                 </>
             )}
         </div>
