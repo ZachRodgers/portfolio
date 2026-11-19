@@ -23,7 +23,7 @@ export function carouselProgress(time: number) {
 
 export default function RoleCarousel({ time }: { time: number }) {
     const progress = carouselProgress(time);
-    const distance = (roles.length - 1) * 7 + 90;
+    const distance = (roles.length - 1) * 7 + 97;
 
     return (
         <div className="ux-role-carousel">
@@ -39,7 +39,7 @@ export default function RoleCarousel({ time }: { time: number }) {
                     return (
                         <div key={index} className={`ux-role-row ${isName ? 'ux-role-name' : ''}`}
                             style={{
-                                top: `${y}%`,
+                                top: isName ? `calc(${y - 13 * progress}% + var(--ux-name-center) * ${progress})` : `${y}%`,
                                 opacity,
                                 transform: `translateY(-50%) perspective(900px) rotateX(${isName ? angle * (1 - progress) : angle}deg)`,
                             }}>

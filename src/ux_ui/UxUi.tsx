@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import LoadingScreen from '../shared/components/LoadingScreen';
 import Hero from './sections/Hero';
 import Resume from './sections/Resume';
-import Contents from './sections/Contents';
 import Portfolio from './sections/Portfolio';
 import Branding from '../shared/sections/Branding';
 import Footer from '../shared/components/Footer';
@@ -53,7 +52,6 @@ const UxUi: React.FC<PageProps> = ({ mainRoute }) => {
             <DynamicNav projects={content.projects} iconBasePath={content.projectIconBasePath} />
             <Hero audioElement={audio} failed={failed} />
             <Resume />
-            <Contents />
             <Portfolio />
             <Branding />
             <Footer projectSource={uxFooterProjects} currentRoute="/ux_ui" mainRoute={mainRoute} resumeRoute="/ux_ui" pages={footerPages} />

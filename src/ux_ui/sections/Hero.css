@@ -68,8 +68,20 @@
 .ux-role-carousel { overflow: hidden; pointer-events: none; }
 .ux-role-row { position: absolute; left: 0; right: 0; padding: 0 20px; text-align: center; font-family: 'Merriweather', Georgia, serif; font-size: clamp(17px, 3vw, min(40px, 4.8svh)); line-height: 1.15; backface-visibility: hidden; }
 .ux-role-name, .ux-role-reduced { font-size: clamp(32px, 6vw, 84px); }
-.ux-role-reduced { display: none; position: absolute; top: 20%; left: 0; right: 0; text-align: center; font-family: 'Merriweather', Georgia, serif; transform: translateY(-50%); }
+.ux-role-reduced { display: none; position: absolute; top: 13%; left: 0; right: 0; text-align: center; font-family: 'Merriweather', Georgia, serif; transform: translateY(-50%); }
 @media (prefers-reduced-motion: reduce) {
     .ux-role-wheel { display: none; }
     .ux-role-reduced { display: block; }
 }
+
+.ux-hero {
+    --ux-scene-gap: clamp(32px, 7svh, 80px);
+    --ux-name-size: clamp(32px, 6vw, 84px);
+    --ux-name-height: calc(var(--ux-name-size) * 1.15);
+    --ux-name-center: calc(var(--ux-scene-gap) + var(--ux-name-height) / 2);
+}
+.ux-role-name, .ux-role-reduced {
+    font-size: var(--ux-name-size);
+    line-height: 1.15;
+}
+.ux-role-reduced { top: var(--ux-name-center); }
