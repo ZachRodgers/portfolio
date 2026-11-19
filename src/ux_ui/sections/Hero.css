@@ -13,3 +13,20 @@
 .ux-sound { top: 24px; bottom: auto; right: 24px; z-index: 10; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; }
 
 .ux-sound:focus-visible { outline: 2px solid #bfbaff; outline-offset: 3px; }
+.ux-orb { position: relative; }
+.ux-orb > div { transition: opacity .5s ease; }
+.ux-orb.is-waiting > div { opacity: .45; }
+.ux-play:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
+
+.ux-play { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; display: grid; place-items: center; padding: 0; border: 0; color: #e4ddff; background: transparent; cursor: pointer; transition: opacity .5s ease; }
+.ux-play.is-fading { opacity: 0; pointer-events: none; }
+.ux-play-shape { display: block; position: relative; width: 42px; height: 42px; transform: scale(1.9); filter: drop-shadow(0 0 5px rgba(120, 110, 255, .4)); }
+.ux-play:hover .ux-play-shape { filter: drop-shadow(0 0 10px #bfbaff); }
+
+
+.ux-play-arrow { position: relative; z-index: 1; overflow: visible; }
+.ux-arrow-base { fill: none; stroke: rgba(225, 215, 255, .55); stroke-width: 1.1; stroke-linejoin: round; }
+.ux-arrow-light { fill: none; stroke: url(#ux-arrow-gradient); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 25 85; animation: ux-arrow-travel 2.5s linear infinite; }
+.ux-arrow-glow { stroke-width: 3.5; filter: blur(2px); opacity: .7; }
+@keyframes ux-arrow-travel { to { stroke-dashoffset: -110; } }
+@media (prefers-reduced-motion: reduce) { .ux-arrow-light { animation: none; } }
