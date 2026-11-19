@@ -3,6 +3,7 @@ import { Volume2, VolumeX } from 'lucide-react';
 import VoiceOrb from '../../shared/voice-orb/components/VoiceOrb';
 import type { LevelSource } from '../../shared/voice-orb/lib/orb/audio';
 import './Hero.css';
+import RoleCarousel from './RoleCarousel';
 
 const waitingPalette: [string, string, string, string] = ['#101010', '#121019', '#201948', '#362a80'];
 const params = { speed: 2.8, warp: 1.5, sphere: 1.5, detail: 1.9, grain: 0.17, pulse: 0.57, highlight: 0.33, exposure: 0, saturation: 1.04, fluid: 0.21 };
@@ -209,7 +210,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                 const beat = cue === undefined ? 0 : (1 + Math.sin(progress * Math.PI * 10)) / 2;
                 orb.current.style.transform = `scale(${1 + bass * .025 + swell * (.045 + beat * .01) + finalAccent(current) * .06})`;
             }
-            if (current < 17.00) frame = requestAnimationFrame(tick);
+            if (current < 19.50) frame = requestAnimationFrame(tick);
         };
         frame = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(frame);
@@ -285,6 +286,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                     </p>
                 </div>
             </div>
+            {time >= 16 && <RoleCarousel time={time} />}
             {cut && <p className={`ux-cut-text ux-cut-text--${cut.size}`} aria-hidden="true">{cut.size === 'large' || cut.size === 'larger' || cut.size === 'huge' ? <span className="ux-cut-numeral"><span className="ux-numeral-measure">{cut.text}</span><svg className="ux-numeral-svg" aria-hidden="true">
                         {(cut.size === 'larger' || cut.size === 'huge') && Array.from({ length: cut.size === 'huge' ? 6 : 2 }, (_, index) => {
                             const ring = (cut.size === 'huge' ? 6 : 2) - index;
