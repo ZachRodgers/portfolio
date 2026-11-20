@@ -14,7 +14,8 @@ export const contentsCues = [
     { image: 6, column: 2, start: 22 + 22 / 48, end: Infinity },
 ];
 export const contentsEnd = 22 + 43 / 48;
-const traceDuration = .24;
+export const traceDuration = .48;
+const revealDuration = .45;
 const revealLead = traceDuration * .7;
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 const logos = ['parallel', 'mission_control', 'stockhub'];
@@ -36,8 +37,8 @@ const Contents: React.FC<{ time: number; revealCount?: number }> = ({ time, reve
                     aria-label={project.name}
                     aria-hidden={!visible || !final}
                     tabIndex={visible && final ? 0 : -1}>
-                    <CellRevealImage className="ux-contents-art" width={900} height={1500} src={`/assets/ux_ui/hero/${cue.image}.png`} visible={visible}
-                        revealProgress={revealCount === undefined ? clamp((time - cue.start + revealLead) / .25) : undefined}
+                    <CellRevealImage className="ux-contents-art" width={900} height={1500} src={`/assets/ux_ui/hero/${cue.image}.png`} visible={visible} durationMs={revealDuration * 1000}
+                        revealProgress={revealCount === undefined ? clamp((time - cue.start + revealLead) / revealDuration) : undefined}
                         exitProgress={revealCount === undefined && Number.isFinite(cue.end) ? clamp((time - cue.end + .25) / .25) : 0} />
                     {final && <span className="ux-contents-brand" aria-hidden="true">
                         <img src={`/assets/ux_ui/hero/${logos[cue.column]}.png`} alt="" loading="eager" decoding="async" draggable={false} />
@@ -51,7 +52,7 @@ const Contents: React.FC<{ time: number; revealCount?: number }> = ({ time, reve
                 ? cue.image >= 4 && cue.column === revealCount
                 : time >= cue.start - traceDuration && time < cue.start;
             return tracing ? <FrameOutline key={cue.image} className="ux-frame-outline" style={{ gridColumn: cue.column + 1 }}
-                progress={skipped ? 0 : (time - (cue.start - traceDuration)) / traceDuration} animate={skipped} /> : null;
+                progress={skipped ? 0 : (time - (cue.start - traceDuration)) / traceDuration} animate={skipped} durationMs={traceDuration * 1000} /> : null;
         })}
     </nav>
 );

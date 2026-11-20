@@ -4,7 +4,7 @@ import VoiceOrb from '../../shared/voice-orb/components/VoiceOrb';
 import type { LevelSource } from '../../shared/voice-orb/lib/orb/audio';
 import './Hero.css';
 import RoleCarousel from './RoleCarousel';
-import Contents, { contentsEnd } from './Contents';
+import Contents, { contentsEnd, traceDuration } from './Contents';
 import FrameworkRule from './FrameworkRule';
 
 const waitingPalette: [string, string, string, string] = ['#101010', '#121019', '#201948', '#362a80'];
@@ -182,7 +182,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
             if (count === 3) requestAnimationFrame(() => {
                 document.querySelector<HTMLAnchorElement>('#contents a[tabindex="0"]')?.focus({ preventScroll: true });
             });
-        }, reduced ? 0 : 300 + (count - 1) * 250));
+        }, reduced ? 0 : count * traceDuration * 1000));
         return () => timers.forEach(clearTimeout);
     }, [isSkipped]);
 

@@ -39,7 +39,7 @@ test('reveals all three logos together at frame 43 and keeps the final scene ali
 
 test('traces frames before the music cues and hands them off to images on the cut', () => {
     const container = document.createElement('div');
-    container.innerHTML = renderToStaticMarkup(<Contents time={contentsCues[0].start - .2} />);
+    container.innerHTML = renderToStaticMarkup(<Contents time={contentsCues[0].start - .4} />);
     expect(container.querySelectorAll('.ux-frame-outline')).toHaveLength(1);
     expect(container.querySelectorAll('.ux-frame-outline path')).toHaveLength(5);
     expect(container.querySelectorAll('.is-visible')).toHaveLength(0);

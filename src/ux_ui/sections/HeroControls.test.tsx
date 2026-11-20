@@ -43,11 +43,11 @@ test('replaces the arrow with an accessible start area and skips directly to the
     expect(play).not.toHaveBeenCalled();
     expect(audio.pause).toHaveBeenCalled();
     expect(container.querySelectorAll('.ux-contents-tile.is-visible.is-final')).toHaveLength(0);
-    act(() => jest.advanceTimersByTime(300));
+    act(() => jest.advanceTimersByTime(480));
     expect(container.querySelectorAll('.ux-contents-tile.is-visible.is-final')).toHaveLength(1);
-    act(() => jest.advanceTimersByTime(250));
+    act(() => jest.advanceTimersByTime(480));
     expect(container.querySelectorAll('.ux-contents-tile.is-visible.is-final')).toHaveLength(2);
-    act(() => jest.advanceTimersByTime(250));
+    act(() => jest.advanceTimersByTime(480));
     expect(container.querySelectorAll('.ux-contents-tile.is-visible.is-final')).toHaveLength(3);
     expect(container.querySelector('.ux-contents.has-logos')).not.toBeNull();
     expect(container.querySelector('.ux-role-name')?.textContent).toBe('Zach Rodgers');
@@ -76,7 +76,7 @@ test('replay resets a skipped final scene and restarts the soundtrack and animat
     const play = jest.spyOn(audio, 'play').mockResolvedValue(undefined);
     expect(container.querySelector('.ux-replay')).toBeNull();
     click('.ux-skip');
-    act(() => jest.advanceTimersByTime(1100));
+    act(() => jest.advanceTimersByTime(1600));
     expect(container.querySelector('.ux-replay')).not.toBeNull();
     audio.currentTime = 23;
     click('.ux-replay');
