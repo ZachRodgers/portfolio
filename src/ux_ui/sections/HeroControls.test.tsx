@@ -12,6 +12,7 @@ let audio: HTMLAudioElement;
 beforeEach(() => {
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     jest.useFakeTimers();
+    jest.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
     Object.defineProperty(window, 'matchMedia', { configurable: true, value: () => ({ matches: false }) });
     container = document.createElement('div');
     document.body.appendChild(container);

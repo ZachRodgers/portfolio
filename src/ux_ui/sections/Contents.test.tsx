@@ -36,3 +36,16 @@ test('reveals all three logos together at frame 43 and keeps the final scene ali
     expect(Array.from(container.querySelectorAll('.ux-contents-brand img')).map(img => img.getAttribute('src')))
         .toEqual(['parallel', 'mission_control', 'stockhub'].map(logo => `/assets/ux_ui/hero/${logo}.png`));
 });
+
+test('traces frames before the music cues and hands them off to images on the cut', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToStaticMarkup(<Contents time={contentsCues[0].start - .2} />);
+    expect(container.querySelectorAll('.ux-frame-outline')).toHaveLength(1);
+    expect(container.querySelectorAll('.ux-frame-outline path')).toHaveLength(5);
+    expect(container.querySelectorAll('.is-visible')).toHaveLength(0);
+    container.innerHTML = renderToStaticMarkup(<Contents time={contentsCues[0].start} />);
+    expect(container.querySelectorAll('.ux-frame-outline')).toHaveLength(0);
+    expect(container.querySelectorAll('.is-visible')).toHaveLength(1);
+    container.innerHTML = renderToStaticMarkup(<Contents time={contentsEnd} revealCount={1} />);
+    expect(container.querySelector('.ux-frame-outline')?.getAttribute('style')).toContain('grid-column:2');
+});
