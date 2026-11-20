@@ -1,7 +1,8 @@
 import React from 'react';
 import content from '../content/page.json';
 import './Contents.css';
-import CellRevealImage from './CellRevealImage';
+import CellRevealImage from '../../shared/components/CellRevealImage';
+import FrameOutline from '../../shared/components/FrameOutline';
 
 // Timecodes use seconds and frames on a 48 fps timeline.
 export const contentsCues = [
@@ -21,20 +22,6 @@ export function contentsImages(time: number) {
     return contentsCues.filter(cue => time >= cue.start && time < cue.end).map(cue => cue.image);
 }
 
-function FrameOutline({ column, progress, skipped }: { column: number; progress: number; skipped: boolean }) {
-    const phase = (start: number, duration: number) => 1 - Math.max(0, Math.min(1, (progress - start) / duration));
-    return (
-        <svg className={`ux-frame-outline ${skipped ? 'is-tracing' : ''}`} style={{ gridColumn: column + 1 }}
-            viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-            <path className="ux-frame-top" d="M 1 1 H 999" pathLength="1" style={{ strokeDashoffset: phase(0, .3) }} />
-            <path className="ux-frame-side" d="M 1 1 V 999" pathLength="1" style={{ strokeDashoffset: phase(.3, .4) }} />
-            <path className="ux-frame-side" d="M 999 1 V 999" pathLength="1" style={{ strokeDashoffset: phase(.3, .4) }} />
-            <path className="ux-frame-bottom" d="M 1 999 H 500" pathLength="1" style={{ strokeDashoffset: phase(.7, .3) }} />
-            <path className="ux-frame-bottom" d="M 999 999 H 500" pathLength="1" style={{ strokeDashoffset: phase(.7, .3) }} />
-        </svg>
-    );
-}
-
 const Contents: React.FC<{ time: number; revealCount?: number }> = ({ time, revealCount }) => (
     <nav id="contents" className={`ux-contents ${time >= contentsEnd ? 'has-logos' : ''} ${revealCount !== undefined ? 'is-skipped' : ''}`} aria-label="Portfolio contents">
         {contentsCues.map(cue => {
@@ -49,7 +36,7 @@ const Contents: React.FC<{ time: number; revealCount?: number }> = ({ time, reve
                     aria-label={project.name}
                     aria-hidden={!visible || !final}
                     tabIndex={visible && final ? 0 : -1}>
-                    <CellRevealImage src={`/assets/ux_ui/hero/${cue.image}.png`} visible={visible}
+                    <CellRevealImage className="ux-contents-art" width={900} height={1500} src={`/assets/ux_ui/hero/${cue.image}.png`} visible={visible}
                         revealProgress={revealCount === undefined ? clamp((time - cue.start + revealLead) / .25) : undefined}
                         exitProgress={revealCount === undefined && Number.isFinite(cue.end) ? clamp((time - cue.end + .25) / .25) : 0} />
                     {final && <span className="ux-contents-brand" aria-hidden="true">
@@ -63,8 +50,8 @@ const Contents: React.FC<{ time: number; revealCount?: number }> = ({ time, reve
             const tracing = skipped
                 ? cue.image >= 4 && cue.column === revealCount
                 : time >= cue.start - traceDuration && time < cue.start;
-            return tracing ? <FrameOutline key={cue.image} column={cue.column}
-                progress={skipped ? 0 : (time - (cue.start - traceDuration)) / traceDuration} skipped={skipped} /> : null;
+            return tracing ? <FrameOutline key={cue.image} className="ux-frame-outline" style={{ gridColumn: cue.column + 1 }}
+                progress={skipped ? 0 : (time - (cue.start - traceDuration)) / traceDuration} animate={skipped} /> : null;
         })}
     </nav>
 );

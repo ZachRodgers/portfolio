@@ -1,0 +1,16 @@
+.frame-outline {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--frame-outline-color, rgba(255,255,255,.065));
+    stroke-width: var(--frame-outline-width, 1);
+}
+.frame-outline path { vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-linecap: butt; }
+.frame-outline.is-tracing .frame-outline-top { animation: frame-outline-trace calc(var(--frame-trace-duration) * .3) linear both; }
+.frame-outline.is-tracing .frame-outline-side { animation: frame-outline-trace calc(var(--frame-trace-duration) * .4) calc(var(--frame-trace-duration) * .3) linear both; }
+.frame-outline.is-tracing .frame-outline-bottom { animation: frame-outline-trace calc(var(--frame-trace-duration) * .3) calc(var(--frame-trace-duration) * .7) linear both; }
+@keyframes frame-outline-trace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .frame-outline { display: none; } }
