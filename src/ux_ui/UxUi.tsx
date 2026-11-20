@@ -13,7 +13,7 @@ import FrameworkRule from './sections/FrameworkRule';
 import './UxUi.css';
 
 const UxUi: React.FC<PageProps> = ({ mainRoute }) => {
-    const [audio] = useState(() => new Audio('/assets/ux_ui/hero/portfoliosoudntrack.mp3'));
+    const [audio] = useState(() => new Audio('/assets/ux_ui/hero/hero.mp3'));
     const [isLoading, setIsLoading] = useState(true);
     const [failed, setFailed] = useState(false);
     useEffect(() => {
