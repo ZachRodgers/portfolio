@@ -21,6 +21,7 @@ export interface CellRevealImageProps {
     height?: number;
     columns?: number;
     durationMs?: number;
+    interactionDelayMs?: number;
     revealProgress?: number;
     exitProgress?: number;
 }
@@ -28,15 +29,26 @@ export interface CellRevealImageProps {
 // Place inside a positioned, clipped frame; progress values range from zero to one.
 export default function CellRevealImage({
     src, visible, alt = '', className = '', width, height, columns = 8, durationMs = 250,
-    revealProgress, exitProgress = 0,
+    revealProgress, exitProgress = 0, interactionDelayMs = 1000,
 }: CellRevealImageProps) {
     const image = useRef<HTMLImageElement>(null);
     const canvas = useRef<HTMLCanvasElement>(null);
     const [localProgress, setLocalProgress] = useState(0);
-    const [loaded, setLoaded] = useState(false);
+    const [loadedSrc, setLoadedSrc] = useState<string>();
+    const loaded = loadedSrc === src;
+    const [hoverReady, setHoverReady] = useState(false);
     const [fallback, setFallback] = useState(false);
     const progress = revealProgress ?? localProgress;
+    const revealFinished = progress >= 1 || fallback;
+    const exiting = exitProgress > 0;
     const animating = visible && !fallback && (progress < 1 || exitProgress > 0);
+
+    useEffect(() => {
+        setHoverReady(false);
+        if (!visible || !loaded || !revealFinished || exiting) return;
+        const timer = setTimeout(() => setHoverReady(true), interactionDelayMs);
+        return () => clearTimeout(timer);
+    }, [visible, loaded, revealFinished, exiting, interactionDelayMs, src]);
 
     useEffect(() => {
         if (!visible) { setLocalProgress(0); return; }
@@ -88,9 +100,9 @@ export default function CellRevealImage({
     }, [animating, progress, exitProgress, loaded, columns, src]);
 
     return <>
-        <img ref={image} className={`cell-reveal-image ${className} ${animating ? 'cell-reveal-loading' : ''}`}
+        <img ref={image} className={`cell-reveal-image ${className} ${animating ? 'cell-reveal-loading' : ''} ${hoverReady && visible && loaded && revealFinished && !exiting ? 'cell-reveal-ready' : ''}`}
             src={src} alt={alt} width={width} height={height} loading="eager" decoding="async" draggable={false}
-            onLoad={() => setLoaded(true)} onError={() => setFallback(true)} />
+            onLoad={() => setLoadedSrc(src)} onError={() => setFallback(true)} />
         {animating && <canvas ref={canvas} className="cell-reveal-canvas" aria-hidden="true" />}
     </>;
 }
