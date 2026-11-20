@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Resume.css';
+import CellRevealImage from '../components/CellRevealImage';
+import ResumeBuild from './ResumeBuild';
 
 interface ResumeData {
     columns: {
@@ -42,9 +44,10 @@ interface ResumeData {
 
 interface ResumeProps {
     dataUrl: string;
+    animated?: boolean;
 }
 
-const Resume: React.FC<ResumeProps> = ({ dataUrl }) => {
+const Resume: React.FC<ResumeProps> = ({ dataUrl, animated = false }) => {
     const [resumeData, setResumeData] = useState<ResumeData | null>(null);
     const [loading, setLoading] = useState(true);
     const [sectionsInView, setSectionsInView] = useState({
@@ -142,15 +145,16 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl }) => {
     }
 
     return (
-        <section id="resume-section" className="component-container">
+        <section id="resume-section" className={`component-container ${animated ? 'resume-studio' : ''}`}>
+            {animated && <ResumeBuild />}
             <div className="resume-container">
                 <div className="resume-column" style={{ width: `${resumeData.columns.column1}%` }}>
                     <div className="profile-section">
-                        <img
+                        {animated ? <ResumePortrait src={`/assets/shared/resume/${resumeData.profile.image}`} alt={resumeData.profile.name} /> : <img
                             src={`/assets/shared/resume/${resumeData.profile.image}`}
                             alt={resumeData.profile.name}
                             className="profile-image"
-                        />
+                        />}
                         <h1 className="profile-name">{resumeData.profile.name}</h1>
                         <p className="profile-statement">{resumeData.profile.statement}</p>
                     </div>
@@ -266,5 +270,18 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl }) => {
         </section>
     );
 };
+
+function ResumePortrait({ src, alt }: { src: string; alt: string }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+            if (entries.some(entry => entry.isIntersecting)) { setVisible(true); observer.disconnect(); }
+        }, { threshold: .2 });
+        if (ref.current) observer.observe(ref.current);
+        return () => observer.disconnect();
+    }, []);
+    return <div ref={ref} className="resume-portrait"><CellRevealImage src={src} alt={alt} visible={visible} className="profile-image" durationMs={1100} /></div>;
+}
 
 export default Resume;

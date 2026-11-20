@@ -1,0 +1,13 @@
+.resume-studio .resume-column { min-width: 0; }
+.resume-portrait { position: relative; width: 100%; overflow: hidden; border-radius: 4px; margin: 3rem 0; }
+.resume-portrait .profile-image { display: block; margin: 0; }
+@media(max-width: 768px) {
+    .resume-portrait { width: 200px; height: 200px; margin: 0 auto 1rem; }
+}
+@media(prefers-reduced-motion: reduce) {
+    .resume-studio :is(.experience-icon, .education-icon, .achievement-icon, .skill-icon) { animation: none; opacity: 1; transform: none; }
+    .resume-studio .language-progress { animation: none; width: var(--target-width); }
+}
+
+.resume-studio .language-progress { animation: none; width: var(--target-width); }
+.resume-studio .skill-icon { animation: none; opacity: 1; transform: none; }

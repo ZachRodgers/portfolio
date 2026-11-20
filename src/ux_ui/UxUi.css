@@ -52,7 +52,7 @@
 .ux-page .resume-container { gap: clamp(24px, 4vw, 64px); }
 .ux-page .branding-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (min-width: 769px) {
-    .ux-page .resume-container { display: grid; grid-template-columns: 31fr 44fr 25fr; }
+    .ux-page .resume-container { display: grid; grid-template-columns: 31fr 39fr 30fr; }
     .ux-page .resume-column { width: auto !important; min-width: 0; }
 }
 @media (max-width: 768px) {
