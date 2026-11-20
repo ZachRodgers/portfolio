@@ -7,8 +7,10 @@ export function squareCells(width: number, height: number, columns = 8) {
     const rows = Math.ceil(height / size);
     return Array.from({ length: rows * columns }, (_, index) => {
         const row = Math.floor(index / columns);
-        const random = ((index * 73 + 19) % 101) / 101;
-        return { x: (index % columns) * size, y: row * size, size, order: (row + random * 3) / (rows + 2) };
+        const noise = Math.sin((index + 1) * 12.9898) * 43758.5453;
+        const random = noise - Math.floor(noise);
+        const spread = Math.min(8, Math.max(3, rows * .55));
+        return { x: (index % columns) * size, y: row * size, size, order: (row + random * spread) / (rows - 1 + spread) };
     });
 }
 
@@ -38,10 +40,27 @@ export default function CellRevealImage({
     const loaded = loadedSrc === src;
     const [hoverReady, setHoverReady] = useState(false);
     const [fallback, setFallback] = useState(false);
+    const [settled, setSettled] = useState(false);
+    const spawned = useRef(new Map<number, number>());
+    const sampleCache = useRef<{ key: string; surface: HTMLCanvasElement }>();
     const progress = revealProgress ?? localProgress;
-    const revealFinished = progress >= 1 || fallback;
+    const revealFinished = (progress >= 1 && settled) || fallback;
     const exiting = exitProgress > 0;
-    const animating = visible && !fallback && (progress < 1 || exitProgress > 0);
+    const animating = visible && !fallback && (progress < 1 || !settled || exitProgress > 0);
+
+    useEffect(() => {
+        spawned.current.clear();
+        sampleCache.current = undefined;
+        setSettled(false);
+        setFallback(false);
+    }, [src]);
+
+    useEffect(() => {
+        if (!visible) {
+            spawned.current.clear();
+            setSettled(false);
+        }
+    }, [visible, src]);
 
     useEffect(() => {
         setHoverReady(false);
@@ -87,16 +106,57 @@ export default function CellRevealImage({
         const drawnHeight = element.naturalHeight * scale;
         const position = getComputedStyle(element).objectPosition.split(' ');
         const positionY = parseFloat(position[1] || '50') / 100;
-        context.save();
-        context.beginPath();
-        for (const cell of squareCells(width, height, columns)) {
-            if (cell.order <= progress && (exitProgress === 0 || cell.order > exitProgress)) {
-                context.rect(cell.x, cell.y, cell.size, cell.size);
-            }
+        const offsetX = (width - drawnWidth) / 2;
+        const offsetY = (height - drawnHeight) * positionY;
+        const cells = squareCells(width, height, columns);
+        const gridColumns = Math.max(1, Math.floor(columns));
+        const sampleKey = `${src}:${width}:${height}:${columns}:${positionY}`;
+        let sample = sampleCache.current?.key === sampleKey ? sampleCache.current.surface : undefined;
+        if (!sample) {
+            sample = document.createElement('canvas');
+            sample.width = gridColumns;
+            sample.height = Math.ceil(cells.length / gridColumns);
+            const sampleContext = sample.getContext('2d');
+            if (!sampleContext) { setFallback(true); return; }
+            const cellSize = width / gridColumns;
+            sampleContext.imageSmoothingEnabled = true;
+            sampleContext.imageSmoothingQuality = 'high';
+            sampleContext.drawImage(element, offsetX / cellSize, offsetY / cellSize, drawnWidth / cellSize, drawnHeight / cellSize);
+            sampleCache.current = { key: sampleKey, surface: sample };
         }
-        context.clip();
-        context.drawImage(element, (width - drawnWidth) / 2, (height - drawnHeight) * positionY, drawnWidth, drawnHeight);
-        context.restore();
+        const sampledImage = sample;
+        let frame = 0;
+        const paint = (now: number) => {
+            context.clearRect(0, 0, width, height);
+            let pending = false;
+            const qualityGroups: typeof cells[] = Array.from({ length: 16 }, () => []);
+            cells.forEach((cell, index) => {
+                if (cell.order > progress || (exitProgress > 0 && cell.order <= exitProgress)) return;
+                if (!spawned.current.has(index)) spawned.current.set(index, now);
+                const quality = Math.min(1, Math.max(0, (now - spawned.current.get(index)!) / 250));
+                if (quality < 1) pending = true;
+                context.imageSmoothingEnabled = false;
+                context.drawImage(sampledImage, index % gridColumns, Math.floor(index / gridColumns), 1, 1,
+                    cell.x, cell.y, cell.size, cell.size);
+                const level = Math.min(15, Math.ceil(quality * 16) - 1);
+                if (level >= 0) qualityGroups[level].push(cell);
+            });
+            qualityGroups.forEach((group, level) => {
+                if (!group.length) return;
+                context.save();
+                context.beginPath();
+                group.forEach(cell => context.rect(cell.x, cell.y, cell.size, cell.size));
+                context.clip();
+                context.globalAlpha = (level + 1) / 16;
+                context.imageSmoothingEnabled = true;
+                context.drawImage(element, offsetX, offsetY, drawnWidth, drawnHeight);
+                context.restore();
+            });
+            if (progress >= 1 && !pending && !exitProgress) setSettled(true);
+            else if (pending) frame = requestAnimationFrame(paint);
+        };
+        paint(performance.now());
+        return () => cancelAnimationFrame(frame);
     }, [animating, progress, exitProgress, loaded, columns, src]);
 
     return <>
