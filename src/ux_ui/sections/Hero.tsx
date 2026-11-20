@@ -4,6 +4,8 @@ import VoiceOrb from '../../shared/voice-orb/components/VoiceOrb';
 import type { LevelSource } from '../../shared/voice-orb/lib/orb/audio';
 import './Hero.css';
 import RoleCarousel from './RoleCarousel';
+import HeroIconGrid from './HeroIconGrid';
+import HeroCodeBackdrop from './HeroCodeBackdrop';
 import Contents, { contentsEnd, traceDuration } from './Contents';
 import FrameworkRule from './FrameworkRule';
 
@@ -343,6 +345,8 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                 </defs>
             </svg>
             <div className={`ux-hero-scene ${isSkipped ? 'is-skipped' : ''} ${glitch ? 'is-glitching' : ''}`}>
+            <HeroIconGrid time={time} active={started && !isSkipped} />
+            <HeroCodeBackdrop time={time} active={started && !isSkipped} />
             <div className={`ux-intro ${ready ? 'is-ready' : ''} ${time >= 12.06 ? 'is-complete' : ''}`}>
                 {time < 12.06 && <><div ref={orb} className={`ux-orb ${!started ? 'is-waiting' : ''}`}><VoiceOrb palette="midnight" variant="painted" state={ready ? "talking" : "ready"} voice={typingLevels.current} seed={0.5} params={activeParams} size="clamp(200px, 30vw, 350px)" />
                 <div className={`ux-orb-waiting ${started ? 'is-fading' : ''}`}><VoiceOrb palette={waitingPalette} variant="painted" state="ready" seed={0.5} params={waitingParams} size="clamp(200px, 30vw, 350px)" /></div>
