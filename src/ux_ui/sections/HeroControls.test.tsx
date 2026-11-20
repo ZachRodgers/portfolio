@@ -71,3 +71,22 @@ test('clicking the orb area requests sound and skipping prevents a pending start
     expect(container.querySelector('.ux-contents.has-logos')).not.toBeNull();
     expect(container.querySelector('.ux-orb')).toBeNull();
 });
+
+test('replay resets a skipped final scene and restarts the soundtrack and animation', async () => {
+    const play = jest.spyOn(audio, 'play').mockResolvedValue(undefined);
+    expect(container.querySelector('.ux-replay')).toBeNull();
+    click('.ux-skip');
+    act(() => jest.advanceTimersByTime(1100));
+    expect(container.querySelector('.ux-replay')).not.toBeNull();
+    audio.currentTime = 23;
+    click('.ux-replay');
+    await act(async () => {});
+    expect(play).toHaveBeenCalledTimes(1);
+    expect(audio.currentTime).toBe(0);
+    expect(audio.muted).toBe(false);
+    expect(container.querySelector('.ux-orb')).not.toBeNull();
+    expect(container.querySelector('.ux-replay')).toBeNull();
+    expect(container.querySelectorAll('.ux-contents-tile.is-visible')).toHaveLength(0);
+    act(() => { audio.currentTime = 5; jest.advanceTimersByTime(32); });
+    expect(container.querySelector('.ux-text-reveal')?.textContent).toContain('Then');
+});

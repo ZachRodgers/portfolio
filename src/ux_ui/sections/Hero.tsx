@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Volume2, VolumeX, MousePointer2, SkipForward } from 'lucide-react';
+import { Volume2, VolumeX, MousePointer2, SkipForward, RotateCcw } from 'lucide-react';
 import VoiceOrb from '../../shared/voice-orb/components/VoiceOrb';
 import type { LevelSource } from '../../shared/voice-orb/lib/orb/audio';
 import './Hero.css';
@@ -72,6 +72,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
     const previousSoundLeft = useRef<number>();
     const graph = useRef<{ context: AudioContext; analyser: AnalyserNode }>();
 
+    const [replayCount, setReplayCount] = useState(0);
     const [ready, setReady] = useState(false);
     const [started, setStarted] = useState(false);
     const [playing, setPlaying] = useState(false);
@@ -140,6 +141,24 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
         } catch {
             // Audio analysis is optional.
         }
+    };
+
+    const replay = () => {
+        audio.current.pause();
+        audio.current.currentTime = 0;
+        skipped.current = false;
+        hasStarted.current = false;
+        timeline.current = 0;
+        timelineActive.current = false;
+        previousSoundLeft.current = undefined;
+        setTime(0);
+        setIsSkipped(false);
+        setSkipRevealCount(0);
+        setSilentClock(false);
+        setPlaying(false);
+        setReplayCount(count => count + 1);
+        void start();
+        requestAnimationFrame(() => soundButton.current?.focus({ preventScroll: true }));
     };
 
     const skip = () => {
@@ -277,7 +296,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
         };
         frame = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(frame);
-    }, [playing, silentClock, isSkipped]);
+    }, [playing, silentClock, isSkipped, replayCount]);
 
     const typingCue = activeTypingCue(time);
     const typingMotion = typingCue === undefined ? 0 : Math.sin(Math.PI * (time - typingCue.start) / typingCue.characters[typingCue.characters.length - 1]);
@@ -345,7 +364,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                 </div>
             </div>
             {time >= 16 && <RoleCarousel time={time} />}
-            <Contents time={time} revealCount={isSkipped ? skipRevealCount : undefined} />
+            <Contents key={replayCount} time={time} revealCount={isSkipped ? skipRevealCount : undefined} />
             {cut && <p className={`ux-cut-text ux-cut-text--${cut.size}`} aria-hidden="true">{cut.size === 'large' || cut.size === 'larger' || cut.size === 'huge' ? <span className="ux-cut-numeral"><span className="ux-numeral-measure">{cut.text}</span><svg className="ux-numeral-svg" aria-hidden="true">
                         {(cut.size === 'larger' || cut.size === 'huge') && Array.from({ length: cut.size === 'huge' ? 6 : 2 }, (_, index) => {
                             const ring = (cut.size === 'huge' ? 6 : 2) - index;
@@ -358,6 +377,8 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                         <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fill="white">{cut.text}</text>
                     </svg></span> : cut.text}</p>}
             </div>
+            {time >= contentsEnd && (!isSkipped || skipRevealCount === 3) &&
+                <button className="ux-replay" onClick={replay} aria-label="Replay animation" title="Replay animation"><RotateCcw size={18} aria-hidden="true" /></button>}
             {time >= 19.2 && <FrameworkRule className="ux-hero-title-rule" />}
             {ready && !isSkipped && time < 16.35 && <button className={`ux-skip ${time >= 16 ? 'is-hiding' : ''}`} onClick={skip} disabled={time >= 16} tabIndex={time >= 16 ? -1 : 0} aria-hidden={time >= 16}><SkipForward size={16} aria-hidden="true" />Skip Animation</button>}
             <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI. But what about all that in one person?</span>

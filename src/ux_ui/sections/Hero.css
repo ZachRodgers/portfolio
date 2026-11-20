@@ -151,3 +151,24 @@
 .ux-start-prompt:hover::after,
 .ux-start-area:focus-visible .ux-start-prompt::after { transform: scaleX(1); transform-origin: left; }
 @media (prefers-reduced-motion: reduce) { .ux-start-prompt::after { transition: none; } }
+
+.ux-replay {
+    position: absolute;
+    top: clamp(12px, 2vw, 24px);
+    left: calc(var(--ux-rail-inset, 0px) + clamp(12px, 2vw, 24px));
+    z-index: 5;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+    transition: color .2s ease;
+}
+.ux-replay { opacity: .65; }
+.ux-replay:hover, .ux-replay:focus-visible { color: white; opacity: 1; }
+.ux-replay:focus-visible { outline: 1px solid #a0a0a0; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .ux-replay { transition: none; } }
