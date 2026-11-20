@@ -1,5 +1,6 @@
 .ux-page {
     --ux-rail-inset: max(clamp(20px, 8.8vw, 96px), calc((100% - 1312px) / 2));
+    --ux-hero-rule-inset: clamp(24px, 4svh, 36px);
     --ux-frame-padding: clamp(16px, 3.5vw, 56px);
     --ux-content-inset: calc(var(--ux-rail-inset) + var(--ux-frame-padding));
     --ux-rule-color: rgba(255, 255, 255, .065);
@@ -38,7 +39,15 @@
 .ux-framework-joint::before, .ux-framework-joint::after { content: ""; position: absolute; background: var(--ux-joint-color); }
 .ux-framework-joint::before { top: 5px; left: 0; width: 11px; height: 1px; }
 .ux-framework-joint::after { top: 0; left: 5px; width: 1px; height: 11px; }
-.ux-page .ux-hero-title-rule { top: calc(var(--ux-scene-gap) * 1.5 + var(--ux-name-height)); }
+.ux-page .ux-hero-title-rule {
+    top: var(--ux-hero-rule-inset);
+    transition: top .9s cubic-bezier(.22, 1, .36, 1);
+}
+.ux-page .ux-hero-title-rule.is-settled { top: calc(var(--ux-scene-gap) * 1.5 + var(--ux-name-height)); }
+.ux-page .ux-resume-rule { top: calc(-1 * var(--ux-hero-rule-inset)); }
+@media (prefers-reduced-motion: reduce) {
+    .ux-page .ux-hero-title-rule { transition: none; }
+}
 .ux-page .ux-contents,
 .ux-page #resume-section.component-container,
 .ux-page .branding-container,

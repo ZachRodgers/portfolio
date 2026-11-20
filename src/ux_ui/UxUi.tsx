@@ -53,7 +53,7 @@ const UxUi: React.FC<PageProps> = ({ mainRoute }) => {
             {!isLoading && <>
             <DynamicNav projects={content.projects} iconBasePath={content.projectIconBasePath} />
             <Hero audioElement={audio} failed={failed} />
-            <div className="ux-framework-section"><FrameworkRule /><Resume /></div>
+            <div className="ux-framework-section"><FrameworkRule className="ux-resume-rule" /><Resume /></div>
             <Portfolio />
             <div className="ux-framework-section"><FrameworkRule /><Branding /></div>
             <div className="ux-framework-section"><FrameworkRule />

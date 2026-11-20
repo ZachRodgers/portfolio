@@ -383,7 +383,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
             </div>
             {time >= contentsEnd && (!isSkipped || skipRevealCount === 3) &&
                 <button className="ux-replay" onClick={replay} aria-label="Replay animation" title="Replay animation"><RotateCcw size={18} aria-hidden="true" /></button>}
-            {time >= 19.2 && <FrameworkRule className="ux-hero-title-rule" />}
+            <FrameworkRule className={`ux-hero-title-rule ${time >= 19.2 ? 'is-settled' : ''}`} />
             {ready && !isSkipped && time < 16.35 && <button className={`ux-skip ${time >= 16 ? 'is-hiding' : ''}`} onClick={skip} disabled={time >= 16} tabIndex={time >= 16 ? -1 : 0} aria-hidden={time >= 16}><SkipForward size={16} aria-hidden="true" />Skip Animation</button>}
             <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI. But what about all that in one person?</span>
 
