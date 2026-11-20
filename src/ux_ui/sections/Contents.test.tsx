@@ -18,9 +18,21 @@ test('cuts each temporary image to the next column on its 48 fps cue', () => {
 test('preloads all images and only exposes final visible tiles as keyboard links', () => {
     const container = document.createElement('div');
     container.innerHTML = renderToStaticMarkup(<Contents time={contentsCues[0].start} />);
-    expect(container.querySelectorAll('img')).toHaveLength(6);
+    expect(container.querySelectorAll('.ux-contents-art')).toHaveLength(6);
     expect(container.querySelectorAll('a[tabindex="0"]')).toHaveLength(0);
     container.innerHTML = renderToStaticMarkup(<Contents time={contentsEnd} />);
     expect(Array.from(container.querySelectorAll('a[tabindex="0"]')).map(link => link.getAttribute('href')))
         .toEqual(['#project-1', '#project-2', '#project-3']);
+});
+
+test('reveals all three logos together at frame 43 and keeps the final scene alive until then', () => {
+    expect(contentsEnd).toBe(22 + 43 / 48);
+    const before = renderToStaticMarkup(<Contents time={22 + 42 / 48} />);
+    expect(before).not.toContain('has-logos');
+    const after = renderToStaticMarkup(<Contents time={contentsEnd} />);
+    expect(after).toContain('has-logos');
+    const container = document.createElement('div');
+    container.innerHTML = after;
+    expect(Array.from(container.querySelectorAll('.ux-contents-brand img')).map(img => img.getAttribute('src')))
+        .toEqual(['parallel', 'mission_control', 'stockhub'].map(logo => `/assets/ux_ui/hero/${logo}.png`));
 });

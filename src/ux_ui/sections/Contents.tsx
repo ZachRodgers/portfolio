@@ -11,13 +11,14 @@ export const contentsCues = [
     { image: 5, column: 1, start: 22 + 6 / 48, end: Infinity },
     { image: 6, column: 2, start: 22 + 22 / 48, end: Infinity },
 ];
-export const contentsEnd = contentsCues[5].start;
+export const contentsEnd = 22 + 43 / 48;
+const logos = ['parallel', 'mission_control', 'stockhub'];
 export function contentsImages(time: number) {
     return contentsCues.filter(cue => time >= cue.start && time < cue.end).map(cue => cue.image);
 }
 
 const Contents: React.FC<{ time: number }> = ({ time }) => (
-    <nav id="contents" className="ux-contents" aria-label="Portfolio contents">
+    <nav id="contents" className={`ux-contents ${time >= contentsEnd ? 'has-logos' : ''}`} aria-label="Portfolio contents">
         {contentsCues.map(cue => {
             const visible = time >= cue.start && time < cue.end;
             const project = content.footerProjects[cue.column];
@@ -30,8 +31,11 @@ const Contents: React.FC<{ time: number }> = ({ time }) => (
                     aria-label={project.name}
                     aria-hidden={!visible || !final}
                     tabIndex={visible && final ? 0 : -1}>
-                    <img src={`/assets/ux_ui/hero/${cue.image}.png`} alt="" width="900" height="1500"
+                    <img className="ux-contents-art" src={`/assets/ux_ui/hero/${cue.image}.png`} alt="" width="900" height="1500"
                         loading="eager" decoding="async" draggable={false} />
+                    {final && <span className="ux-contents-brand" aria-hidden="true">
+                        <img src={`/assets/ux_ui/hero/${logos[cue.column]}.png`} alt="" loading="eager" decoding="async" draggable={false} />
+                    </span>}
                 </a>
             );
         })}
