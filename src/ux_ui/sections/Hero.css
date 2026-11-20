@@ -34,20 +34,56 @@
 .ux-orb.is-waiting::before { opacity: 0; }
 .ux-orb-waiting { position: absolute; inset: 0; transition: opacity .5s ease; pointer-events: none; }
 .ux-orb-waiting.is-fading { opacity: 0; }
-.ux-play:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
-
-.ux-play { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; display: grid; place-items: center; padding: 0; border: 0; color: #e4ddff; background: transparent; cursor: pointer; transition: opacity .5s ease; }
-.ux-play.is-fading { opacity: 0; pointer-events: none; }
-.ux-play-shape { display: block; position: relative; width: 42px; height: 42px; transform: scale(1.9); filter: drop-shadow(0 0 5px rgba(120, 110, 255, .4)); }
-.ux-play:hover .ux-play-shape { filter: drop-shadow(0 0 10px #bfbaff); }
-
-
-.ux-play-arrow { position: relative; z-index: 1; overflow: visible; }
-.ux-arrow-base { fill: none; stroke: rgba(225, 215, 255, .55); stroke-width: 1.1; stroke-linejoin: round; }
-.ux-arrow-light { fill: none; stroke: url(#ux-arrow-gradient); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 25 85; animation: ux-arrow-travel 2.5s linear infinite; }
-.ux-arrow-glow { stroke-width: 3.5; filter: blur(2px); opacity: .7; }
-@keyframes ux-arrow-travel { to { stroke-dashoffset: -110; } }
-@media (prefers-reduced-motion: reduce) { .ux-arrow-light { animation: none; } }
+.ux-start-area {
+    position: absolute;
+    inset: -40px -40px -100px;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 0 24px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+}
+.ux-start-prompt {
+    --proximity: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgb(calc(217 + 38 * var(--proximity)), calc(217 + 38 * var(--proximity)), calc(217 + 38 * var(--proximity)));
+    font-size: 14px;
+    font-weight: 300;
+    transition: color .1s linear;
+}
+.ux-start-area:focus-visible .ux-start-prompt { color: #fff; }
+.ux-start-area:focus-visible { outline: 1px solid #a0a0a0; outline-offset: 6px; border-radius: 8px; }
+.ux-intro-caption.is-waiting { visibility: hidden; pointer-events: none; }
+.ux-skip {
+    position: absolute;
+    z-index: 3;
+    bottom: var(--ux-scene-gap);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 16px;
+    margin-bottom: -10px;
+    border: 0;
+    background: transparent;
+    color: #707070;
+    font: inherit;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: color .2s ease, opacity .35s ease;
+}
+.ux-skip.is-hiding { opacity: 0; pointer-events: none; }
+.ux-skip:hover, .ux-skip:focus-visible { color: white; }
+.ux-skip:focus-visible { outline: 1px solid #a0a0a0; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .ux-start-prompt, .ux-skip { transition: none; } }
 
 .ux-hero-scene { position: absolute; inset: 0; background: #101010; }
 .ux-hero-scene.is-glitching { filter: url(#ux-hero-glitch); }
@@ -85,3 +121,33 @@
     line-height: 1.15;
 }
 .ux-role-reduced { top: var(--ux-name-center); }
+
+.ux-hero-scene.is-skipped .ux-role-name,
+.ux-hero-scene.is-skipped .ux-role-reduced { animation: ux-skip-reveal .6s ease both; }
+@keyframes ux-skip-reveal { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+    .ux-hero-scene.is-skipped .ux-role-name,
+    .ux-hero-scene.is-skipped .ux-role-reduced { animation: none; }
+}
+
+.ux-orb.is-waiting .ux-orb-waiting { opacity: calc(1 - var(--orb-proximity, 0) * .5); transition: opacity .12s linear; }
+.ux-orb.is-waiting::before { opacity: 0; }
+.ux-orb.is-waiting:focus-within .ux-orb-waiting { opacity: .5; }
+
+
+.ux-start-prompt { position: relative; }
+.ux-start-prompt::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .25s ease;
+}
+.ux-start-prompt:hover::after,
+.ux-start-area:focus-visible .ux-start-prompt::after { transform: scaleX(1); transform-origin: left; }
+@media (prefers-reduced-motion: reduce) { .ux-start-prompt::after { transition: none; } }

@@ -17,10 +17,10 @@ export function contentsImages(time: number) {
     return contentsCues.filter(cue => time >= cue.start && time < cue.end).map(cue => cue.image);
 }
 
-const Contents: React.FC<{ time: number }> = ({ time }) => (
-    <nav id="contents" className={`ux-contents ${time >= contentsEnd ? 'has-logos' : ''}`} aria-label="Portfolio contents">
+const Contents: React.FC<{ time: number; revealCount?: number }> = ({ time, revealCount }) => (
+    <nav id="contents" className={`ux-contents ${time >= contentsEnd ? 'has-logos' : ''} ${revealCount !== undefined ? 'is-skipped' : ''}`} aria-label="Portfolio contents">
         {contentsCues.map(cue => {
-            const visible = time >= cue.start && time < cue.end;
+            const visible = time >= cue.start && time < cue.end && (revealCount === undefined || (cue.image >= 4 && cue.column < revealCount));
             const project = content.footerProjects[cue.column];
             const final = cue.image >= 4;
             return (

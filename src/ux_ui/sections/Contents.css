@@ -59,3 +59,6 @@
     object-position: center top;
 }
 .ux-contents.has-logos .is-visible .ux-contents-brand { visibility: visible; }
+
+.ux-contents.is-skipped .is-visible { animation: ux-skip-reveal .35s ease both; }
+@media (prefers-reduced-motion: reduce) { .ux-contents.is-skipped .is-visible { animation: none; } }

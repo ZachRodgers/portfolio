@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, MousePointer2, SkipForward } from 'lucide-react';
 import VoiceOrb from '../../shared/voice-orb/components/VoiceOrb';
 import type { LevelSource } from '../../shared/voice-orb/lib/orb/audio';
 import './Hero.css';
@@ -65,6 +65,8 @@ function finalAccent(time: number) {
 const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ audioElement, failed }) => {
     const audio = useRef(audioElement);
     const orb = useRef<HTMLDivElement>(null);
+    const startPrompt = useRef<HTMLSpanElement>(null);
+    const [skipRevealCount, setSkipRevealCount] = useState(0);
     const soundButton = useRef<HTMLButtonElement>(null);
     const previousSoundLeft = useRef<number>();
     const graph = useRef<{ context: AudioContext; analyser: AnalyserNode }>();
@@ -76,6 +78,8 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
     const [muted, setMuted] = useState(false);
     const [silentClock, setSilentClock] = useState(false);
     const hasStarted = useRef(false);
+    const skipped = useRef(false);
+    const [isSkipped, setIsSkipped] = useState(false);
     const clockStart = useRef(0);
     const timeline = useRef(0);
     const timelineActive = useRef(false);
@@ -105,16 +109,19 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
         try {
             await element.play();
         } catch {
+            if (skipped.current) return;
             element.muted = true;
             setMuted(true);
             try {
                 await element.play();
             } catch {
+                if (skipped.current) return;
                 clockStart.current = performance.now();
                 setSilentClock(true);
                 return;
             }
         }
+        if (skipped.current) { element.pause(); return; }
         setPlaying(true);
         try {
             if (!element.muted && !graph.current) {
@@ -133,6 +140,60 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
             // Audio analysis is optional.
         }
     };
+
+    const skip = () => {
+        skipped.current = true;
+        hasStarted.current = true;
+        audio.current.pause();
+        setStarted(true);
+        setPlaying(false);
+        setSilentClock(false);
+        setIsSkipped(true);
+        timelineActive.current = false;
+        timeline.current = contentsEnd;
+        setTime(contentsEnd);
+    };
+
+    useEffect(() => {
+        if (!isSkipped) return;
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const timers = [1, 2, 3].map(count => setTimeout(() => {
+            setSkipRevealCount(count);
+            if (count === 3) requestAnimationFrame(() => {
+                document.querySelector<HTMLAnchorElement>('#contents a[tabindex="0"]')?.focus({ preventScroll: true });
+            });
+        }, reduced ? 0 : 300 + (count - 1) * 250));
+        return () => timers.forEach(clearTimeout);
+    }, [isSkipped]);
+
+    useEffect(() => {
+        if (!ready || started) return;
+        const update = (event: PointerEvent) => {
+            const prompt = startPrompt.current;
+            if (!prompt) return;
+            const bounds = prompt.getBoundingClientRect();
+            const dx = Math.max(bounds.left - event.clientX, 0, event.clientX - bounds.right);
+            const dy = Math.max(bounds.top - event.clientY, 0, event.clientY - bounds.bottom);
+            const orbBounds = orb.current?.getBoundingClientRect();
+            const orbDistance = orbBounds ? Math.max(0, Math.hypot(
+                event.clientX - (orbBounds.left + orbBounds.width / 2),
+                event.clientY - (orbBounds.top + orbBounds.height / 2),
+            ) - orbBounds.width / 2) : Infinity;
+            const proximity = Math.max(0, 1 - Math.min(Math.hypot(dx, dy), orbDistance) / 480);
+            prompt.style.setProperty('--proximity', String(proximity));
+            orb.current?.style.setProperty('--orb-proximity', String(proximity));
+        };
+        const reset = () => {
+            startPrompt.current?.style.setProperty('--proximity', '0');
+            orb.current?.style.setProperty('--orb-proximity', '0');
+        };
+        window.addEventListener('pointermove', update);
+        document.addEventListener('pointerleave', reset);
+        return () => {
+            window.removeEventListener('pointermove', update);
+            document.removeEventListener('pointerleave', reset);
+        };
+    }, [ready, started]);
 
     const toggleSound = () => {
         const element = audio.current;
@@ -190,7 +251,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
     }, [ready, started]);
 
     useEffect(() => {
-        if (!playing && !silentClock) return;
+        if (isSkipped || (!playing && !silentClock)) return;
         let frame: number;
         const samples = new Uint8Array(128);
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -215,7 +276,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
         };
         frame = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(frame);
-    }, [playing, silentClock]);
+    }, [playing, silentClock, isSkipped]);
 
     const typingCue = activeTypingCue(time);
     const typingMotion = typingCue === undefined ? 0 : Math.sin(Math.PI * (time - typingCue.start) / typingCue.characters[typingCue.characters.length - 1]);
@@ -261,22 +322,17 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                     </filter>
                 </defs>
             </svg>
-            <div className={`ux-hero-scene ${glitch ? 'is-glitching' : ''}`}>
+            <div className={`ux-hero-scene ${isSkipped ? 'is-skipped' : ''} ${glitch ? 'is-glitching' : ''}`}>
             <div className={`ux-intro ${ready ? 'is-ready' : ''} ${time >= 12.06 ? 'is-complete' : ''}`}>
                 {time < 12.06 && <><div ref={orb} className={`ux-orb ${!started ? 'is-waiting' : ''}`}><VoiceOrb palette="midnight" variant="painted" state={ready ? "talking" : "ready"} voice={typingLevels.current} seed={0.5} params={activeParams} size="clamp(200px, 30vw, 350px)" />
                 <div className={`ux-orb-waiting ${started ? 'is-fading' : ''}`}><VoiceOrb palette={waitingPalette} variant="painted" state="ready" seed={0.5} params={waitingParams} size="clamp(200px, 30vw, 350px)" /></div>
-                {ready && <button className={`ux-play ${started ? 'is-fading' : ''}`} onClick={() => void start()} disabled={started} tabIndex={started ? -1 : 0} aria-hidden={started} aria-label="Play introduction with sound"><span className="ux-play-shape" aria-hidden="true">
-                    <svg className="ux-play-arrow" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true">
-                        <defs><linearGradient id="ux-arrow-gradient" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#8264ff" /><stop offset=".5" stopColor="#e8dcff" /><stop offset="1" stopColor="#6d49ff" /></linearGradient></defs>
-                        <path className="ux-arrow-base" d="M9 4 L38 21 L9 38 Z" />
-                        <path className="ux-arrow-light ux-arrow-glow" d="M9 4 L38 21 L9 38 Z" />
-                    </svg>
-
-                </span></button>}
+                {ready && !started && <button className="ux-start-area" onClick={() => void start()} aria-label="Start animation with sound">
+                    <span ref={startPrompt} className="ux-start-prompt"><span className="ux-start-label">Click me</span><MousePointer2 size={16} aria-hidden="true" /></span>
+                </button>}
                 </div>
                 </>}
             </div>
-            <div className="ux-intro-caption">
+            <div className={`ux-intro-caption ${!started ? 'is-waiting' : ''}`}>
                 <div className={`ux-caption-content ${time >= 12.06 ? 'is-complete' : ''}`}>
                     {!failed && <button ref={soundButton} className={`ux-sound ${started ? 'is-visible' : ''}`} onClick={toggleSound} disabled={!started || time >= 12.06} aria-label={muted ? 'Turn sound on' : 'Turn sound off'} aria-pressed={!muted} tabIndex={started && time < 12.06 ? 0 : -1} aria-hidden={!started || time >= 12.06}>{muted ? <VolumeX size={22} /> : <Volume2 size={22} />}</button>}
                     <p className={`ux-intro-text ${ready ? 'is-ready' : ''} ${time >= 12.06 ? 'is-complete' : ''}`} aria-hidden="true">
@@ -288,7 +344,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                 </div>
             </div>
             {time >= 16 && <RoleCarousel time={time} />}
-            <Contents time={time} />
+            <Contents time={time} revealCount={isSkipped ? skipRevealCount : undefined} />
             {cut && <p className={`ux-cut-text ux-cut-text--${cut.size}`} aria-hidden="true">{cut.size === 'large' || cut.size === 'larger' || cut.size === 'huge' ? <span className="ux-cut-numeral"><span className="ux-numeral-measure">{cut.text}</span><svg className="ux-numeral-svg" aria-hidden="true">
                         {(cut.size === 'larger' || cut.size === 'huge') && Array.from({ length: cut.size === 'huge' ? 6 : 2 }, (_, index) => {
                             const ring = (cut.size === 'huge' ? 6 : 2) - index;
@@ -301,6 +357,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                         <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fill="white">{cut.text}</text>
                     </svg></span> : cut.text}</p>}
             </div>
+            {ready && !isSkipped && time < 16.35 && <button className={`ux-skip ${time >= 16 ? 'is-hiding' : ''}`} onClick={skip} disabled={time >= 16} tabIndex={time >= 16 ? -1 : 0} aria-hidden={time >= 16}><SkipForward size={16} aria-hidden="true" />Skip Animation</button>}
             <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI. But what about all that in one person?</span>
 
         </section>
