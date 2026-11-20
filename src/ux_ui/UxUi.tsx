@@ -9,6 +9,8 @@ import Branding from '../shared/sections/Branding';
 import Footer from '../shared/components/Footer';
 import DynamicNav from '../shared/components/DynamicNav';
 import content from './content/page.json';
+import FrameworkRule from './sections/FrameworkRule';
+import './UxUi.css';
 
 const UxUi: React.FC<PageProps> = ({ mainRoute }) => {
     const [audio] = useState(() => new Audio('/assets/ux_ui/hero/portfoliosoudntrack.mp3'));
@@ -46,15 +48,17 @@ const UxUi: React.FC<PageProps> = ({ mainRoute }) => {
     }, [audio]);
     useHashScroll();
     return (
-        <div className="App">
+        <div className="App ux-page">
             <LoadingScreen isLoading={isLoading} />
             {!isLoading && <>
             <DynamicNav projects={content.projects} iconBasePath={content.projectIconBasePath} />
             <Hero audioElement={audio} failed={failed} />
-            <Resume />
+            <div className="ux-framework-section"><FrameworkRule /><Resume /></div>
             <Portfolio />
-            <Branding />
+            <div className="ux-framework-section"><FrameworkRule /><Branding /></div>
+            <div className="ux-framework-section"><FrameworkRule />
             <Footer projectSource={uxFooterProjects} currentRoute="/ux_ui" mainRoute={mainRoute} resumeRoute="/ux_ui" pages={footerPages} />
+            </div>
             </>}
         </div>
     );

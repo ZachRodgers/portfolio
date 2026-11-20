@@ -5,6 +5,7 @@ import type { LevelSource } from '../../shared/voice-orb/lib/orb/audio';
 import './Hero.css';
 import RoleCarousel from './RoleCarousel';
 import Contents, { contentsEnd } from './Contents';
+import FrameworkRule from './FrameworkRule';
 
 const waitingPalette: [string, string, string, string] = ['#101010', '#121019', '#201948', '#362a80'];
 const params = { speed: 2.8, warp: 1.5, sphere: 1.5, detail: 1.9, grain: 0.17, pulse: 0.57, highlight: 0.33, exposure: 0, saturation: 1.04, fluid: 0.21 };
@@ -357,6 +358,7 @@ const Hero: React.FC<{ audioElement: HTMLAudioElement; failed: boolean }> = ({ a
                         <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fill="white">{cut.text}</text>
                     </svg></span> : cut.text}</p>}
             </div>
+            {time >= 19.2 && <FrameworkRule className="ux-hero-title-rule" />}
             {ready && !isSkipped && time < 16.35 && <button className={`ux-skip ${time >= 16 ? 'is-hiding' : ''}`} onClick={skip} disabled={time >= 16} tabIndex={time >= 16 ? -1 : 0} aria-hidden={time >= 16}><SkipForward size={16} aria-hidden="true" />Skip Animation</button>}
             <span className="ux-sr-only">First there was engineering. Then there was design. The world changed with AI. But what about all that in one person?</span>
 
