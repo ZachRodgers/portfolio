@@ -23,14 +23,15 @@ export function carouselProgress(time: number) {
 
 export default function RoleCarousel({ time }: { time: number }) {
     const progress = carouselProgress(time);
-    const distance = (roles.length - 1) * 7 + 97;
+    const nameGap = 3;
+    const distance = (roles.length - 1) * 7 + nameGap + 97;
 
     return (
         <div className="ux-role-carousel">
             <div className="ux-role-wheel" aria-hidden="true">
                 {roles.map((role, index) => {
                     const isName = index === roles.length - 1;
-                    const y = 110 + index * 7 - progress * distance;
+                    const y = 110 + index * 7 + (isName ? nameGap : 0) - progress * distance;
                     if (y < -12 || y > 112) return null;
                     const angle = Math.max(-55, Math.min(55, (50 - y) * 1.1));
                     const opacity = isName
@@ -39,7 +40,7 @@ export default function RoleCarousel({ time }: { time: number }) {
                     return (
                         <div key={index} className={`ux-role-row ${isName ? 'ux-role-name' : ''}`}
                             style={{
-                                top: isName ? `calc(${y - 13 * progress}% + var(--ux-name-center) * ${progress})` : `${y}%`,
+                                top: `calc(${y - 13 * progress}% + var(--ux-name-center) * ${progress})`,
                                 opacity,
                                 transform: `translateY(-50%) perspective(900px) rotateX(${isName ? angle * (1 - progress) : angle}deg)`,
                             }}>
