@@ -181,6 +181,28 @@
     grid-template-columns: repeat(7, 1fr);
 }
 
+.skill-item { display: flex; flex-direction: column; align-items: center; min-width: 0; gap: .25rem; }
+.skill-label { font-size: .62rem; line-height: 1.15; text-align: center; overflow-wrap: anywhere; }
+.resume-bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: .3rem; }
+.resume-bullets li { position: relative; padding-left: .9rem; }
+.resume-bullets li::before { content: '•'; position: absolute; left: .15rem; color: var(--text-secondary); }
+
+.resume-studio .resume-container { gap: 2rem; align-items: flex-start; }
+.resume-studio .resume-column { min-width: 0; }
+.resume-studio .job-title, .resume-studio .education-title, .resume-studio .achievement-title { font-size: clamp(.82rem, 1.05vw, 1rem); line-height: 1.2; }
+.resume-studio .resume-portrait { filter: grayscale(1); }
+.resume-studio .profile-statement { text-align: left; }
+.resume-studio .education-section { margin-top: 2rem; }
+.resume-studio .section-title { margin-bottom: 1.1rem; }
+.resume-studio .skill-item { display: block; }
+.resume-studio .experience-header, .resume-studio .education-header, .resume-studio .achievement-header { gap: .65rem; }
+.resume-studio .experience-icon, .resume-studio .education-icon, .resume-studio .achievement-icon { width: 42px; height: 42px; }
+.resume-studio .experience-item, .resume-studio .education-item { margin-bottom: 1.2rem; }
+.resume-studio .job-description, .resume-studio .education-description { font-size: .88rem; line-height: 1.42; }
+.resume-studio .job-company, .resume-studio .education-institution, .resume-studio .achievement-description { font-size: .78rem; line-height: 1.3; }
+.resume-studio .skill-icon { width: 36px; height: 36px; }
+.resume-studio .skills-grid { grid-template-columns: repeat(5, 36px); gap: .5rem; }
+
 .skill-icon {
     width: 45px;
     height: 45px;
@@ -233,6 +255,9 @@
     .skill-icon {
         width: 50px;
     }
+
+    .resume-studio .job-title, .resume-studio .education-title, .resume-studio .achievement-title { white-space: normal; }
+    .resume-studio .skills-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
     .profile-image {
         width: 200px;

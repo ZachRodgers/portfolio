@@ -38,7 +38,9 @@ interface ResumeData {
         description: string;
     }>;
     skills: {
-        numberOfIcons: number;
+        numberOfIcons?: number;
+        icons?: (number | string)[];
+        labels?: string[];
     };
 }
 
@@ -158,6 +160,7 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl, animated = false }) => {
                         <h1 className="profile-name">{resumeData.profile.name}</h1>
                         <p className="profile-statement">{resumeData.profile.statement}</p>
                     </div>
+
                 </div>
 
                 <div className="resume-column" style={{ width: `${resumeData.columns.column2}%` }}>
@@ -166,24 +169,24 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl, animated = false }) => {
                         {resumeData.experience.map((job, index) => (
                             <div key={index} className="experience-item">
                                 <div className="experience-header">
-                                    <img
+                                    {job.icon && <img
                                         src={`/assets/shared/resume/${job.icon}`}
                                         alt={job.company}
                                         className="experience-icon"
                                         style={{
                                             animationDelay: `${0.2 + index * 0.15}s`
                                         }}
-                                    />
+                                    />}
                                     <div className="experience-header-content">
                                         <h2 className="job-title">{job.title}</h2>
                                         <p className="job-company">{job.company} | {job.date}</p>
                                     </div>
                                 </div>
-                                <p className="job-description">{job.description}</p>
+                                <ResumeCopy className="job-description" text={job.description} />
                             </div>
                         ))}
                     </div>
-
+                    {!animated && (
                     <div ref={educationRef} className={`education-section ${sectionsInView.education ? 'animate' : ''}`}>
                         <h2 className="section-title">Education</h2>
                         {resumeData.education.map((edu, index) => (
@@ -202,10 +205,13 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl, animated = false }) => {
                                         <p className="education-institution">{edu.institution} | {edu.date}</p>
                                     </div>
                                 </div>
-                                <p className="education-description">{edu.description}</p>
+                                <ResumeCopy className="education-description" text={edu.description} />
                             </div>
                         ))}
                     </div>
+                    )}
+
+
                 </div>
 
                 <div className="resume-column" style={{ width: `${resumeData.columns.column3}%` }}>
@@ -227,7 +233,32 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl, animated = false }) => {
                         ))}
                     </div>
 
-                    <div ref={achievementsRef} className={`achievements-section ${sectionsInView.achievements ? 'animate' : ''}`}>
+                    {animated && (
+                    <div ref={educationRef} className={`education-section ${sectionsInView.education ? 'animate' : ''}`}>
+                        <h2 className="section-title">Education</h2>
+                        {resumeData.education.map((edu, index) => (
+                            <div key={index} className="education-item">
+                                <div className="education-header">
+                                    <img
+                                        src={`/assets/shared/resume/${edu.icon}`}
+                                        alt={edu.institution}
+                                        className="education-icon"
+                                        style={{
+                                            animationDelay: `${0.8 + index * 0.15}s`
+                                        }}
+                                    />
+                                    <div className="education-header-content">
+                                        <h2 className="education-title">{edu.title}</h2>
+                                        <p className="education-institution">{edu.institution} | {edu.date}</p>
+                                    </div>
+                                </div>
+                                <ResumeCopy className="education-description" text={edu.description} />
+                            </div>
+                        ))}
+                    </div>
+                    )}
+
+                    {resumeData.achievements.length > 0 && <div ref={achievementsRef} className={`achievements-section ${sectionsInView.achievements ? 'animate' : ''}`}>
                         <h2 className="section-title">Achievements</h2>
                         {resumeData.achievements.map((achievement, index) => (
                             <div key={index} className="achievement-item">
@@ -247,21 +278,15 @@ const Resume: React.FC<ResumeProps> = ({ dataUrl, animated = false }) => {
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </div>}
 
                     <div ref={skillsRef} className={`skills-section ${sectionsInView.skills ? 'animate' : ''}`}>
                         <h2 className="section-title">Skills</h2>
                         <div className="skills-grid">
-                            {Array.from({ length: resumeData.skills.numberOfIcons }, (_, index) => (
-                                <img
-                                    key={index}
-                                    src={`/assets/shared/resume/app_icons/app${index + 1}.png`}
-                                    alt={`Skill ${index + 1}`}
-                                    className="skill-icon"
-                                    style={{
-                                        animationDelay: `${1.5 + index * 0.1}s`
-                                    }}
-                                />
+                            {(resumeData.skills.icons ?? Array.from({ length: resumeData.skills.numberOfIcons ?? 0 }, (_, index) => index + 1)).map((icon, index) => (
+                                <div className="skill-item" key={`${icon}-${index}`} title={resumeData.skills.labels?.[index]}>
+                                    <img src={typeof icon === 'number' ? `/assets/shared/resume/app_icons/app${icon}.png` : `/assets/shared/resume/app_icons/${icon}.svg`} alt={resumeData.skills.labels?.[index] ?? `Skill ${icon}`} className="skill-icon" style={{ animationDelay: `${1.5 + index * 0.1}s` }} />
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -282,6 +307,11 @@ function ResumePortrait({ src, alt }: { src: string; alt: string }) {
         return () => observer.disconnect();
     }, []);
     return <div ref={ref} className="resume-portrait"><CellRevealImage src={src} alt={alt} visible={visible} className="profile-image" durationMs={1100} /></div>;
+}
+
+function ResumeCopy({ text, className }: { text: string; className: string }) {
+    const lines = text.split('\n').filter(Boolean);
+    return lines.some(line => line.startsWith('•')) ? <ul className={`${className} resume-bullets`}>{lines.map((line, index) => <li key={index}>{line.replace(/^•\s*/, '')}</li>)}</ul> : <p className={className}>{text}</p>;
 }
 
 export default Resume;

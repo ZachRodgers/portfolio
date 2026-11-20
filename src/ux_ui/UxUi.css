@@ -52,13 +52,15 @@
 .ux-page .resume-container { gap: clamp(24px, 4vw, 64px); }
 .ux-page .branding-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (min-width: 769px) {
-    .ux-page .resume-container { display: grid; grid-template-columns: 31fr 39fr 30fr; }
+    .ux-page .resume-container { display: grid; grid-template-columns: 27fr 46fr 27fr; }
     .ux-page .resume-column { width: auto !important; min-width: 0; }
+    .ux-page .resume-portrait { aspect-ratio: 0.68; }
+    .ux-page .resume-portrait .profile-image { width: 100%; height: 100%; object-fit: cover; }
 }
 @media (max-width: 768px) {
     .ux-page { --ux-rail-inset: 16px; --ux-frame-padding: 16px; }
     .ux-page .resume-container { padding-left: 0; padding-right: 0; }
     .ux-page .branding-grid { grid-template-columns: minmax(0, 1fr); }
 }
-.ux-page .skills-grid { grid-template-columns: repeat(auto-fit, minmax(36px, 1fr)); gap: 4px; }
-.ux-page .skill-icon { width: min(100%, 45px); height: auto; aspect-ratio: 1; }
+.ux-page .skills-grid { grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); gap: 2px; }
+.ux-page .resume-studio .skill-icon { width: min(100%, 45px); height: auto; aspect-ratio: 1; }
