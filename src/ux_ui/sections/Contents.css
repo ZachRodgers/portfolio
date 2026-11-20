@@ -58,6 +58,9 @@
     object-fit: contain;
     object-position: center top;
 }
+.ux-contents-brand--parallel img { width: 59%; }
+.ux-contents-brand--mission_control img { width: 70%; }
+.ux-contents-brand--stockhub img { width: 81%; }
 .ux-contents.has-logos .is-visible .ux-contents-brand { visibility: visible; }
 
 
