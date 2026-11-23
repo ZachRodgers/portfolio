@@ -34,7 +34,7 @@ const paths = [...fileData.map(f => f[0] as string), 'src/main.tsx', 'package.js
 const names = ['workspace-navigation', 'editor-layout'];
 const titles = ['Workspace navigation', 'Editor layout'];
 const listeners = new Map<string, Set<Function>>();
-let elapsed = 0, paused = true, visible = false, launched = false, released = 0, lastStep = '', branch = 'main';
+let elapsed = 0, paused = true, visible = false, started = false, launched = false, released = 0, lastStep = '', branch = 'main';
 let stageData: any[] = [];
 let changes: any[] = [];
 let missionData: Record<string, any> = {};
@@ -44,9 +44,13 @@ let runSessions: any[] = [];
 let nextRunId = 0;
 let promptTyped = false;
 let typingTimer: number | null = null;
+let previewOpenTimer: number | null = null;
+let previewOpenPending = false;
+let previewOpenReady = false;
 let interacted = false;
 let planningQuestionShown = false;
 let planningQuestionAnswered = false;
+let planningQuestionGeneration = 0;
 let ideaNotes: any[] = [{ id: 'demo-idea-1', name: 'Switch between active chats', body: 'Add a keyboard shortcut to move between active agent conversations.' }];
 const updateMotion = () => { (window as any).__demoPaused = paused || !visible; window.dispatchEvent(new Event('demo-motion')); };
 let settings: any = { hasOnboarded: true, recentProjects: [project], enabledProviders: ['codex', 'claude'], defaultModel: 'sonnet', defaultServiceTier: 'default', permModeCounts: { auto: 3 }, thinkingCounts: { '2': 3 }, indexingEnabled: false, lastBranchByProject: {} };
@@ -85,6 +89,7 @@ function startPromptTyping() {
   promptTyped = false;
   let index = 0;
   const typeNext = () => {
+    if (paused || !visible || document.hidden) { typingTimer = window.setTimeout(typeNext, 80); return; }
     const input = document.querySelector<HTMLTextAreaElement>('textarea');
     if (!input) { typingTimer = window.setTimeout(typeNext, 80); return; }
     if (index >= prompt.length) { promptTyped = true; typingTimer = null; return; }
@@ -95,6 +100,12 @@ function startPromptTyping() {
     typingTimer = window.setTimeout(typeNext, 22);
   };
   typingTimer = window.setTimeout(typeNext, 160);
+}
+function startDemo() {
+  if (started || !visible) return;
+  started = true;
+  if (planningScene) startPlanningScene();
+  else startPromptTyping();
 }
 function launch() {
   if (launched) return missionData['demo-0'];
@@ -148,6 +159,11 @@ function planningPreview() {
     files: [{ name: 'plan.html', url: planningPlanUrl, kind: 'html', relPath: 'plan.html', mtime: 1 }]
   };
 }
+function openPlanningPreview() {
+  if (!previewOpenPending || !previewOpenReady || !visible || paused || document.hidden) return;
+  previewOpenPending = false;
+  useUi.setState({ previewOpen: true });
+}
 function startPlanningScene() {
   if (launched) return;
   launched = true;
@@ -180,13 +196,21 @@ function startPlanningScene() {
     selectedProjects: [project],
     blankMode: false,
     route: { name: 'launchpad' },
-    previewOpen: true,
+    previewOpen: false,
     previewTab: 'preview',
     preview: planningPreview(),
     activePreviewFile: 'plan.html',
     canvasWidth: 720,
     canvasEngaged: false
   });
+  previewOpenPending = true;
+  previewOpenReady = false;
+  if (previewOpenTimer !== null) window.clearTimeout(previewOpenTimer);
+  previewOpenTimer = window.setTimeout(() => {
+    previewOpenTimer = null;
+    previewOpenReady = true;
+    openPlanningPreview();
+  }, 500);
   tickPlanningScene();
   requestAnimationFrame(() => requestAnimationFrame(() => document.querySelector('[aria-label^="Question 1 of"]')?.scrollIntoView({ block: 'center' })));
 }
@@ -197,8 +221,8 @@ function tickPlanningScene() {
   if (!planningQuestionShown && elapsed >= 0) {
     planningQuestionShown = true;
     const request = {
-      requestId: 'planning-question-set',
-      toolUseId: 'planning-question-set',
+      requestId: 'planning-question-set-' + planningQuestionGeneration,
+      toolUseId: 'planning-question-set-' + planningQuestionGeneration,
       toolName: 'AskUserQuestion',
       input: { questions: [
         { question: 'When you open Mission Control, what should help you get moving fastest?', header: 'First look', options: [
@@ -216,7 +240,7 @@ function tickPlanningScene() {
         ] }
       ] }
     };
-    useSessions.setState(state => ({ transcripts: { ...state.transcripts, [planningSessionKey]: [ ...(state.transcripts[planningSessionKey] ?? []), { type: 'permission', id: 'planning-question-card', request } ] }, statuses: { ...state.statuses, [planningSessionKey]: 'awaiting-approval' } }));
+    useSessions.setState(state => ({ transcripts: { ...state.transcripts, [planningSessionKey]: [ ...(state.transcripts[planningSessionKey] ?? []), { type: 'permission', id: 'planning-question-card-' + planningQuestionGeneration, request } ] }, statuses: { ...state.statuses, [planningSessionKey]: 'awaiting-approval' } }));
     missionData[planningMissionId] = { ...mission, progress: 38, agents: mission.agents.map((agent:any) => ({ ...agent, status: 'awaiting-approval', activity: 'Waiting for your direction', orbState: 'listening' })) };
     useMissions.setState({ missions: { ...missionData } });
   }
@@ -228,21 +252,24 @@ function tickPlanningScene() {
   }
 }
 function reset(manual = false) {
-  elapsed = 0; launched = false; released = 0; lastStep = ''; stageData = []; changes = []; missionData = {};
-  planningQuestionShown = false; planningQuestionAnswered = false;
+  if (previewOpenTimer !== null) window.clearTimeout(previewOpenTimer);
+  previewOpenTimer = null;
+  previewOpenPending = false;
+  previewOpenReady = false;
+  elapsed = 0; started = false; launched = false; released = 0; lastStep = ''; stageData = []; changes = []; missionData = {};
+  planningQuestionShown = false; planningQuestionAnswered = false; planningQuestionGeneration++;
   stoppedMissions = new Set();
   interacted = manual;
   for (const session of runSessions) if (session.alive) listeners.get('terminal:exit')?.forEach(fn=>fn({id:session.id}));
   runSessions = [];
   localStorage.setItem('mc:draft:new:' + project, '');
-  if (planningScene) startPlanningScene();
-  else startPromptTyping();
   useUi.getState().clearPreviewContext();
   window.location.hash='';
   useUi.setState({route:{name:'launchpad'}});
   useMissions.setState({ missions: {}, activeMissionId: null, loaded: true });
   useSessions.setState({transcripts:{},statuses:{}});
   sync();
+  startDemo();
 }
 const handlers: Record<string, Function> = {
   'app.home': () => '/projects',
@@ -295,7 +322,7 @@ const handlers: Record<string, Function> = {
     return ok;
   },
   'session.respondPermission': (sessionKey:string, requestId:string, behavior:string) => {
-    if (planningScene && requestId === 'planning-question-set' && behavior === 'allow' && !planningQuestionAnswered) {
+    if (planningScene && requestId === 'planning-question-set-' + planningQuestionGeneration && behavior === 'allow' && !planningQuestionAnswered) {
       planningQuestionAnswered = true;
       useSessions.setState(state => ({
         transcripts: { ...state.transcripts, [sessionKey]: [ ...(state.transcripts[sessionKey] ?? []), { type: 'text', id: 'planning-answer-followup', content: 'Thanks, that gives me a clear direction. I’ve reflected your choices in the clickable preview and grouped the remaining work into reviewable tasks.', streaming: false } ] },
@@ -373,8 +400,7 @@ export function initialize() {
   useWorkspace.setState({changesOnly:true,expanded:{[workspaceKey(project,'')]:true}});
   useMissions.setState({loaded:true});
   sync();
-  if (planningScene) startPlanningScene();
-  else startPromptTyping();
+  startDemo();
   const markInteracted = (event: Event) => {
     if (event.type === 'input' && typingTimer !== null) return;
     interacted = true;
@@ -394,6 +420,8 @@ export function initialize() {
     if(event.data.action==='replay')reset(true);
     if(typeof event.data.paused==='boolean')paused=event.data.paused;
     if(typeof event.data.visible==='boolean')visible=event.data.visible;
+    startDemo();
+    openPlanningPreview();
     updateMotion();
   });
   updateMotion();

@@ -4,9 +4,11 @@ import { Pause, Play, RotateCcw } from 'lucide-react';
 interface MissionDemoFrameProps {
     src: string;
     title: string;
+    showPause?: boolean;
+    tone?: 'default' | 'planning';
 }
 
-export default function MissionDemoFrame({ src, title }: MissionDemoFrameProps) {
+export default function MissionDemoFrame({ src, title, showPause = true, tone = 'default' }: MissionDemoFrameProps) {
     const frame = useRef<HTMLIFrameElement>(null);
     const viewport = useRef<HTMLDivElement>(null);
     const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -31,9 +33,9 @@ export default function MissionDemoFrame({ src, title }: MissionDemoFrameProps) 
         return () => window.removeEventListener('message', ready);
     }, [paused, visible]);
 
-    return <div className="mission-demo-background">
+    return <div className={`mission-demo-background${tone === 'planning' ? ' mission-demo-background--planning' : ''}`}>
         <div className="mission-playback">
-            <button aria-label={paused ? 'Play demo' : 'Pause demo'} title={paused ? 'Play' : 'Pause'} onClick={() => { setPaused(value => !value); send('interact'); }}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>
+            {showPause && <button aria-label={paused ? 'Play demo' : 'Pause demo'} title={paused ? 'Play' : 'Pause'} onClick={() => { setPaused(value => !value); send('interact'); }}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>}
             <button aria-label="Replay demo" title="Replay" onClick={() => send('replay')}><RotateCcw size={14} /></button>
         </div>
         <div className="mission-demo-viewport" ref={viewport} style={{ height: 700 * scale }}>

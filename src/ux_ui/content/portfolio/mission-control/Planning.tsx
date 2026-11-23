@@ -24,6 +24,8 @@ export default function MissionControlPlanning() {
             <MissionDemoFrame
                 src="/assets/ux_ui/content/portfolio/mission-control/demo/index.html?scene=planning"
                 title="Mission Control planning and preview workflow"
+                showPause={false}
+                tone="planning"
             />
             <div className="mission-feature-grid">
                 {features.map((feature) => <article key={feature.title}>
