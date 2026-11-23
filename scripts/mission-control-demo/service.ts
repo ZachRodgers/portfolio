@@ -2,13 +2,18 @@ import { useUi } from '@app/state/ui';
 import { useWorkspace, workspaceKey } from '@app/state/workspace';
 import { useMissions } from '@app/state/missions';
 import { useSessions } from '@app/state/sessions';
+import { browserScopeKey, useComments } from '@app/state/comments';
 
 const project = '/projects/demo-repo';
 const scene = new URLSearchParams(window.location.search).get('scene');
 const planningScene = scene === 'planning';
+const browserDesignScene = scene === 'browser-design';
 const planningMissionId = 'planning-demo';
 const planningSessionKey = 'planning-demo-agent';
+const browserMissionId = 'browser-design-demo';
+const browserSessionKey = 'browser-design-agent';
 const planningPlanUrl = '/assets/ux_ui/content/portfolio/mission-control/plan.html';
+const browserPreviewUrl = '/assets/ux_ui/content/portfolio/mission-control/browser-preview.html';
 const planningTasks = [
   { content: 'Map the current workspace navigation', status: 'completed', activeForm: 'Mapping the workspace navigation' },
   { content: 'Define the overview information hierarchy', status: 'completed', activeForm: 'Defining the overview hierarchy' },
@@ -51,6 +56,13 @@ let interacted = false;
 let planningQuestionShown = false;
 let planningQuestionAnswered = false;
 let planningQuestionGeneration = 0;
+let browserAgentStep = 0;
+let browserAgentFinishedAt: number | null = null;
+let browserAgentCommandId = 0;
+let browserDemoFrameWidth = 1100;
+const browserDemoCanvasWidth = (frameWidth: number) => {
+  return Math.max(560, Math.round(frameWidth - 400));
+};
 let ideaNotes: any[] = [{ id: 'demo-idea-1', name: 'Switch between active chats', body: 'Add a keyboard shortcut to move between active agent conversations.' }];
 const updateMotion = () => { (window as any).__demoPaused = paused || !visible; window.dispatchEvent(new Event('demo-motion')); };
 let settings: any = { hasOnboarded: true, recentProjects: [project], enabledProviders: ['codex', 'claude'], defaultModel: 'sonnet', defaultServiceTier: 'default', permModeCounts: { auto: 3 }, thinkingCounts: { '2': 3 }, indexingEnabled: false, lastBranchByProject: {} };
@@ -105,6 +117,7 @@ function startDemo() {
   if (started || !visible) return;
   started = true;
   if (planningScene) startPlanningScene();
+  else if (browserDesignScene) startBrowserDesignScene();
   else startPromptTyping();
 }
 function launch() {
@@ -158,6 +171,89 @@ function planningPreview() {
     projectPath: project,
     files: [{ name: 'plan.html', url: planningPlanUrl, kind: 'html', relPath: 'plan.html', mtime: 1 }]
   };
+}
+function startBrowserDesignScene() {
+  if (launched) return;
+  launched = true;
+  browserAgentStep = 0;
+  browserAgentFinishedAt = null;
+  const mission = {
+    id: browserMissionId,
+    title: 'Review the Casa Noma homepage',
+    prompt: 'Review the live homepage, check its rhythm as you scroll, and capture the hero for feedback.',
+    projectPath: project,
+    projectPaths: [project],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    status: 'running',
+    agents: [{ role: 'solo', roleLabel: 'Product designer', sessionKey: browserSessionKey, status: 'working', costUsd: 0, activity: 'Opening the live page', orbState: 'searching' }],
+    skills: [], attachments: [], planMode: false, model: 'sonnet', permissionMode: 'auto', maxThinkingTokens: 16384, totalCostUsd: 0, progress: 8
+  };
+  missionData = { [browserMissionId]: mission };
+  useMissions.setState({ missions: { ...missionData }, activeMissionId: browserMissionId, loaded: true });
+  useSessions.setState({
+    transcripts: { [browserSessionKey]: [
+      { type: 'user', id: 'browser-user', text: mission.prompt },
+      { type: 'text', id: 'browser-review', content: 'I’m reviewing the live page in context, then I’ll capture the hero so we can discuss the details together.', streaming: false }
+    ] },
+    statuses: { [browserSessionKey]: 'working' },
+    hasTasks: { [browserSessionKey]: false },
+    taskVersions: { [browserSessionKey]: 0 }
+  });
+  useUi.setState({
+    activeProject: project,
+    selectedProjects: [project],
+    blankMode: false,
+    route: { name: 'launchpad' },
+    previewOpen: true,
+    previewTab: 'browser',
+    preview: null,
+    browser: { sessionId: 'browser-design-demo', url: browserPreviewUrl, projectPath: project },
+    browserAgentCommand: null,
+    browserAgentActiveMissionId: browserMissionId,
+    designTool: 'pointer',
+    designEdits: [],
+    canvasWidth: browserDemoCanvasWidth(browserDemoFrameWidth),
+    canvasEngaged: false,
+    filePinned: false
+  });
+}
+function runBrowserAgentAction(action: string, details: Record<string, unknown> = {}) {
+  useUi.setState({ browserAgentCommand: {
+    id: 'browser-demo-action-' + (++browserAgentCommandId),
+    missionId: browserMissionId,
+    projectPath: project,
+    action,
+    ...details
+  } as any });
+}
+function tickBrowserDesignScene() {
+  if (!launched) return;
+  const mission = missionData[browserMissionId];
+  if (!mission) return;
+  const progress = Math.min(96, 8 + Math.round(elapsed * 9));
+  const activity = elapsed < 4.5 ? 'Exploring the page' : elapsed < 7 ? 'Capturing the hero for review' : 'Reviewing the details';
+  missionData[browserMissionId] = { ...mission, progress, agents: mission.agents.map((agent: any) => ({ ...agent, activity, orbState: elapsed < 4.5 ? 'searching' : elapsed < 7 ? 'composing' : 'weaving' })) };
+  useMissions.setState({ missions: { ...missionData } });
+  const steps: Array<[number, string, Record<string, unknown>]> = [
+    [0.5, 'scroll', { scrollY: 240 }],
+    [1.7, 'hover', { selector: '.hero-links .solid-link' }],
+    [2.8, 'click', { selector: '.hero-links .solid-link' }],
+    [3.8, 'scroll', { scrollY: -240 }],
+    [5, 'hover', { selector: '.hero-photo' }],
+    [6, 'screenshot', { selector: '.hero-photo' }],
+    [7.8, 'hover', { selector: '.hero-copy h1' }],
+    [9, 'hover', { selector: '.hero-links .text-link' }],
+  ];
+  if (browserAgentStep < steps.length && elapsed >= steps[browserAgentStep][0] && !useUi.getState().browserAgentCommand) {
+    const [, action, details] = steps[browserAgentStep++];
+    runBrowserAgentAction(action, details);
+  }
+  if (browserAgentStep === steps.length && elapsed >= 10.5 && !useUi.getState().browserAgentCommand) {
+    browserAgentStep++;
+    browserAgentFinishedAt = elapsed;
+    useUi.getState().setBrowserAgentActiveMissionId(null);
+  }
 }
 function openPlanningPreview() {
   if (!previewOpenPending || !previewOpenReady || !visible || paused || document.hidden) return;
@@ -260,10 +356,21 @@ function reset(manual = false) {
   planningQuestionShown = false; planningQuestionAnswered = false; planningQuestionGeneration++;
   stoppedMissions = new Set();
   interacted = manual;
+  useUi.getState().setBrowserAgentCommand(null);
+  useUi.getState().setBrowserAgentActiveMissionId(null);
+  if (browserDesignScene) {
+    const scope = browserScopeKey(project, browserPreviewUrl);
+    useComments.setState(state => {
+      const comments = { ...state.comments };
+      delete comments[scope];
+      return { comments };
+    });
+  }
   for (const session of runSessions) if (session.alive) listeners.get('terminal:exit')?.forEach(fn=>fn({id:session.id}));
   runSessions = [];
   localStorage.setItem('mc:draft:new:' + project, '');
   useUi.getState().clearPreviewContext();
+  useUi.setState({ browser: null, browserAgentCommand: null, browserAgentActiveMissionId: null });
   window.location.hash='';
   useUi.setState({route:{name:'launchpad'}});
   useMissions.setState({ missions: {}, activeMissionId: null, loaded: true });
@@ -337,7 +444,28 @@ const handlers: Record<string, Function> = {
   },
   'preview.state': () => planningScene ? planningPreview() : null,
   'preview.list': () => [],
-  'preview.workspaceUrl': () => null,
+  'preview.snipRegion': () => 'browser-preview-capture.svg',
+  'preview.workspaceUrl': (_: string, relPath: string) => relPath === 'browser-preview-capture.svg' ? '/assets/ux_ui/content/portfolio/mission-control/browser-preview-capture.svg' : null,
+  'browser.saveEdits': () => ({ css: '.design-note { /* review the visible changes in Design Mode */ }', notes: 'Browser edits are ready to review.', htmlCaptured: true }),
+  'browser.agentResult': () => ok,
+  'browser.sendInput': (_id: number, input: { type: string; x: number; y: number }) => {
+    const guest = document.querySelector<HTMLIFrameElement>('iframe[aria-label="Live browser preview"]')?.contentDocument;
+    if (!guest) return ok;
+    const target = guest.elementFromPoint(input.x, input.y) as HTMLElement | null;
+    if (input.type === 'mouseMove') {
+      guest.querySelectorAll('.demo-agent-hover').forEach(element => element.classList.remove('demo-agent-hover'));
+      target?.closest('a, button')?.classList.add('demo-agent-hover');
+    }
+    if (input.type === 'mouseDown') target?.closest('a, button')?.classList.add('demo-agent-pressed');
+    if (input.type === 'mouseUp') {
+      const pressed = guest.querySelectorAll('.demo-agent-pressed');
+      target?.addEventListener('click', event => event.preventDefault(), { once: true });
+      target?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: guest.defaultView }));
+      setTimeout(() => pressed.forEach(element => element.classList.remove('demo-agent-pressed')), 180);
+    }
+    return ok;
+  },
+  'browser.captureGuest': () => ({ data: '', mimeType: 'image/png', attachmentPath: 'browser-preview-capture.svg', width: 1200, height: 720 }),
   'handoff.get': () => null,
   'brand.status': () => ({projectPath:project,phase:'idle'}),
   'brand.workspaceUrl': () => null,
@@ -420,18 +548,26 @@ export function initialize() {
     if(event.data.action==='replay')reset(true);
     if(typeof event.data.paused==='boolean')paused=event.data.paused;
     if(typeof event.data.visible==='boolean')visible=event.data.visible;
+    if(browserDesignScene && Number.isFinite(event.data.frameWidth)) {
+      browserDemoFrameWidth = Math.max(320, Number(event.data.frameWidth));
+      useUi.setState({ canvasWidth: browserDemoCanvasWidth(browserDemoFrameWidth) });
+    }
     startDemo();
     openPlanningPreview();
     updateMotion();
   });
+  document.addEventListener('visibilitychange', updateMotion);
   updateMotion();
   setInterval(()=>{
     if(paused || !visible || document.hidden)return;
     elapsed+=.25;
-    if(elapsed>=37 && !interacted)reset();
+    if(!interacted && (browserDesignScene ? browserAgentFinishedAt !== null && elapsed >= browserAgentFinishedAt + 1 : elapsed >= 37))reset();
     else if(planningScene) {
       if(elapsed>=2 && !launched)startPlanningScene();
       if(launched)tickPlanningScene();
+    } else if(browserDesignScene) {
+      if(!launched)startBrowserDesignScene();
+      if(launched)tickBrowserDesignScene();
     } else if(elapsed>=2 && promptTyped && !launched)launch();
     else tickState();
   },250);

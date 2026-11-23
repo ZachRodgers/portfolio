@@ -54,7 +54,7 @@ esbuild.build({
         return {
           contents: contents.replace(
             'const [explorerOpen, setExplorerOpen] = useState(true)',
-            "const [explorerOpen, setExplorerOpen] = useState(() => new URLSearchParams(window.location.search).get('scene') !== 'planning')"
+            "const [explorerOpen, setExplorerOpen] = useState(() => !['planning', 'browser-design'].includes(new URLSearchParams(window.location.search).get('scene') ?? ''))"
           ),
           loader: 'tsx',
           resolveDir: path.dirname(args.path)
@@ -67,27 +67,116 @@ esbuild.build({
       build.onLoad({ filter: /\/renderer\/src\/components\/preview\/PreviewCanvas\.tsx$/ }, args => {
         let contents = fs.readFileSync(args.path, 'utf8');
         const componentMarker = 'export default function PreviewCanvas()';
-        if (!contents.includes(componentMarker)) throw new Error('Could not find PreviewCanvas for the planning scene.');
+        if (!contents.includes(componentMarker)) throw new Error('Could not find PreviewCanvas for the portfolio scenes.');
         contents = contents.replace(
           componentMarker,
-          "const planningDemo = new URLSearchParams(window.location.search).get('scene') === 'planning';\nexport default function PreviewCanvas()"
+          "const planningDemo = new URLSearchParams(window.location.search).get('scene') === 'planning';\nconst browserDemo = new URLSearchParams(window.location.search).get('scene') === 'browser-design';\nexport default function PreviewCanvas()"
+        );
+        contents = contents.replace(
+          'const [flashRect, setFlashRect] = useState<{ left: number; top: number; width: number; height: number } | null>(null)',
+          'const [browserCaptureDrawing, setBrowserCaptureDrawing] = useState(false)\n  const [flashRect, setFlashRect] = useState<{ left: number; top: number; width: number; height: number } | null>(null)'
         );
         for (const tab of ['files', 'terminal']) {
           const pattern = new RegExp(`\\n\\s*<button\\n\\s*className=\\{tabClass\\('${tab}'\\)\\}[\\s\\S]*?\\n\\s*<\\/button>`);
           const match = contents.match(pattern);
           if (!match) throw new Error(`Could not find the ${tab} canvas tab for the planning scene.`);
-          contents = contents.replace(pattern, `\n          {!planningDemo && (${match[0].trim()})}`);
+          contents = contents.replace(pattern, `\n          {!planningDemo && !browserDemo && (${match[0].trim()})}`);
         }
+        contents = contents.replace('{hasPreview && <button', '{!browserDemo && hasPreview && <button');
+        contents = contents.replace('{hasTasks && <button', '{!browserDemo && hasTasks && <button');
         contents = contents.replace(
           /\n\s*\{ui\.activeProject && <button className=\{tabClass\('brand'\)\}[\s\S]*?<\/button>\}/,
-          "\n          {!planningDemo && ui.activeProject && <button className={tabClass('brand')} onClick={() => ui.selectPreviewTab('brand')}>\n            <Palette size={13} /> Styles\n          </button>}"
+          "\n          {!planningDemo && !browserDemo && ui.activeProject && <button className={tabClass('brand')} onClick={() => ui.selectPreviewTab('brand')}>\n            <Palette size={13} /> Styles\n          </button>}"
         );
         contents = contents.replace(
           /\n\s*<CanvasAddMenu[\s\S]*?\/>/,
-          match => `\n          {!planningDemo && (${match.trim()})}`
+          match => `\n          {!planningDemo && !browserDemo && (${match.trim()})}`
+        );
+        contents = contents.replace(
+          '{ui.browserAgentActiveMissionId && (',
+          '{(browserDemo ? Boolean(ui.browserAgentActiveMissionId || ui.browserAgentCommand) : Boolean(ui.browserAgentActiveMissionId)) && ('
+        );
+        contents = contents.replace(
+          '{!snipping && !ui.browserAgentActiveMissionId && (',
+          '{(browserDemo || (!snipping && !ui.browserAgentActiveMissionId)) && ('
+        );
+        contents = contents.replace(
+          /<div className=\{styles\.agentWorkingBar\}>[\s\S]*?<\/div>/,
+          match => `{!browserDemo && (${match})}`
+        );
+        contents = contents.replace(
+          'className={styles.agentTakeover}',
+          'className={styles.agentTakeover} style={browserDemo ? { pointerEvents: \'none\' } : undefined}'
+        );
+        // Keep agent navigation inside the guest page, not its cropped ancestors.
+        contents = contents.replaceAll(
+          "el.scrollIntoView({ block: 'center', inline: 'center' });",
+          "if (window.location.pathname.endsWith('browser-preview.html')) window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - el.getBoundingClientRect().height) / 2, behavior: 'instant' }); else el.scrollIntoView({ block: 'center', inline: 'center' });"
+        );
+        contents = contents.replace(
+          'setAgentCursor({\n          x: captureRect.x + captureRect.width / 2,\n          y: captureRect.y + captureRect.height / 2\n        })',
+          "if (browserDemo) {\n          await moveCursorTo({ x: captureRect.x, y: captureRect.y });\n          setBrowserCaptureDrawing(true);\n          setFlashRect({ left: captureRect.x, top: captureRect.y, width: 0, height: 0 });\n          await new Promise((resolve) => window.requestAnimationFrame(() => resolve(undefined)));\n          setFlashRect({ left: captureRect.x, top: captureRect.y, width: captureRect.width, height: captureRect.height });\n          await moveCursorTo({ x: captureRect.x + captureRect.width, y: captureRect.y + captureRect.height });\n          await new Promise((resolve) => window.setTimeout(resolve, 250));\n          setBrowserCaptureDrawing(false);\n        } else setAgentCursor({ x: captureRect.x + captureRect.width / 2, y: captureRect.y + captureRect.height / 2 })"
+        );
+        contents = contents.replace(
+          'className={styles.snipFlash} style={flashRect}',
+          "className={styles.snipFlash} style={browserDemo && browserCaptureDrawing ? { ...flashRect, animation: 'none', background: 'rgba(90, 200, 250, .14)', border: '1px solid #5ac8fa', transition: 'width 500ms ease, height 500ms ease' } : flashRect}"
+        );
+        contents = contents.replace(
+          'setAgentCursor({ x: guest.clientWidth / 2, y: guest.clientHeight / 2 })',
+          'if (browserDemo) await moveCursorTo({ x: guest.clientWidth / 2, y: guest.clientHeight / 2 }); else setAgentCursor({ x: guest.clientWidth / 2, y: guest.clientHeight / 2 })'
         );
         return { contents, loader: 'tsx', resolveDir: path.dirname(args.path) };
       });
+    }
+  }, {
+    name: 'static-browser-surface',
+    setup(build) {
+      build.onLoad({ filter: /\/renderer\/src\/components\/preview\/BrowserSurface\.tsx$/ }, args => ({
+        loader: 'tsx',
+        resolveDir: path.dirname(args.path),
+        contents: `
+          import React, { memo, useRef } from 'react';
+          import styles from './PreviewCanvas.module.css';
+          export type BrowserWebview = HTMLElement & {
+            executeJavaScript: (code: string, userGesture?: boolean) => Promise<unknown>;
+            getWebContentsId: () => number;
+            getURL: () => string;
+            isLoading: () => boolean;
+            loadURL: (url: string) => Promise<void>;
+          };
+          export const BrowserSurface = memo(function BrowserSurface({ sessionId, initialUrl, surfaceRef }: {
+            sessionId: string; initialUrl: string; surfaceRef: React.RefObject<BrowserWebview | null>
+          }): React.JSX.Element {
+            const srcRef = useRef(initialUrl);
+            const attach = (node: HTMLIFrameElement | null): void => {
+              if (!node) { (surfaceRef as any).current = null; return; }
+              const guest = node as unknown as BrowserWebview;
+              guest.executeJavaScript = (code: string) => Promise.resolve(node.contentWindow?.eval(code));
+              guest.getWebContentsId = () => 1;
+              guest.getURL = () => node.contentWindow?.location.href ?? node.src;
+              guest.isLoading = () => false;
+              guest.loadURL = (url: string) => new Promise(resolve => {
+                node.addEventListener('load', () => resolve(), { once: true });
+                node.src = url;
+              });
+              (surfaceRef as any).current = guest;
+              const notifyInteraction = () => node.contentWindow?.parent.postMessage({ type: 'mc-demo-interaction' }, location.origin);
+              node.addEventListener('load', () => {
+                node.dispatchEvent(new Event('dom-ready'));
+                for (const eventName of ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart']) {
+                  node.contentWindow?.addEventListener(eventName, notifyInteraction, { passive: true });
+                }
+              });
+            };
+            return <iframe key={sessionId} ref={attach} className={styles.iframe} src={srcRef.current} aria-label="Live browser preview" />;
+          });
+          export function browserLabel(url: string): string {
+            try { const parsed = new URL(url); return parsed.pathname.split('/').filter(Boolean).at(-1) ?? parsed.host; }
+            catch { return url; }
+          }
+          export function agentActionLabel(action?: string): string { return action ? 'Working…' : 'Viewing…'; }
+        `
+      }));
     }
   }, {
     name: 'focused-shiki',
