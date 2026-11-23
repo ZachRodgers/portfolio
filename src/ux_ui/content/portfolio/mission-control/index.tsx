@@ -34,7 +34,7 @@ export default function MissionControl() {
             <h2 id="mission-title">A coding harness for engineers and designers with skills that need tools to support them.</h2>
             <div className="mission-demo-background">
                 <div className="mission-playback">
-                    <button aria-label={paused ? 'Play demo' : 'Pause demo'} title={paused ? 'Play' : 'Pause'} onClick={() => setPaused(value => !value)}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>
+                    <button aria-label={paused ? 'Play demo' : 'Pause demo'} title={paused ? 'Play' : 'Pause'} onClick={() => { setPaused(value => !value); send('interact'); }}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>
                     <button aria-label="Replay demo" title="Replay" onClick={() => send('replay')}><RotateCcw size={14} /></button>
                 </div>
                 <div className="mission-demo-viewport" ref={viewport} style={{ height: 700 * scale }}>

@@ -30,6 +30,7 @@ let runSessions: any[] = [];
 let nextRunId = 0;
 let promptTyped = false;
 let typingTimer: number | null = null;
+let interacted = false;
 let ideaNotes: any[] = [{ id: 'demo-idea-1', name: 'Switch between active chats', body: 'Add a keyboard shortcut to move between active agent conversations.' }];
 const updateMotion = () => { (window as any).__demoPaused = paused || !visible; window.dispatchEvent(new Event('demo-motion')); };
 let settings: any = { hasOnboarded: true, recentProjects: [project], enabledProviders: ['codex', 'claude'], defaultModel: 'sonnet', defaultServiceTier: 'default', permModeCounts: { auto: 3 }, thinkingCounts: { '2': 3 }, indexingEnabled: false, lastBranchByProject: {} };
@@ -124,9 +125,10 @@ function tickState() {
     sync();
   }
 }
-function reset() {
+function reset(manual = false) {
   elapsed = 0; launched = false; released = 0; lastStep = ''; stageData = []; changes = []; missionData = {};
   stoppedMissions = new Set();
+  interacted = manual;
   for (const session of runSessions) if (session.alive) listeners.get('terminal:exit')?.forEach(fn=>fn({id:session.id}));
   runSessions = [];
   localStorage.setItem('mc:draft:new:' + project, '');
@@ -254,6 +256,13 @@ export function initialize() {
   useMissions.setState({loaded:true});
   sync();
   startPromptTyping();
+  const markInteracted = (event: Event) => {
+    if (event.type === 'input' && typingTimer !== null) return;
+    interacted = true;
+  };
+  for (const event of ['pointerdown','pointermove','keydown','wheel','touchstart','input','change']) {
+    window.addEventListener(event, markInteracted, { capture: true, passive: true });
+  }
   window.addEventListener('hashchange', () => {
     if (!window.location.hash || window.location.hash === '#/') return;
     window.location.hash = '';
@@ -261,7 +270,8 @@ export function initialize() {
   });
   window.addEventListener('message', event => {
     if(event.source!==parent || event.origin!==location.origin || event.data?.type!=='mc-demo')return;
-    if(event.data.action==='replay')reset();
+    if(event.data.action==='interact')interacted=true;
+    if(event.data.action==='replay')reset(true);
     if(typeof event.data.paused==='boolean')paused=event.data.paused;
     if(typeof event.data.visible==='boolean')visible=event.data.visible;
     updateMotion();
@@ -270,7 +280,7 @@ export function initialize() {
   setInterval(()=>{
     if(paused || !visible || document.hidden)return;
     elapsed+=.25;
-    if(elapsed>=37)reset();
+    if(elapsed>=37 && !interacted)reset();
     else if(elapsed>=2 && promptTyped && !launched)launch();
     else tickState();
   },250);
