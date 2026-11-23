@@ -13,6 +13,25 @@ esbuild.build({
   nodePaths: [path.join(source, 'node_modules')],
   loader: { '.woff2': 'file', '.woff': 'file', '.svg': 'dataurl', '.png': 'file' },
   plugins: [{
+    name: 'demo-model-options',
+    setup(build) {
+      build.onLoad({ filter: /\/src\/shared\/types\.ts$/ }, args => {
+        const contents = fs.readFileSync(args.path, 'utf8');
+        const models = `export const MODELS: { id: string; label: string; blurb: string; provider: Provider }[] = [
+  { id: 'gpt-6-astra', label: 'Astra', blurb: 'Flagship', provider: 'codex' },
+  { id: 'gpt-6.1-sol', label: 'Sol', blurb: 'Balanced', provider: 'codex' },
+  { id: 'fable', label: 'Fable', blurb: 'Best $', provider: 'claude' },
+  { id: 'opus', label: 'Opus', blurb: 'Frontier', provider: 'claude' },
+  { id: 'sonnet', label: 'Sonnet', blurb: 'Balanced', provider: 'claude' }
+]`;
+        return {
+          contents: contents.replace(/export const MODELS: \{ id: string; label: string; blurb: string; provider: Provider \}\[\] = \[[\s\S]*?\n\]/, () => models),
+          loader: 'ts',
+          resolveDir: path.dirname(args.path)
+        };
+      });
+    }
+  }, {
     name: 'demo-route-availability',
     setup(build) {
       build.onLoad({ filter: /\/renderer\/src\/App\.tsx$/ }, args => {

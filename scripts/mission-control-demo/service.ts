@@ -3,7 +3,7 @@ import { useWorkspace, workspaceKey } from '@app/state/workspace';
 import { useMissions } from '@app/state/missions';
 import { useSessions } from '@app/state/sessions';
 
-const project = '/projects/mission-control';
+const project = '/projects/demo-repo';
 const prompt = 'Build workspace navigation and refine the editor layout. Work in parallel, with a separate stage for each task.';
 const fileData = [
   ['src/components/WorkspaceTabs.tsx', 'added', 0],
@@ -20,7 +20,7 @@ const paths = [...fileData.map(f => f[0] as string), 'src/main.tsx', 'package.js
 const names = ['workspace-navigation', 'editor-layout'];
 const titles = ['Workspace navigation', 'Editor layout'];
 const listeners = new Map<string, Set<Function>>();
-let elapsed = 0, paused = true, visible = false, launched = false, released = 0, lastStep = -1, branch = 'main';
+let elapsed = 0, paused = true, visible = false, launched = false, released = 0, lastStep = '', branch = 'main';
 let stageData: any[] = [];
 let changes: any[] = [];
 let missionData: Record<string, any> = {};
@@ -28,8 +28,11 @@ let stoppedMissions = new Set<string>();
 let runTargets: any[] = [];
 let runSessions: any[] = [];
 let nextRunId = 0;
+let promptTyped = false;
+let typingTimer: number | null = null;
+let ideaNotes: any[] = [{ id: 'demo-idea-1', name: 'Switch between active chats', body: 'Add a keyboard shortcut to move between active agent conversations.' }];
 const updateMotion = () => { (window as any).__demoPaused = paused || !visible; window.dispatchEvent(new Event('demo-motion')); };
-let settings: any = { hasOnboarded: true, recentProjects: [project], enabledProviders: ['codex', 'claude'], defaultModel: 'gpt-5.5', defaultServiceTier: 'default', permModeCounts: { auto: 3 }, thinkingCounts: { '2': 3 }, indexingEnabled: false, lastBranchByProject: {} };
+let settings: any = { hasOnboarded: true, recentProjects: [project], enabledProviders: ['codex', 'claude'], defaultModel: 'sonnet', defaultServiceTier: 'default', permModeCounts: { auto: 3 }, thinkingCounts: { '2': 3 }, indexingEnabled: false, lastBranchByProject: {} };
 const ok = { ok: true, detail: '' };
 const status = () => ({ isRepo: true, branch, ahead: 0, behind: 0, changes: [...changes], conflicted: false, hasRemote: true });
 const sync = () => { useWorkspace.getState().setGitStatusFor(project, status()); useWorkspace.getState().setStagesFor(project, structuredClone(stageData)); };
@@ -54,17 +57,35 @@ const transcripts = (i: number, step: number) => {
   if (step >= 1) items.push({ type: 'thinking', id: 'thinking-' + i, content: 'Checking the existing component boundaries and shared state before making changes.', streaming: step === 1 });
   if (step >= 2) items.push({ type: 'tool', id: 'edit-' + i, toolUseId: 'edit-' + i, name: 'Edit', input: { file_path: file, old_string: 'gap: 12px', new_string: 'gap: var(--s-4)' }, result: 'File updated successfully.', running: step === 2 });
   if (step >= 3) items.push({ type: 'text', id: 'update-' + i, content: i === 0 ? 'The navigation now shares workspace state. I’m checking the keyboard controls and removing the old navigation.' : 'The editor uses shared spacing tokens. I’m checking the toolbar at narrower workspace widths.', streaming: false });
+  if (step >= 3) items.push({ type: 'tool', id: 'read-related-' + i, toolUseId: 'read-related-' + i, name: 'Read', input: { file_path: i === 0 ? 'src/hooks/useWorkspace.ts' : 'src/styles/tokens.css' }, result: sourceFor(file), running: false });
   if (step >= 4) items.push({ type: 'tool', id: 'test-' + i, toolUseId: 'test-' + i, name: 'Bash', input: { command: 'npm run typecheck' }, result: step === 5 ? 'tsc --noEmit\nCompleted successfully.' : undefined, running: step === 4 });
+  if (step >= 4) items.push({ type: 'tool', id: 'diff-' + i, toolUseId: 'diff-' + i, name: 'Bash', input: { command: 'git diff --check' }, result: step === 5 ? 'No whitespace errors found.' : undefined, running: step === 4 });
   if (step >= 5) items.push({ type: 'text', id: 'done-' + i, content: 'The changes are ready for review in **' + names[i] + '**. Type checks pass.', streaming: false });
   return items;
 };
+function startPromptTyping() {
+  if (typingTimer !== null) window.clearTimeout(typingTimer);
+  promptTyped = false;
+  let index = 0;
+  const typeNext = () => {
+    const input = document.querySelector<HTMLTextAreaElement>('textarea');
+    if (!input) { typingTimer = window.setTimeout(typeNext, 80); return; }
+    if (index >= prompt.length) { promptTyped = true; typingTimer = null; return; }
+    const next = prompt.slice(0, ++index);
+    const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set;
+    setter?.call(input, next);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    typingTimer = window.setTimeout(typeNext, 22);
+  };
+  typingTimer = window.setTimeout(typeNext, 160);
+}
 function launch() {
   if (launched) return missionData['demo-0'];
   launched = true; elapsed = Math.max(2, elapsed);
   stageData = names.map((name, i) => ({ id: 'stage-' + i, name, files: [] }));
   missionData = Object.fromEntries(names.map((name,i) => {
     const id = 'demo-' + i;
-    return [id, { id, title: titles[i], prompt, projectPath: project, projectPaths: [project], createdAt: Date.now() + i, updatedAt: Date.now(), status: 'running', agents: [{ role: 'solo', roleLabel: 'Developer', sessionKey: id, status: 'working', costUsd: 0, activity: 'Inspecting workspace components', orbState: 'searching' }], skills: [], attachments: [], planMode: false, model: 'gpt-5.5', permissionMode: 'auto', maxThinkingTokens: 16384, totalCostUsd: 0, progress: 0, chatStage: { name, stageIds: { [project]: 'stage-' + i } } }];
+    return [id, { id, title: titles[i], prompt, projectPath: project, projectPaths: [project], createdAt: Date.now() + i, updatedAt: Date.now(), status: 'running', agents: [{ role: 'solo', roleLabel: 'Developer', sessionKey: id, status: 'working', costUsd: 0, activity: 'Inspecting workspace components', orbState: 'searching' }], skills: [], attachments: [], planMode: false, model: 'sonnet', permissionMode: 'auto', maxThinkingTokens: 16384, totalCostUsd: 0, progress: 0, chatStage: { name, stageIds: { [project]: 'stage-' + i } } }];
   }));
   useMissions.setState({ missions: {...missionData}, activeMissionId: 'demo-0', loaded: true });
   tickState(); sync();
@@ -72,18 +93,26 @@ function launch() {
 }
 function tickState() {
   if (!launched) return;
-  const done = elapsed >= 20;
-  const step = done ? 5 : Math.min(4, Math.floor((elapsed - 2) / 3.6));
-  if (step !== lastStep) {
-    useSessions.setState({ transcripts: Object.fromEntries([0,1].map(i => ['demo-' + i, transcripts(i,step)])), statuses: { 'demo-0': stoppedMissions.has('demo-0') ? 'idle' : done ? 'complete' : 'working', 'demo-1': stoppedMissions.has('demo-1') ? 'idle' : done ? 'complete' : 'working' } });
-    lastStep = step;
+  const steps = [0,1].map(i => {
+    const endAt = i === 0 ? 20 : 27;
+    return elapsed >= endAt ? 5 : Math.min(4, Math.floor((elapsed - 2) / (i === 0 ? 3.6 : 4.8)));
+  });
+  const stepKey = steps.join(':');
+  if (stepKey !== lastStep) {
+    useSessions.setState({
+      transcripts: Object.fromEntries([0,1].map(i => ['demo-' + i, transcripts(i,steps[i])])),
+      statuses: Object.fromEntries([0,1].map(i => ['demo-' + i, stoppedMissions.has('demo-' + i) ? 'idle' : steps[i] === 5 ? 'complete' : 'working']))
+    });
+    lastStep = stepKey;
   }
   const states = ['searching','weaving','solving','connecting','composing','breathing'];
   const activities = ['Inspecting workspace components','Planning parallel changes','Updating workspace components','Checking keyboard controls','Running type checks','Ready for review'];
   for (let i=0; i<2; i++) {
     const id = 'demo-' + i, m = missionData[id];
     if (!m || stoppedMissions.has(id)) continue;
-    missionData[id] = { ...m, progress: done ? 100 : Math.max(0, Math.round((elapsed-2)/18*100)), status: done ? 'complete' : 'running', unread: done, agents: m.agents.map((a: any) => ({...a, status: done ? 'complete' : 'working', activity: activities[step], orbState: states[(step+i)%states.length] })) };
+    const step = steps[i], done = step === 5;
+    const progress = done ? 100 : Math.max(0, Math.round((elapsed-2)/(i === 0 ? 18 : 25)*100));
+    missionData[id] = { ...m, progress, status: done ? 'complete' : 'running', unread: done, agents: m.agents.map((a: any) => ({...a, status: done ? 'complete' : 'working', activity: activities[step], orbState: states[(step+i)%states.length] })) };
   }
   useMissions.setState({ missions: {...missionData} });
   const wanted = elapsed < 3 ? 0 : Math.min(9, Math.floor((elapsed - 3)*1.5)+2);
@@ -96,11 +125,12 @@ function tickState() {
   }
 }
 function reset() {
-  elapsed = 0; launched = false; released = 0; lastStep = -1; stageData = []; changes = []; missionData = {};
+  elapsed = 0; launched = false; released = 0; lastStep = ''; stageData = []; changes = []; missionData = {};
   stoppedMissions = new Set();
   for (const session of runSessions) if (session.alive) listeners.get('terminal:exit')?.forEach(fn=>fn({id:session.id}));
   runSessions = [];
-  localStorage.setItem('mc:draft:new:' + project, prompt);
+  localStorage.setItem('mc:draft:new:' + project, '');
+  startPromptTyping();
   useUi.getState().clearPreviewContext();
   window.location.hash='';
   useUi.setState({route:{name:'launchpad'}});
@@ -198,7 +228,8 @@ const handlers: Record<string, Function> = {
   'terminal.backlog': (id:string) => runSessions.some(session=>session.id===id)?'$ demo\r\nDemo terminal session.\r\n':'',
   'terminal.kill': (id:string) => handlers['run.stop'](id),
   'skills.list': () => [],
-  'ideas.load': () => [],
+  'ideas.load': () => structuredClone(ideaNotes),
+  'ideas.save': (_:string, ideas:any[]) => {ideaNotes=structuredClone(ideas);return ok;},
   'templates.list': () => [],
   'session.commands': () => [],
   'git.log': () => [],
@@ -217,11 +248,12 @@ const handlers: Record<string, Function> = {
 }});
 export function initialize() {
   if (parent === window) { paused = false; visible = true; }
-  localStorage.setItem('mc:draft:new:' + project,prompt);
+  localStorage.setItem('mc:draft:new:' + project,'');
   useUi.setState({activeProject:project,selectedProjects:[project],blankMode:false,route:{name:'launchpad'},previewOpen:false});
   useWorkspace.setState({changesOnly:true,expanded:{[workspaceKey(project,'')]:true}});
   useMissions.setState({loaded:true});
   sync();
+  startPromptTyping();
   window.addEventListener('hashchange', () => {
     if (!window.location.hash || window.location.hash === '#/') return;
     window.location.hash = '';
@@ -238,8 +270,8 @@ export function initialize() {
   setInterval(()=>{
     if(paused || !visible || document.hidden)return;
     elapsed+=.25;
-    if(elapsed>=30)reset();
-    else if(elapsed>=2 && !launched)launch();
+    if(elapsed>=37)reset();
+    else if(elapsed>=2 && promptTyped && !launched)launch();
     else tickState();
   },250);
   parent.postMessage({type:'mc-demo-ready'},location.origin);
