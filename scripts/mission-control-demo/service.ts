@@ -4,6 +4,20 @@ import { useMissions } from '@app/state/missions';
 import { useSessions } from '@app/state/sessions';
 
 const project = '/projects/demo-repo';
+const scene = new URLSearchParams(window.location.search).get('scene');
+const planningScene = scene === 'planning';
+const planningMissionId = 'planning-demo';
+const planningSessionKey = 'planning-demo-agent';
+const planningPlanUrl = '/assets/ux_ui/content/portfolio/mission-control/plan.html';
+const planningTasks = [
+  { content: 'Map the current workspace navigation', status: 'completed', activeForm: 'Mapping the workspace navigation' },
+  { content: 'Define the overview information hierarchy', status: 'completed', activeForm: 'Defining the overview hierarchy' },
+  { content: 'Draft the dashboard preview', status: 'completed', activeForm: 'Drafting the dashboard preview' },
+  { content: 'Check the responsive layout', status: 'completed', activeForm: 'Checking the responsive layout' },
+  { content: 'Connect the workspace navigation states', status: 'in_progress', activeForm: 'Connecting the workspace navigation states' },
+  { content: 'Polish empty and loading states', status: 'pending', activeForm: 'Polishing empty and loading states' },
+  { content: 'Review keyboard and focus behavior', status: 'pending', activeForm: 'Reviewing keyboard and focus behavior' }
+];
 const prompt = 'Build workspace navigation and refine the editor layout. Work in parallel, with a separate stage for each task.';
 const fileData = [
   ['src/components/WorkspaceTabs.tsx', 'added', 0],
@@ -31,6 +45,8 @@ let nextRunId = 0;
 let promptTyped = false;
 let typingTimer: number | null = null;
 let interacted = false;
+let planningQuestionShown = false;
+let planningQuestionAnswered = false;
 let ideaNotes: any[] = [{ id: 'demo-idea-1', name: 'Switch between active chats', body: 'Add a keyboard shortcut to move between active agent conversations.' }];
 const updateMotion = () => { (window as any).__demoPaused = paused || !visible; window.dispatchEvent(new Event('demo-motion')); };
 let settings: any = { hasOnboarded: true, recentProjects: [project], enabledProviders: ['codex', 'claude'], defaultModel: 'sonnet', defaultServiceTier: 'default', permModeCounts: { auto: 3 }, thinkingCounts: { '2': 3 }, indexingEnabled: false, lastBranchByProject: {} };
@@ -125,14 +141,102 @@ function tickState() {
     sync();
   }
 }
+function planningPreview() {
+  return {
+    missionId: planningMissionId,
+    projectPath: project,
+    files: [{ name: 'plan.html', url: planningPlanUrl, kind: 'html', relPath: 'plan.html', mtime: 1 }]
+  };
+}
+function startPlanningScene() {
+  if (launched) return;
+  launched = true;
+  const mission = {
+    id: planningMissionId,
+    title: 'Workspace dashboard refresh',
+    prompt: 'Help me rethink the workspace home. Ask a few questions first, then prepare a clickable preview and a clear task list before building.',
+    projectPath: project,
+    projectPaths: [project],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    status: 'running',
+    agents: [{ role: 'solo', roleLabel: 'Product designer', sessionKey: planningSessionKey, status: 'working', costUsd: 0, activity: 'Reviewing the current workspace', orbState: 'searching' }],
+    skills: [], attachments: [], planMode: true, model: 'sonnet', permissionMode: 'plan', maxThinkingTokens: 16384, totalCostUsd: 0, progress: 12
+  };
+  missionData = { [planningMissionId]: mission };
+  useMissions.setState({ missions: { ...missionData }, activeMissionId: planningMissionId, loaded: true });
+  useSessions.setState({
+    transcripts: { [planningSessionKey]: [
+      { type: 'tool', id: 'planning-todos', toolUseId: 'planning-todos', name: 'TodoWrite', input: { todos: planningTasks }, result: 'Task list updated.', running: false },
+      { type: 'user', id: 'planning-user', text: mission.prompt },
+      { type: 'text', id: 'planning-intro', content: 'I’ve mapped a first direction. A few choices will help me tune the plan before building.', streaming: false }
+    ] },
+    statuses: { [planningSessionKey]: 'working' },
+    hasTasks: { [planningSessionKey]: true },
+    taskVersions: { [planningSessionKey]: 1 }
+  });
+  useUi.setState({
+    activeProject: project,
+    selectedProjects: [project],
+    blankMode: false,
+    route: { name: 'launchpad' },
+    previewOpen: true,
+    previewTab: 'preview',
+    preview: planningPreview(),
+    activePreviewFile: 'plan.html',
+    canvasWidth: 720,
+    canvasEngaged: false
+  });
+  tickPlanningScene();
+  requestAnimationFrame(() => requestAnimationFrame(() => document.querySelector('[aria-label^="Question 1 of"]')?.scrollIntoView({ block: 'center' })));
+}
+function tickPlanningScene() {
+  if (!launched) return;
+  const mission = missionData[planningMissionId];
+  if (!mission) return;
+  if (!planningQuestionShown && elapsed >= 0) {
+    planningQuestionShown = true;
+    const request = {
+      requestId: 'planning-question-set',
+      toolUseId: 'planning-question-set',
+      toolName: 'AskUserQuestion',
+      input: { questions: [
+        { question: 'When you open Mission Control, what should help you get moving fastest?', header: 'First look', options: [
+          { label: 'Resume a project', description: 'Bring my active work and last stopping point forward.' },
+          { label: 'Spot what changed', description: 'Show recent updates and project health first.' },
+          { label: 'Choose my next task', description: 'Put a useful next action at the top.' }
+        ] },
+        { question: 'How much should the overview tell you before you open a project?', header: 'Level of detail', options: [
+          { label: 'A quick scan', description: 'Status, next action, and a little recent activity.' },
+          { label: 'The full picture', description: 'More task and activity context at a glance.' }
+        ] },
+        { question: 'Which trade-off fits the way you work?', header: 'Workspace feel', options: [
+          { label: 'Room to focus', description: 'Fewer, clearer signals with space to think.' },
+          { label: 'More within reach', description: 'A denser view with more controls visible.' }
+        ] }
+      ] }
+    };
+    useSessions.setState(state => ({ transcripts: { ...state.transcripts, [planningSessionKey]: [ ...(state.transcripts[planningSessionKey] ?? []), { type: 'permission', id: 'planning-question-card', request } ] }, statuses: { ...state.statuses, [planningSessionKey]: 'awaiting-approval' } }));
+    missionData[planningMissionId] = { ...mission, progress: 38, agents: mission.agents.map((agent:any) => ({ ...agent, status: 'awaiting-approval', activity: 'Waiting for your direction', orbState: 'listening' })) };
+    useMissions.setState({ missions: { ...missionData } });
+  }
+  if (!planningQuestionShown) {
+    const orbState = elapsed < 3.2 ? 'searching' : 'weaving';
+    const progress = elapsed < 3.2 ? 18 : 28;
+    missionData[planningMissionId] = { ...missionData[planningMissionId], progress, agents: missionData[planningMissionId].agents.map((agent:any) => ({ ...agent, status: 'working', activity: elapsed < 3.2 ? 'Reviewing the existing workspace' : 'Drafting the first layout', orbState })) };
+    useMissions.setState({ missions: { ...missionData } });
+  }
+}
 function reset(manual = false) {
   elapsed = 0; launched = false; released = 0; lastStep = ''; stageData = []; changes = []; missionData = {};
+  planningQuestionShown = false; planningQuestionAnswered = false;
   stoppedMissions = new Set();
   interacted = manual;
   for (const session of runSessions) if (session.alive) listeners.get('terminal:exit')?.forEach(fn=>fn({id:session.id}));
   runSessions = [];
   localStorage.setItem('mc:draft:new:' + project, '');
-  startPromptTyping();
+  if (planningScene) startPlanningScene();
+  else startPromptTyping();
   useUi.getState().clearPreviewContext();
   window.location.hash='';
   useUi.setState({route:{name:'launchpad'}});
@@ -190,7 +294,21 @@ const handlers: Record<string, Function> = {
     useSessions.setState(state => ({statuses:{...state.statuses,[id]:'idle'}}));
     return ok;
   },
-  'preview.state': () => null,
+  'session.respondPermission': (sessionKey:string, requestId:string, behavior:string) => {
+    if (planningScene && requestId === 'planning-question-set' && behavior === 'allow' && !planningQuestionAnswered) {
+      planningQuestionAnswered = true;
+      useSessions.setState(state => ({
+        transcripts: { ...state.transcripts, [sessionKey]: [ ...(state.transcripts[sessionKey] ?? []), { type: 'text', id: 'planning-answer-followup', content: 'Thanks, that gives me a clear direction. I’ve reflected your choices in the clickable preview and grouped the remaining work into reviewable tasks.', streaming: false } ] },
+        statuses: { ...state.statuses, [sessionKey]: 'working' }
+      }));
+      if (missionData[planningMissionId]) {
+        missionData[planningMissionId] = { ...missionData[planningMissionId], progress: 76, agents: missionData[planningMissionId].agents.map((agent:any) => ({ ...agent, status: 'working', activity: 'Refining the plan from your answers', orbState: 'solving' })) };
+        useMissions.setState({ missions: { ...missionData } });
+      }
+    }
+    return ok;
+  },
+  'preview.state': () => planningScene ? planningPreview() : null,
   'preview.list': () => [],
   'preview.workspaceUrl': () => null,
   'handoff.get': () => null,
@@ -255,7 +373,8 @@ export function initialize() {
   useWorkspace.setState({changesOnly:true,expanded:{[workspaceKey(project,'')]:true}});
   useMissions.setState({loaded:true});
   sync();
-  startPromptTyping();
+  if (planningScene) startPlanningScene();
+  else startPromptTyping();
   const markInteracted = (event: Event) => {
     if (event.type === 'input' && typingTimer !== null) return;
     interacted = true;
@@ -269,6 +388,7 @@ export function initialize() {
     useUi.setState({route:{name:'launchpad'}});
   });
   window.addEventListener('message', event => {
+    if(event.origin===location.origin && event.data?.type==='mc-demo-interaction') { interacted=true; return; }
     if(event.source!==parent || event.origin!==location.origin || event.data?.type!=='mc-demo')return;
     if(event.data.action==='interact')interacted=true;
     if(event.data.action==='replay')reset(true);
@@ -281,7 +401,10 @@ export function initialize() {
     if(paused || !visible || document.hidden)return;
     elapsed+=.25;
     if(elapsed>=37 && !interacted)reset();
-    else if(elapsed>=2 && promptTyped && !launched)launch();
+    else if(planningScene) {
+      if(elapsed>=2 && !launched)startPlanningScene();
+      if(launched)tickPlanningScene();
+    } else if(elapsed>=2 && promptTyped && !launched)launch();
     else tickState();
   },250);
   parent.postMessage({type:'mc-demo-ready'},location.origin);

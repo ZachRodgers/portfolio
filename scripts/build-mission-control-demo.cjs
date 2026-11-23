@@ -47,6 +47,49 @@ esbuild.build({
       });
     }
   }, {
+    name: 'planning-scene-sidebar',
+    setup(build) {
+      build.onLoad({ filter: /\/renderer\/src\/screens\/NoProject\/index\.tsx$/ }, args => {
+        const contents = fs.readFileSync(args.path, 'utf8');
+        return {
+          contents: contents.replace(
+            'const [explorerOpen, setExplorerOpen] = useState(true)',
+            "const [explorerOpen, setExplorerOpen] = useState(() => new URLSearchParams(window.location.search).get('scene') !== 'planning')"
+          ),
+          loader: 'tsx',
+          resolveDir: path.dirname(args.path)
+        };
+      });
+    }
+  }, {
+    name: 'planning-scene-canvas-tabs',
+    setup(build) {
+      build.onLoad({ filter: /\/renderer\/src\/components\/preview\/PreviewCanvas\.tsx$/ }, args => {
+        let contents = fs.readFileSync(args.path, 'utf8');
+        const componentMarker = 'export default function PreviewCanvas()';
+        if (!contents.includes(componentMarker)) throw new Error('Could not find PreviewCanvas for the planning scene.');
+        contents = contents.replace(
+          componentMarker,
+          "const planningDemo = new URLSearchParams(window.location.search).get('scene') === 'planning';\nexport default function PreviewCanvas()"
+        );
+        for (const tab of ['files', 'terminal']) {
+          const pattern = new RegExp(`\\n\\s*<button\\n\\s*className=\\{tabClass\\('${tab}'\\)\\}[\\s\\S]*?\\n\\s*<\\/button>`);
+          const match = contents.match(pattern);
+          if (!match) throw new Error(`Could not find the ${tab} canvas tab for the planning scene.`);
+          contents = contents.replace(pattern, `\n          {!planningDemo && (${match[0].trim()})}`);
+        }
+        contents = contents.replace(
+          /\n\s*\{ui\.activeProject && <button className=\{tabClass\('brand'\)\}[\s\S]*?<\/button>\}/,
+          "\n          {!planningDemo && ui.activeProject && <button className={tabClass('brand')} onClick={() => ui.selectPreviewTab('brand')}>\n            <Palette size={13} /> Styles\n          </button>}"
+        );
+        contents = contents.replace(
+          /\n\s*<CanvasAddMenu[\s\S]*?\/>/,
+          match => `\n          {!planningDemo && (${match.trim()})}`
+        );
+        return { contents, loader: 'tsx', resolveDir: path.dirname(args.path) };
+      });
+    }
+  }, {
     name: 'focused-shiki',
     setup(build) {
       build.onResolve({ filter: /^shiki$/ }, () => ({ path: 'shiki', namespace: 'focused-shiki' }));
