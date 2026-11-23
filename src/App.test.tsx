@@ -43,6 +43,7 @@ test.each(['/missing', '/missing/nested/', '/constructor', '/toString'])(
 test.each([
     ['/design', '/industrial_design', 'Industrial portfolio'],
     ['/id', '/industrial_design', 'Industrial portfolio'],
+    ['/ux-ui', '/ux_ui', 'UX/UI portfolio'],
     ['/ux', '/ux_ui', 'UX/UI portfolio'],
     ['/ui', '/ux_ui', 'UX/UI portfolio'],
     ['/uxui', '/ux_ui', 'UX/UI portfolio'],
@@ -57,3 +58,13 @@ test.each([
         expect(window.history.length).toBe(historyLength);
     }
 });
+
+test.each(['/ux-ui/contents/portfolio/mission-control', '/ux_ui/contents/portfolio/mission-control'])(
+    '%s opens the project inside the UX/UI portfolio', path => {
+        window.history.replaceState(null, '', path + '?preview=1');
+        expect(renderToStaticMarkup(<App />)).toContain('UX/UI portfolio');
+        expect(window.location.pathname).toBe('/ux_ui');
+        expect(window.location.hash).toBe('#project-2');
+        expect(window.location.search).toBe('?preview=1');
+    }
+);

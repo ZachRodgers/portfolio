@@ -1,0 +1,14 @@
+.mission-overview { padding: 0; scroll-margin-top: 32px; }
+.mission-overview-inner { width: calc(100% - var(--ux-content-inset) * 2); max-width: 1200px; margin: 0 auto; padding: clamp(40px, 6vw, 88px) 0; }
+.mission-overview h2 { max-width: 800px; margin: 0 0 36px; font-size: clamp(24px, 2.6vw, 36px); line-height: 1.25; font-weight: 400; letter-spacing: -.025em; }
+.mission-demo-background { position: relative; padding: 44px 24px 24px; background: #91938a; border-radius: 4px; }
+.mission-demo-viewport { position: relative; width: 100%; overflow: hidden; border-radius: 4px; box-shadow: 0 15px 40px #0003; }
+.mission-demo-viewport iframe { display: block; border: 0; transform-origin: top left; }
+.mission-playback { position: absolute; top: 10px; right: 18px; display: flex; gap: 5px; }
+.mission-playback button { display: grid; place-items: center; width: 25px; height: 25px; color: #65685f; background: transparent; border: 0; border-radius: 4px; cursor: pointer; transition: color .15s, background .15s; }
+.mission-playback button:hover, .mission-playback button:focus-visible { color: #32362e; background: #0000000b; outline: 1px solid #54584e; }
+.mission-feature-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 36px; padding-top: 32px; }
+.mission-feature-grid h3 { margin: 0 0 12px; font-size: 17px; font-weight: 500; line-height: 1.4; }
+.mission-feature-grid p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+@media(max-width:700px) { .mission-demo-background { padding: 38px 10px 10px; } .mission-feature-grid { grid-template-columns: 1fr; gap: 26px; } }
+@media(prefers-reduced-motion:reduce) { .mission-playback button { transition: none; } }

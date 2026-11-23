@@ -1,0 +1,246 @@
+import { useUi } from '@app/state/ui';
+import { useWorkspace, workspaceKey } from '@app/state/workspace';
+import { useMissions } from '@app/state/missions';
+import { useSessions } from '@app/state/sessions';
+
+const project = '/projects/mission-control';
+const prompt = 'Build workspace navigation and refine the editor layout. Work in parallel, with a separate stage for each task.';
+const fileData = [
+  ['src/components/WorkspaceTabs.tsx', 'added', 0],
+  ['src/components/Editor.tsx', 'modified', 1],
+  ['src/hooks/useWorkspace.ts', 'added', 0],
+  ['src/components/Sidebar.tsx', 'modified', 0],
+  ['src/styles/editor.css', 'modified', 1],
+  ['src/App.tsx', 'modified', 0],
+  ['src/styles/tokens.css', 'modified', 1],
+  ['src/components/LegacyNav.tsx', 'deleted', 0],
+  ['src/components/Toolbar.tsx', 'modified', 1],
+];
+const paths = [...fileData.map(f => f[0] as string), 'src/main.tsx', 'package.json', 'README.md', 'tsconfig.json'];
+const names = ['workspace-navigation', 'editor-layout'];
+const titles = ['Workspace navigation', 'Editor layout'];
+const listeners = new Map<string, Set<Function>>();
+let elapsed = 0, paused = true, visible = false, launched = false, released = 0, lastStep = -1, branch = 'main';
+let stageData: any[] = [];
+let changes: any[] = [];
+let missionData: Record<string, any> = {};
+let stoppedMissions = new Set<string>();
+let runTargets: any[] = [];
+let runSessions: any[] = [];
+let nextRunId = 0;
+const updateMotion = () => { (window as any).__demoPaused = paused || !visible; window.dispatchEvent(new Event('demo-motion')); };
+let settings: any = { hasOnboarded: true, recentProjects: [project], enabledProviders: ['codex', 'claude'], defaultModel: 'gpt-5.5', defaultServiceTier: 'default', permModeCounts: { auto: 3 }, thinkingCounts: { '2': 3 }, indexingEnabled: false, lastBranchByProject: {} };
+const ok = { ok: true, detail: '' };
+const status = () => ({ isRepo: true, branch, ahead: 0, behind: 0, changes: [...changes], conflicted: false, hasRemote: true });
+const sync = () => { useWorkspace.getState().setGitStatusFor(project, status()); useWorkspace.getState().setStagesFor(project, structuredClone(stageData)); };
+const sourceFor = (file: string) => file.endsWith('.css') ? '.editor {\n  display: flex;\n  gap: var(--s-4);\n  min-width: 0;\n}\n' : 'import { useWorkspace } from "../hooks/useWorkspace";\n\nexport function WorkspaceTabs() {\n  const { activeTab, setActiveTab } = useWorkspace();\n  return <nav aria-label="Workspace">{activeTab}</nav>;\n}\n';
+const listDir = (dir = '') => {
+  const entries = new Map();
+  for (const file of paths) {
+    if (dir && !file.startsWith(dir + '/')) continue;
+    const relative = dir ? file.slice(dir.length + 1) : file;
+    const name = relative.split('/')[0], path = dir ? dir + '/' + name : name;
+    entries.set(name, { name, path, type: relative.includes('/') ? 'dir' : 'file', gitState: changes.find(c => c.path === path)?.state });
+  }
+  return [...entries.values()].sort((a,b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name));
+};
+const transcripts = (i: number, step: number) => {
+  const file = i === 0 ? 'src/components/WorkspaceTabs.tsx' : 'src/components/Editor.tsx';
+  const items: any[] = [
+    { type: 'user', id: 'user-' + i, text: i === 0 ? prompt : 'Refine the editor spacing and toolbar using shared design tokens. Keep the work in its own stage.' },
+    { type: 'text', id: 'intro-' + i, content: i === 0 ? 'I’ll inspect the workspace, then work on navigation and the editor in parallel. Each task will have its own stage for review.' : 'I’ll check the editor layout and shared tokens, then refine the toolbar and spacing.', streaming: false },
+    { type: 'tool', id: 'read-' + i, toolUseId: 'read-' + i, name: 'Read', input: { file_path: file }, result: sourceFor(file), running: false }
+  ];
+  if (step >= 1) items.push({ type: 'thinking', id: 'thinking-' + i, content: 'Checking the existing component boundaries and shared state before making changes.', streaming: step === 1 });
+  if (step >= 2) items.push({ type: 'tool', id: 'edit-' + i, toolUseId: 'edit-' + i, name: 'Edit', input: { file_path: file, old_string: 'gap: 12px', new_string: 'gap: var(--s-4)' }, result: 'File updated successfully.', running: step === 2 });
+  if (step >= 3) items.push({ type: 'text', id: 'update-' + i, content: i === 0 ? 'The navigation now shares workspace state. I’m checking the keyboard controls and removing the old navigation.' : 'The editor uses shared spacing tokens. I’m checking the toolbar at narrower workspace widths.', streaming: false });
+  if (step >= 4) items.push({ type: 'tool', id: 'test-' + i, toolUseId: 'test-' + i, name: 'Bash', input: { command: 'npm run typecheck' }, result: step === 5 ? 'tsc --noEmit\nCompleted successfully.' : undefined, running: step === 4 });
+  if (step >= 5) items.push({ type: 'text', id: 'done-' + i, content: 'The changes are ready for review in **' + names[i] + '**. Type checks pass.', streaming: false });
+  return items;
+};
+function launch() {
+  if (launched) return missionData['demo-0'];
+  launched = true; elapsed = Math.max(2, elapsed);
+  stageData = names.map((name, i) => ({ id: 'stage-' + i, name, files: [] }));
+  missionData = Object.fromEntries(names.map((name,i) => {
+    const id = 'demo-' + i;
+    return [id, { id, title: titles[i], prompt, projectPath: project, projectPaths: [project], createdAt: Date.now() + i, updatedAt: Date.now(), status: 'running', agents: [{ role: 'solo', roleLabel: 'Developer', sessionKey: id, status: 'working', costUsd: 0, activity: 'Inspecting workspace components', orbState: 'searching' }], skills: [], attachments: [], planMode: false, model: 'gpt-5.5', permissionMode: 'auto', maxThinkingTokens: 16384, totalCostUsd: 0, progress: 0, chatStage: { name, stageIds: { [project]: 'stage-' + i } } }];
+  }));
+  useMissions.setState({ missions: {...missionData}, activeMissionId: 'demo-0', loaded: true });
+  tickState(); sync();
+  return missionData['demo-0'];
+}
+function tickState() {
+  if (!launched) return;
+  const done = elapsed >= 20;
+  const step = done ? 5 : Math.min(4, Math.floor((elapsed - 2) / 3.6));
+  if (step !== lastStep) {
+    useSessions.setState({ transcripts: Object.fromEntries([0,1].map(i => ['demo-' + i, transcripts(i,step)])), statuses: { 'demo-0': stoppedMissions.has('demo-0') ? 'idle' : done ? 'complete' : 'working', 'demo-1': stoppedMissions.has('demo-1') ? 'idle' : done ? 'complete' : 'working' } });
+    lastStep = step;
+  }
+  const states = ['searching','weaving','solving','connecting','composing','breathing'];
+  const activities = ['Inspecting workspace components','Planning parallel changes','Updating workspace components','Checking keyboard controls','Running type checks','Ready for review'];
+  for (let i=0; i<2; i++) {
+    const id = 'demo-' + i, m = missionData[id];
+    if (!m || stoppedMissions.has(id)) continue;
+    missionData[id] = { ...m, progress: done ? 100 : Math.max(0, Math.round((elapsed-2)/18*100)), status: done ? 'complete' : 'running', unread: done, agents: m.agents.map((a: any) => ({...a, status: done ? 'complete' : 'working', activity: activities[step], orbState: states[(step+i)%states.length] })) };
+  }
+  useMissions.setState({ missions: {...missionData} });
+  const wanted = elapsed < 3 ? 0 : Math.min(9, Math.floor((elapsed - 3)*1.5)+2);
+  while (released < wanted) {
+    const [path,state,stage] = fileData[released++];
+    const change = { path, state, staged: false };
+    changes.push(change);
+    stageData.find(s => s.id === 'stage-' + stage)?.files.push({path,state});
+    sync();
+  }
+}
+function reset() {
+  elapsed = 0; launched = false; released = 0; lastStep = -1; stageData = []; changes = []; missionData = {};
+  stoppedMissions = new Set();
+  for (const session of runSessions) if (session.alive) listeners.get('terminal:exit')?.forEach(fn=>fn({id:session.id}));
+  runSessions = [];
+  localStorage.setItem('mc:draft:new:' + project, prompt);
+  useUi.getState().clearPreviewContext();
+  window.location.hash='';
+  useUi.setState({route:{name:'launchpad'}});
+  useMissions.setState({ missions: {}, activeMissionId: null, loaded: true });
+  useSessions.setState({transcripts:{},statuses:{}});
+  sync();
+}
+const handlers: Record<string, Function> = {
+  'app.home': () => '/projects',
+  'auth.status': () => Object.fromEntries(['codex','claude'].map(provider => [provider, { provider, cliPath: '/usr/bin/' + provider, authenticated: true, version: '1.0' }])),
+  'settings.get': () => settings,
+  'settings.set': (patch: any) => (settings = {...settings,...patch}),
+  'workspace.list': (_: string, dir: string) => listDir(dir),
+  'workspace.readFile': (_: string, file: string) => ({content:sourceFor(file),tooLarge:false}),
+  'workspace.search': (_: string, query: string) => paths.filter(p=>p.includes(query)).map(path=>({path,name:path.split('/').pop(),type:'file'})),
+  'workspace.searchContent': () => [],
+  'git.status': status,
+  'git.snapshot': () => ({projectPath:project,status:status(),commits:[],refs:['main','feature/workspace'].map(name=>({name:'refs/heads/'+name,shortName:name,hash:'demo-head',kind:'local',current:name===branch})),remotes:[],identity:{authorName:'',authorEmail:''},sync:{projectPath:project,intervalMs:0,running:false},hasMore:false}),
+  'github.repositoryIdentity': () => ({accounts:[],confidence:'unknown',detail:''}),
+  'git.compare': (_:string,left:string,right:string) => ({left,right,mergeBase:null,ahead:0,behind:0,conflicted:false,additions:0,deletions:0,files:[]}),
+  'git.commitDetail': () => null,
+  'git.merge': (_:string,request:any) => {branch=request.target;sync();return ok;},
+  'git.push': () => ok,
+  'git.pull': () => ok,
+  'git.stageAssignFiles': (_:string,assignments:any[]) => {for(const a of assignments)handlers['git.stageAddFile'](_,a.stageId,a.path);return ok;},
+  'git.stages': () => structuredClone(stageData),
+  'git.branches': () => ({current:branch,branches:['main','feature/workspace']}),
+  'git.checkout': (_: string, name: string) => { branch=name;sync();return ok; },
+  'git.createBranch': (_: string, name: string) => { branch=name;sync();return ok; },
+  'git.stageRename': (_: string,id:string,name:string) => { const s=stageData.find(s=>s.id===id);if(s)s.name=name;sync();return ok; },
+  'git.stageReorder': (_:string,ids:string[]) => {stageData=ids.map(id=>stageData.find(s=>s.id===id)).filter(Boolean);sync();return ok;},
+  'git.stageDelete': (_:string,id:string) => {stageData=stageData.filter(s=>s.id!==id);sync();return ok;},
+  'git.stageRemoveFile': (_:string,id:string,path:string) => {const s=stageData.find(s=>s.id===id);if(s)s.files=s.files.filter((f:any)=>f.path!==path);sync();return ok;},
+  'git.stageAddFile': (_:string,id:string,path:string) => {stageData.forEach(s=>s.files=s.files.filter((f:any)=>f.path!==path));stageData.find(s=>s.id===id)?.files.push(changes.find(c=>c.path===path));sync();return ok;},
+  'git.stageCreate': (_:string,selected:string[]=[]) => {stageData.push({id:'stage-'+Date.now(),name:'New stage',files:changes.filter(c=>selected.includes(c.path))});sync();return ok;},
+  'git.stageMerge': (_:string,id:string,destination:string) => {const from=stageData.find(s=>s.id===id),to=stageData.find(s=>s.id===destination);if(from&&to)to.files.push(...from.files);stageData=stageData.filter(s=>s.id!==id);sync();return ok;},
+  'git.generateCommitMessage': () => 'Refine workspace navigation and editor layout',
+  'git.commitStageAndPush': (_:string,id:string) => {const s=stageData.find(s=>s.id===id);changes=changes.filter(c=>!s?.files.some((f:any)=>f.path===c.path));stageData=stageData.filter(s=>s.id!==id);sync();return ok;},
+  'git.commitAndPush': () => {changes=[];stageData=[];sync();return ok;},
+  'git.diff': ({filePath}:any) => 'diff --git a/'+filePath+' b/'+filePath+'\n--- a/'+filePath+'\n+++ b/'+filePath+'\n@@ -1,3 +1,3 @@\n .editor {\n-  gap: 12px;\n+  gap: var(--s-4);\n }\n',
+  'git.discardChange': (_:string,path:string) => {changes=changes.filter(c=>c.path!==path);stageData.forEach(s=>s.files=s.files.filter((f:any)=>f.path!==path));sync();return ok;},
+  'git.stageDiscardFile': (_:string,id:string,path:string) => handlers['git.discardChange'](_,path),
+  'mission.list': () => Object.values(missionData),
+  'mission.launch': launch,
+  'mission.history': () => [],
+  'mission.remove': (id:string) => {delete missionData[id];return ok;},
+  'mission.markViewed': (id:string) => missionData[id],
+  'mission.rename': (id:string,title:string) => (missionData[id]={...missionData[id],title}),
+  'mission.updateSettings': (id:string,patch:any) => (missionData[id]={...missionData[id],...patch}),
+  'mission.send': (id:string,text:string) => { useSessions.getState().addUserMessage(id,text);return ok; },
+  'mission.stop': (id:string) => {
+    stoppedMissions.add(id);
+    if (missionData[id]) missionData[id] = {...missionData[id], status:'idle', agents:missionData[id].agents.map((agent:any) => ({...agent,status:'idle',activity:'Stopped'}))};
+    useMissions.setState({missions:{...missionData}});
+    useSessions.setState(state => ({statuses:{...state.statuses,[id]:'idle'}}));
+    return ok;
+  },
+  'preview.state': () => null,
+  'preview.list': () => [],
+  'preview.workspaceUrl': () => null,
+  'handoff.get': () => null,
+  'brand.status': () => ({projectPath:project,phase:'idle'}),
+  'brand.workspaceUrl': () => null,
+  'run.targets': () => [...runTargets],
+  'run.add': (_:string, input:any) => {
+    const target = {id:'demo-run-'+(++nextRunId),label:input.label,command:input.command,kind:'dev',primary:runTargets.length===0,custom:true};
+    runTargets.push(target);
+    return target;
+  },
+  'run.remove': (_:string,id:string) => {runTargets=runTargets.filter(target=>target.id!==id);return ok;},
+  'run.start': (_:string,id:string) => {
+    const target=runTargets.find(item=>item.id===id);
+    if(!target) throw new Error('Run command is no longer available.');
+    const session={id:'demo-terminal-'+id,title:target.label,kind:'run',cwd:project,alive:true,runTargetId:project+':'+id,browserPreview:false};
+    runSessions=runSessions.filter(item=>item.id!==session.id);runSessions.push(session);
+    listeners.get('terminal:created')?.forEach(fn=>fn(session));
+    listeners.get('terminal:data')?.forEach(fn=>fn({id:session.id,data:'$ '+target.command+'\r\nDemo run command started.\r\n'}));
+    return session;
+  },
+  'run.stop': (id:string) => {
+    runSessions=runSessions.map(session=>session.id===id?{...session,alive:false}:session);
+    listeners.get('terminal:exit')?.forEach(fn=>fn({id}));
+    return ok;
+  },
+  'terminal.list': () => [...runSessions],
+  'terminal.create': (_:string) => {
+    const session={id:'demo-terminal-shell-'+(++nextRunId),title:'Terminal',kind:'shell',cwd:project,alive:true};
+    runSessions.push(session);
+    listeners.get('terminal:created')?.forEach(fn=>fn(session));
+    listeners.get('terminal:data')?.forEach(fn=>fn({id:session.id,data:'Demo terminal session.\r\n'}));
+    return session;
+  },
+  'terminal.write': () => ok,
+  'terminal.resize': () => ok,
+  'terminal.backlog': (id:string) => runSessions.some(session=>session.id===id)?'$ demo\r\nDemo terminal session.\r\n':'',
+  'terminal.kill': (id:string) => handlers['run.stop'](id),
+  'skills.list': () => [],
+  'ideas.load': () => [],
+  'templates.list': () => [],
+  'session.commands': () => [],
+  'git.log': () => [],
+  'github.status': () => ({authenticated:false}),
+};
+(window as any).mc = new Proxy({
+  on: (name:string,fn:Function) => { if(!listeners.has(name))listeners.set(name,new Set());listeners.get(name)!.add(fn);return ()=>listeners.get(name)!.delete(fn); }
+}, {get(target:any, namespace:string) {
+  if(namespace==='on')return target.on;
+  return new Proxy({}, {get(_,method:string) {return async (...args:any[]) => {
+    const key=namespace+'.'+method;
+    if(handlers[key])return handlers[key](...args);
+    if(['list','load','commands','targets','history','repos'].includes(method))return [];
+    return null;
+  };}});
+}});
+export function initialize() {
+  if (parent === window) { paused = false; visible = true; }
+  localStorage.setItem('mc:draft:new:' + project,prompt);
+  useUi.setState({activeProject:project,selectedProjects:[project],blankMode:false,route:{name:'launchpad'},previewOpen:false});
+  useWorkspace.setState({changesOnly:true,expanded:{[workspaceKey(project,'')]:true}});
+  useMissions.setState({loaded:true});
+  sync();
+  window.addEventListener('hashchange', () => {
+    if (!window.location.hash || window.location.hash === '#/') return;
+    window.location.hash = '';
+    useUi.setState({route:{name:'launchpad'}});
+  });
+  window.addEventListener('message', event => {
+    if(event.source!==parent || event.origin!==location.origin || event.data?.type!=='mc-demo')return;
+    if(event.data.action==='replay')reset();
+    if(typeof event.data.paused==='boolean')paused=event.data.paused;
+    if(typeof event.data.visible==='boolean')visible=event.data.visible;
+    updateMotion();
+  });
+  updateMotion();
+  setInterval(()=>{
+    if(paused || !visible || document.hidden)return;
+    elapsed+=.25;
+    if(elapsed>=30)reset();
+    else if(elapsed>=2 && !launched)launch();
+    else tickState();
+  },250);
+  parent.postMessage({type:'mc-demo-ready'},location.origin);
+}

@@ -1,0 +1,11 @@
+import './service';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import './fonts.css';
+import '@app/styles/styles.css';
+import '@app/styles/base.css';
+import '@app/styles/components.css';
+import App from '@app/App';
+import { initialize } from './service';
+initialize();
+createRoot(document.getElementById('root')!).render(<App />);

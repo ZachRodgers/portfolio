@@ -13,6 +13,7 @@ const pages = {
 const aliases: Record<string, keyof typeof pages> = {
     '/design': '/industrial_design',
     '/id': '/industrial_design',
+    '/ux-ui': '/ux_ui',
     '/ux': '/ux_ui',
     '/ui': '/ux_ui',
     '/uxui': '/ux_ui',
@@ -21,6 +22,9 @@ const aliases: Record<string, keyof typeof pages> = {
 export const DEFAULT_ROUTE: keyof typeof pages = '/ux_ui';
 
 function App() {
+    if (/^\/(ux-ui|ux_ui)\/contents\/portfolio\/mission-control\/?$/.test(window.location.pathname)) {
+        window.history.replaceState(null, '', '/ux_ui' + window.location.search + '#project-2');
+    }
     const path = window.location.pathname.replace(/\/+$/, '') || '/';
     const isKnownRoute = Object.prototype.hasOwnProperty.call(pages, path);
     const alias = Object.prototype.hasOwnProperty.call(aliases, path) ? aliases[path] : undefined;
