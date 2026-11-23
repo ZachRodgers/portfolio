@@ -18,13 +18,13 @@
 .mission-playback button:focus-visible { color: #32362e; background: #0000000b; outline: 1px solid #54584e; outline-offset: 2px; }
 .mission-feature-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 36px; padding-top: 32px; }
 .mission-feature-grid h3 { margin: 0 0 12px; font-size: 17px; font-weight: 500; line-height: 1.4; }
-.mission-feature-grid p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+.mission-feature-grid p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
 .mission-browser-section .mission-overview-inner { max-width: 1480px; }
 .mission-browser-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(190px, 250px); align-items: center; gap: clamp(22px, 3vw, 42px); width: calc(100% - var(--ux-content-inset) * 2); max-width: 1480px; margin: 0 auto; padding: clamp(40px, 6vw, 88px) 0; }
 .mission-browser-layout .mission-demo-background { min-width: 0; }
 .mission-browser-notes { display: grid; gap: 36px; }
 .mission-browser-notes h3 { margin: 0 0 12px; font-size: 17px; font-weight: 500; line-height: 1.4; }
-.mission-browser-notes p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+.mission-browser-notes p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
 @media(max-width:1100px) { .mission-browser-layout { grid-template-columns: 1fr; } .mission-browser-notes { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; } }
 @media(max-width:700px) { .mission-demo-background { padding: 38px 10px 10px; } .mission-feature-grid { grid-template-columns: 1fr; gap: 26px; } .mission-browser-notes { grid-template-columns: 1fr; gap: 22px; } }
 .mission-demo-background--crop { padding-left: 0; }
@@ -35,7 +35,7 @@
 .mission-showcase-tabs button[aria-selected="true"] { color: #fff; }
 .mission-showcase-tabs button:focus-visible { outline: 2px solid white; outline-offset: 2px; }
 .mission-showcase-description { max-width: 700px; min-height: 54px; margin: 0 auto 24px; text-align: center; }
-.mission-showcase-description p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+.mission-showcase-description p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: balance; }
 .mission-showcase-frames { display: grid; }
 .mission-showcase-frame { grid-area: 1 / 1; min-width: 0; visibility: hidden; pointer-events: none; }
 .mission-showcase-frame[data-active="true"] { visibility: visible; pointer-events: auto; }

@@ -15,11 +15,11 @@ export default function MissionControlBrowserDesign() {
             <aside className="mission-browser-notes">
                 <article>
                     <h3>Browser Preview</h3>
-                    <p>Run a site beside the conversation. Browse the page, inspect details, and capture an area to discuss.</p>
+                    <p>Run the site beside the conversation and see the work in context. Browse it together, inspect details, and capture an area when a screenshot says more than a description.</p>
                 </article>
                 <article>
                     <h3>Design Mode</h3>
-                    <p>Select elements to adjust spacing and styles, edit text, or leave comments anchored to the page.</p>
+                    <p>Give designers a hands-on way to refine the result. Adjust spacing and styles, edit text, or pin a comment to the exact element that needs attention.</p>
                 </article>
             </aside>
         </div>

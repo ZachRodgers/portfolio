@@ -3,10 +3,10 @@ import FrameworkRule from '../../../sections/FrameworkRule';
 import MissionDemoFrame from './MissionDemoFrame';
 
 const features = [
-    { id: 'brand', label: 'Brand Guideline', description: 'Keep colors, type, and components in one place. Review the guideline alongside the project as it evolves.' },
-    { id: 'index', label: 'Codebase Index', description: 'Explore files, modules, and their connections in a 3D map. Search the index to find the parts of a project you need.' },
-    { id: 'git', label: 'Git Editor', description: 'See branches, commits, and uncommitted changes together, then review and manage them from the workspace.' },
-    { id: 'skills', label: 'Skill Manager', description: 'Browse and manage reusable instructions for tasks such as planning, mockups, and wireframes.' },
+    { id: 'brand', label: 'Brand Guideline', description: 'A source-backed guide brings the project’s colors, type, and components together. It updates as the project changes, giving future work a consistent reference.' },
+    { id: 'index', label: 'Codebase Index', description: 'A local index maps the codebase and points agents to relevant files and symbols. Less searching and fewer broad reads help save time and context.' },
+    { id: 'git', label: 'Git Editor', description: 'Inspect commit history, compare branches, and review file diffs in one place. Manage the repository with familiar Git controls, without switching to a terminal.' },
+    { id: 'skills', label: 'Skill Manager', description: 'Create and manage skills that turn repeatable processes into workflows. Give agents instructions for using the canvas, browser, and other app capabilities.' },
 ];
 
 export default function MissionControlFeatures() {

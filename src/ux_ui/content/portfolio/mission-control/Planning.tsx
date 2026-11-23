@@ -5,15 +5,15 @@ import MissionDemoFrame from './MissionDemoFrame';
 const features = [
     {
         title: 'Questions',
-        copy: 'Answer questions before work begins to help set the direction and make decisions early.'
+        copy: 'Questions bring important decisions forward before implementation starts. Compare options, add context, and guide the work without rewriting the brief.'
     },
     {
         title: 'Preview Canvas',
-        copy: 'Review interactive previews, wireframes, and mockups alongside the conversation.'
+        copy: 'Watch previews, wireframes, and mockups take shape inside the app. Compare directions, leave comments, and make changes alongside the conversation.'
     },
     {
         title: 'Plans & Todo Lists',
-        copy: 'Review the plan and its tasks together, then follow progress as the work takes shape.'
+        copy: 'Review a visual HTML plan alongside its task list. Working components and a clear sequence make the proposed work easier to assess before it begins.'
     }
 ];
 
