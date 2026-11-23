@@ -3,6 +3,12 @@ const path = require('path');
 const source = process.env.MISSION_CONTROL_SOURCE || '/home/Zach/Repos/mission-control';
 const esbuild = require(path.join(source, 'node_modules/esbuild'));
 const outdir = path.resolve('public/assets/ux_ui/content/portfolio/mission-control/demo');
+esbuild.buildSync({
+  entryPoints: ['scripts/mission-control-demo/plan-design-engine.ts'],
+  bundle: true, minify: true, target: 'es2022',
+  outfile: path.resolve('public/assets/ux_ui/content/portfolio/mission-control/plan-design-engine.js'),
+  alias: { '@shared': path.join(source, 'src/shared') }
+});
 esbuild.build({
   entryPoints: ['scripts/mission-control-demo/entry.tsx'],
   bundle: true, splitting: true, format: 'esm', target: 'es2022',
@@ -124,6 +130,22 @@ esbuild.build({
         contents = contents.replace(
           'setAgentCursor({ x: guest.clientWidth / 2, y: guest.clientHeight / 2 })',
           'if (browserDemo) await moveCursorTo({ x: guest.clientWidth / 2, y: guest.clientHeight / 2 }); else setAgentCursor({ x: guest.clientWidth / 2, y: guest.clientHeight / 2 })'
+        );
+        return { contents, loader: 'tsx', resolveDir: path.dirname(args.path) };
+      });
+    }
+  }, {
+    name: 'planning-demo-toolbar',
+    setup(build) {
+      build.onLoad({ filter: /\/renderer\/src\/components\/preview\/DesignToolbar\.tsx$/ }, args => {
+        let contents = fs.readFileSync(args.path, 'utf8');
+        contents = contents.replace(
+          'const visible = tools.filter((item) => !(planMode && item.hideInPlan))',
+          "const planningPreview = surface === 'preview' && new URLSearchParams(window.location.search).get('scene') === 'planning'\n  const visible = tools.filter((item) => planningPreview ? item.id === 'pointer' || item.id === 'comment' : !(planMode && item.hideInPlan))"
+        );
+        contents = contents.replace(
+          /      <span className=\{styles\.divider\} \/>\n      <button className=\{styles\.tool\} title="Undo \(Ctrl\/Cmd\+Z\)"[\s\S]*?<\/button>\n      <button className=\{styles\.tool\} title="Redo \(Ctrl\/Cmd\+Shift\+Z\)"[\s\S]*?<\/button>/,
+          match => `      {!planningPreview && (<>\n${match}\n      </>)}`
         );
         return { contents, loader: 'tsx', resolveDir: path.dirname(args.path) };
       });

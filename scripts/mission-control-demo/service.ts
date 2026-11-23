@@ -15,29 +15,29 @@ const browserSessionKey = 'browser-design-agent';
 const planningPlanUrl = '/assets/ux_ui/content/portfolio/mission-control/plan.html';
 const browserPreviewUrl = '/assets/ux_ui/content/portfolio/mission-control/browser-preview.html';
 const planningTasks = [
-  { content: 'Map the current workspace navigation', status: 'completed', activeForm: 'Mapping the workspace navigation' },
-  { content: 'Define the overview information hierarchy', status: 'completed', activeForm: 'Defining the overview hierarchy' },
-  { content: 'Draft the dashboard preview', status: 'completed', activeForm: 'Drafting the dashboard preview' },
-  { content: 'Check the responsive layout', status: 'completed', activeForm: 'Checking the responsive layout' },
-  { content: 'Connect the workspace navigation states', status: 'in_progress', activeForm: 'Connecting the workspace navigation states' },
-  { content: 'Polish empty and loading states', status: 'pending', activeForm: 'Polishing empty and loading states' },
-  { content: 'Review keyboard and focus behavior', status: 'pending', activeForm: 'Reviewing keyboard and focus behavior' }
+  { content: 'Define the Toronto stay and its guests', status: 'completed', activeForm: 'Defining the stay and its guests' },
+  { content: 'Map the homepage and booking journey', status: 'completed', activeForm: 'Mapping the booking journey' },
+  { content: 'Draft the homepage preview', status: 'completed', activeForm: 'Drafting the homepage preview' },
+  { content: 'Check the mobile booking layout', status: 'completed', activeForm: 'Checking the mobile booking layout' },
+  { content: 'Build the stay and booking sections', status: 'in_progress', activeForm: 'Building the stay and booking sections' },
+  { content: 'Polish the Toronto imagery and copy', status: 'pending', activeForm: 'Polishing the imagery and copy' },
+  { content: 'Review booking accessibility', status: 'pending', activeForm: 'Reviewing booking accessibility' }
 ];
-const prompt = 'Build workspace navigation and refine the editor layout. Work in parallel, with a separate stage for each task.';
+const prompt = 'Build Casa Toronto: create the stay homepage and booking experience in parallel, with a separate stage for each.';
 const fileData = [
-  ['src/components/WorkspaceTabs.tsx', 'added', 0],
-  ['src/components/Editor.tsx', 'modified', 1],
-  ['src/hooks/useWorkspace.ts', 'added', 0],
-  ['src/components/Sidebar.tsx', 'modified', 0],
-  ['src/styles/editor.css', 'modified', 1],
+  ['src/components/StayHero.tsx', 'added', 0],
+  ['src/components/BookingForm.tsx', 'modified', 1],
+  ['src/data/stays.ts', 'added', 0],
+  ['src/components/SiteNav.tsx', 'modified', 0],
+  ['src/styles/booking.css', 'modified', 1],
   ['src/App.tsx', 'modified', 0],
   ['src/styles/tokens.css', 'modified', 1],
-  ['src/components/LegacyNav.tsx', 'deleted', 0],
-  ['src/components/Toolbar.tsx', 'modified', 1],
+  ['src/components/OldBooking.tsx', 'deleted', 0],
+  ['src/components/StayGallery.tsx', 'modified', 1],
 ];
 const paths = [...fileData.map(f => f[0] as string), 'src/main.tsx', 'package.json', 'README.md', 'tsconfig.json'];
-const names = ['workspace-navigation', 'editor-layout'];
-const titles = ['Workspace navigation', 'Editor layout'];
+const names = ['stay-homepage', 'booking-experience'];
+const titles = ['Stay homepage', 'Booking experience'];
 const listeners = new Map<string, Set<Function>>();
 let elapsed = 0, paused = true, visible = false, started = false, launched = false, released = 0, lastStep = '', branch = 'main';
 let stageData: any[] = [];
@@ -63,13 +63,13 @@ let browserDemoFrameWidth = 1100;
 const browserDemoCanvasWidth = (frameWidth: number) => {
   return Math.max(560, Math.round(frameWidth - 400));
 };
-let ideaNotes: any[] = [{ id: 'demo-idea-1', name: 'Switch between active chats', body: 'Add a keyboard shortcut to move between active agent conversations.' }];
+let ideaNotes: any[] = [{ id: 'demo-idea-1', name: 'Highlight Toronto neighbourhoods', body: 'Add a short guide to nearby cafés and waterfront walks.' }];
 const updateMotion = () => { (window as any).__demoPaused = paused || !visible; window.dispatchEvent(new Event('demo-motion')); };
 let settings: any = { hasOnboarded: true, recentProjects: [project], enabledProviders: ['codex', 'claude'], defaultModel: 'sonnet', defaultServiceTier: 'default', permModeCounts: { auto: 3 }, thinkingCounts: { '2': 3 }, indexingEnabled: false, lastBranchByProject: {} };
 const ok = { ok: true, detail: '' };
 const status = () => ({ isRepo: true, branch, ahead: 0, behind: 0, changes: [...changes], conflicted: false, hasRemote: true });
 const sync = () => { useWorkspace.getState().setGitStatusFor(project, status()); useWorkspace.getState().setStagesFor(project, structuredClone(stageData)); };
-const sourceFor = (file: string) => file.endsWith('.css') ? '.editor {\n  display: flex;\n  gap: var(--s-4);\n  min-width: 0;\n}\n' : 'import { useWorkspace } from "../hooks/useWorkspace";\n\nexport function WorkspaceTabs() {\n  const { activeTab, setActiveTab } = useWorkspace();\n  return <nav aria-label="Workspace">{activeTab}</nav>;\n}\n';
+const sourceFor = (file: string) => file.endsWith('.css') ? '.booking-form {\n  display: flex;\n  gap: var(--s-4);\n}\n' : file.includes('Booking') ? 'export function BookingForm() {\n  return <form aria-label="Check availability">Choose dates and guests</form>;\n}\n' : 'export function StayHero() {\n  return <section><h1>A slower kind of escape.</h1><p>Discover Casa Toronto.</p></section>;\n}\n';
 const listDir = (dir = '') => {
   const entries = new Map();
   for (const file of paths) {
@@ -81,16 +81,16 @@ const listDir = (dir = '') => {
   return [...entries.values()].sort((a,b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name));
 };
 const transcripts = (i: number, step: number) => {
-  const file = i === 0 ? 'src/components/WorkspaceTabs.tsx' : 'src/components/Editor.tsx';
+  const file = i === 0 ? 'src/components/StayHero.tsx' : 'src/components/BookingForm.tsx';
   const items: any[] = [
-    { type: 'user', id: 'user-' + i, text: i === 0 ? prompt : 'Refine the editor spacing and toolbar using shared design tokens. Keep the work in its own stage.' },
-    { type: 'text', id: 'intro-' + i, content: i === 0 ? 'I’ll inspect the workspace, then work on navigation and the editor in parallel. Each task will have its own stage for review.' : 'I’ll check the editor layout and shared tokens, then refine the toolbar and spacing.', streaming: false },
+    { type: 'user', id: 'user-' + i, text: i === 0 ? prompt : 'Build the date and guest booking form with clear, responsive controls. Keep the work in its own stage.' },
+    { type: 'text', id: 'intro-' + i, content: i === 0 ? 'I’ll build the stay homepage and booking flow in parallel, with a separate stage for each.' : 'I’ll build the date and guest controls and check the form on smaller screens.', streaming: false },
     { type: 'tool', id: 'read-' + i, toolUseId: 'read-' + i, name: 'Read', input: { file_path: file }, result: sourceFor(file), running: false }
   ];
-  if (step >= 1) items.push({ type: 'thinking', id: 'thinking-' + i, content: 'Checking the existing component boundaries and shared state before making changes.', streaming: step === 1 });
+  if (step >= 1) items.push({ type: 'thinking', id: 'thinking-' + i, content: 'Checking the homepage sections and booking requirements before making changes.', streaming: step === 1 });
   if (step >= 2) items.push({ type: 'tool', id: 'edit-' + i, toolUseId: 'edit-' + i, name: 'Edit', input: { file_path: file, old_string: 'gap: 12px', new_string: 'gap: var(--s-4)' }, result: 'File updated successfully.', running: step === 2 });
-  if (step >= 3) items.push({ type: 'text', id: 'update-' + i, content: i === 0 ? 'The navigation now shares workspace state. I’m checking the keyboard controls and removing the old navigation.' : 'The editor uses shared spacing tokens. I’m checking the toolbar at narrower workspace widths.', streaming: false });
-  if (step >= 3) items.push({ type: 'tool', id: 'read-related-' + i, toolUseId: 'read-related-' + i, name: 'Read', input: { file_path: i === 0 ? 'src/hooks/useWorkspace.ts' : 'src/styles/tokens.css' }, result: sourceFor(file), running: false });
+  if (step >= 3) items.push({ type: 'text', id: 'update-' + i, content: i === 0 ? 'The homepage now introduces the stay and its Toronto setting. I’m checking navigation and the responsive layout.' : 'The booking form now groups dates and guests. I’m checking the controls on mobile.', streaming: false });
+  if (step >= 3) items.push({ type: 'tool', id: 'read-related-' + i, toolUseId: 'read-related-' + i, name: 'Read', input: { file_path: i === 0 ? 'src/data/stays.ts' : 'src/styles/tokens.css' }, result: sourceFor(file), running: false });
   if (step >= 4) items.push({ type: 'tool', id: 'test-' + i, toolUseId: 'test-' + i, name: 'Bash', input: { command: 'npm run typecheck' }, result: step === 5 ? 'tsc --noEmit\nCompleted successfully.' : undefined, running: step === 4 });
   if (step >= 4) items.push({ type: 'tool', id: 'diff-' + i, toolUseId: 'diff-' + i, name: 'Bash', input: { command: 'git diff --check' }, result: step === 5 ? 'No whitespace errors found.' : undefined, running: step === 4 });
   if (step >= 5) items.push({ type: 'text', id: 'done-' + i, content: 'The changes are ready for review in **' + names[i] + '**. Type checks pass.', streaming: false });
@@ -126,7 +126,7 @@ function launch() {
   stageData = names.map((name, i) => ({ id: 'stage-' + i, name, files: [] }));
   missionData = Object.fromEntries(names.map((name,i) => {
     const id = 'demo-' + i;
-    return [id, { id, title: titles[i], prompt, projectPath: project, projectPaths: [project], createdAt: Date.now() + i, updatedAt: Date.now(), status: 'running', agents: [{ role: 'solo', roleLabel: 'Developer', sessionKey: id, status: 'working', costUsd: 0, activity: 'Inspecting workspace components', orbState: 'searching' }], skills: [], attachments: [], planMode: false, model: 'sonnet', permissionMode: 'auto', maxThinkingTokens: 16384, totalCostUsd: 0, progress: 0, chatStage: { name, stageIds: { [project]: 'stage-' + i } } }];
+    return [id, { id, title: titles[i], prompt, projectPath: project, projectPaths: [project], createdAt: Date.now() + i, updatedAt: Date.now(), status: 'running', agents: [{ role: 'solo', roleLabel: 'Developer', sessionKey: id, status: 'working', costUsd: 0, activity: 'Inspecting the stay components', orbState: 'searching' }], skills: [], attachments: [], planMode: false, model: 'sonnet', permissionMode: 'auto', maxThinkingTokens: 16384, totalCostUsd: 0, progress: 0, chatStage: { name, stageIds: { [project]: 'stage-' + i } } }];
   }));
   useMissions.setState({ missions: {...missionData}, activeMissionId: 'demo-0', loaded: true });
   tickState(); sync();
@@ -147,7 +147,7 @@ function tickState() {
     lastStep = stepKey;
   }
   const states = ['searching','weaving','solving','connecting','composing','breathing'];
-  const activities = ['Inspecting workspace components','Planning parallel changes','Updating workspace components','Checking keyboard controls','Running type checks','Ready for review'];
+  const activities = ['Inspecting the stay components','Planning the two site features','Building the stay website','Checking the booking controls','Running type checks','Ready for review'];
   for (let i=0; i<2; i++) {
     const id = 'demo-' + i, m = missionData[id];
     if (!m || stoppedMissions.has(id)) continue;
@@ -179,7 +179,7 @@ function startBrowserDesignScene() {
   browserAgentFinishedAt = null;
   const mission = {
     id: browserMissionId,
-    title: 'Review the Casa Noma homepage',
+    title: 'Review the Casa Toronto homepage',
     prompt: 'Review the live homepage, check its rhythm as you scroll, and capture the hero for feedback.',
     projectPath: project,
     projectPaths: [project],
@@ -265,14 +265,14 @@ function startPlanningScene() {
   launched = true;
   const mission = {
     id: planningMissionId,
-    title: 'Workspace dashboard refresh',
-    prompt: 'Help me rethink the workspace home. Ask a few questions first, then prepare a clickable preview and a clear task list before building.',
+    title: 'Casa Toronto website plan',
+    prompt: 'Help me plan a calm, welcoming website for Casa Toronto. Ask a few questions, then prepare a homepage preview and task list before building.',
     projectPath: project,
     projectPaths: [project],
     createdAt: Date.now(),
     updatedAt: Date.now(),
     status: 'running',
-    agents: [{ role: 'solo', roleLabel: 'Product designer', sessionKey: planningSessionKey, status: 'working', costUsd: 0, activity: 'Reviewing the current workspace', orbState: 'searching' }],
+    agents: [{ role: 'solo', roleLabel: 'Product designer', sessionKey: planningSessionKey, status: 'working', costUsd: 0, activity: 'Reviewing the stay brief', orbState: 'searching' }],
     skills: [], attachments: [], planMode: true, model: 'sonnet', permissionMode: 'plan', maxThinkingTokens: 16384, totalCostUsd: 0, progress: 12
   };
   missionData = { [planningMissionId]: mission };
@@ -321,18 +321,18 @@ function tickPlanningScene() {
       toolUseId: 'planning-question-set-' + planningQuestionGeneration,
       toolName: 'AskUserQuestion',
       input: { questions: [
-        { question: 'When you open Mission Control, what should help you get moving fastest?', header: 'First look', options: [
-          { label: 'Resume a project', description: 'Bring my active work and last stopping point forward.' },
-          { label: 'Spot what changed', description: 'Show recent updates and project health first.' },
-          { label: 'Choose my next task', description: 'Put a useful next action at the top.' }
+        { question: 'What should guests notice first when they arrive on the site?', header: 'First impression', options: [
+          { label: 'The stay itself', description: 'Lead with a beautiful interior and a clear introduction.' },
+          { label: 'The Toronto setting', description: 'Introduce the city and the neighbourhood first.' },
+          { label: 'Booking a stay', description: 'Put dates and availability front and centre.' }
         ] },
-        { question: 'How much should the overview tell you before you open a project?', header: 'Level of detail', options: [
-          { label: 'A quick scan', description: 'Status, next action, and a little recent activity.' },
-          { label: 'The full picture', description: 'More task and activity context at a glance.' }
+        { question: 'How should guests begin booking?', header: 'Booking flow', options: [
+          { label: 'Quick availability', description: 'Show dates and guests on the homepage.' },
+          { label: 'Explore first', description: 'Introduce the rooms before asking for dates.' }
         ] },
-        { question: 'Which trade-off fits the way you work?', header: 'Workspace feel', options: [
-          { label: 'Room to focus', description: 'Fewer, clearer signals with space to think.' },
-          { label: 'More within reach', description: 'A denser view with more controls visible.' }
+        { question: 'What mood should the site convey?', header: 'Visual direction', options: [
+          { label: 'Calm and considered', description: 'Warm interiors, generous space, and quiet typography.' },
+          { label: 'Lively and local', description: 'More colour and energy inspired by the city.' }
         ] }
       ] }
     };
@@ -343,7 +343,7 @@ function tickPlanningScene() {
   if (!planningQuestionShown) {
     const orbState = elapsed < 3.2 ? 'searching' : 'weaving';
     const progress = elapsed < 3.2 ? 18 : 28;
-    missionData[planningMissionId] = { ...missionData[planningMissionId], progress, agents: missionData[planningMissionId].agents.map((agent:any) => ({ ...agent, status: 'working', activity: elapsed < 3.2 ? 'Reviewing the existing workspace' : 'Drafting the first layout', orbState })) };
+    missionData[planningMissionId] = { ...missionData[planningMissionId], progress, agents: missionData[planningMissionId].agents.map((agent:any) => ({ ...agent, status: 'working', activity: elapsed < 3.2 ? 'Reviewing the stay brief' : 'Drafting the first layout', orbState })) };
     useMissions.setState({ missions: { ...missionData } });
   }
 }
@@ -388,7 +388,7 @@ const handlers: Record<string, Function> = {
   'workspace.search': (_: string, query: string) => paths.filter(p=>p.includes(query)).map(path=>({path,name:path.split('/').pop(),type:'file'})),
   'workspace.searchContent': () => [],
   'git.status': status,
-  'git.snapshot': () => ({projectPath:project,status:status(),commits:[],refs:['main','feature/workspace'].map(name=>({name:'refs/heads/'+name,shortName:name,hash:'demo-head',kind:'local',current:name===branch})),remotes:[],identity:{authorName:'',authorEmail:''},sync:{projectPath:project,intervalMs:0,running:false},hasMore:false}),
+  'git.snapshot': () => ({projectPath:project,status:status(),commits:[],refs:['main','feature/casa-toronto'].map(name=>({name:'refs/heads/'+name,shortName:name,hash:'demo-head',kind:'local',current:name===branch})),remotes:[],identity:{authorName:'',authorEmail:''},sync:{projectPath:project,intervalMs:0,running:false},hasMore:false}),
   'github.repositoryIdentity': () => ({accounts:[],confidence:'unknown',detail:''}),
   'git.compare': (_:string,left:string,right:string) => ({left,right,mergeBase:null,ahead:0,behind:0,conflicted:false,additions:0,deletions:0,files:[]}),
   'git.commitDetail': () => null,
@@ -397,7 +397,7 @@ const handlers: Record<string, Function> = {
   'git.pull': () => ok,
   'git.stageAssignFiles': (_:string,assignments:any[]) => {for(const a of assignments)handlers['git.stageAddFile'](_,a.stageId,a.path);return ok;},
   'git.stages': () => structuredClone(stageData),
-  'git.branches': () => ({current:branch,branches:['main','feature/workspace']}),
+  'git.branches': () => ({current:branch,branches:['main','feature/casa-toronto']}),
   'git.checkout': (_: string, name: string) => { branch=name;sync();return ok; },
   'git.createBranch': (_: string, name: string) => { branch=name;sync();return ok; },
   'git.stageRename': (_: string,id:string,name:string) => { const s=stageData.find(s=>s.id===id);if(s)s.name=name;sync();return ok; },
@@ -407,10 +407,10 @@ const handlers: Record<string, Function> = {
   'git.stageAddFile': (_:string,id:string,path:string) => {stageData.forEach(s=>s.files=s.files.filter((f:any)=>f.path!==path));stageData.find(s=>s.id===id)?.files.push(changes.find(c=>c.path===path));sync();return ok;},
   'git.stageCreate': (_:string,selected:string[]=[]) => {stageData.push({id:'stage-'+Date.now(),name:'New stage',files:changes.filter(c=>selected.includes(c.path))});sync();return ok;},
   'git.stageMerge': (_:string,id:string,destination:string) => {const from=stageData.find(s=>s.id===id),to=stageData.find(s=>s.id===destination);if(from&&to)to.files.push(...from.files);stageData=stageData.filter(s=>s.id!==id);sync();return ok;},
-  'git.generateCommitMessage': () => 'Refine workspace navigation and editor layout',
+  'git.generateCommitMessage': () => 'Build stay homepage and booking experience',
   'git.commitStageAndPush': (_:string,id:string) => {const s=stageData.find(s=>s.id===id);changes=changes.filter(c=>!s?.files.some((f:any)=>f.path===c.path));stageData=stageData.filter(s=>s.id!==id);sync();return ok;},
   'git.commitAndPush': () => {changes=[];stageData=[];sync();return ok;},
-  'git.diff': ({filePath}:any) => 'diff --git a/'+filePath+' b/'+filePath+'\n--- a/'+filePath+'\n+++ b/'+filePath+'\n@@ -1,3 +1,3 @@\n .editor {\n-  gap: 12px;\n+  gap: var(--s-4);\n }\n',
+  'git.diff': ({filePath}:any) => 'diff --git a/'+filePath+' b/'+filePath+'\n--- a/'+filePath+'\n+++ b/'+filePath+'\n@@ -1,3 +1,3 @@\n .booking-form {\n-  gap: 12px;\n+  gap: var(--s-4);\n }\n',
   'git.discardChange': (_:string,path:string) => {changes=changes.filter(c=>c.path!==path);stageData.forEach(s=>s.files=s.files.filter((f:any)=>f.path!==path));sync();return ok;},
   'git.stageDiscardFile': (_:string,id:string,path:string) => handlers['git.discardChange'](_,path),
   'mission.list': () => Object.values(missionData),
