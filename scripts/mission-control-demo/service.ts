@@ -3,11 +3,13 @@ import { useWorkspace, workspaceKey } from '@app/state/workspace';
 import { useMissions } from '@app/state/missions';
 import { useSessions } from '@app/state/sessions';
 import { browserScopeKey, useComments } from '@app/state/comments';
+import bundledSkills from './bundled-skills.json';
 
 const project = '/projects/demo-repo';
 const scene = new URLSearchParams(window.location.search).get('scene');
 const planningScene = scene === 'planning';
 const browserDesignScene = scene === 'browser-design';
+const featureScene = scene?.startsWith('feature-') ? scene.slice(8) : null;
 const planningMissionId = 'planning-demo';
 const planningSessionKey = 'planning-demo-agent';
 const browserMissionId = 'browser-design-demo';
@@ -38,8 +40,64 @@ const fileData = [
 const paths = [...fileData.map(f => f[0] as string), 'src/main.tsx', 'package.json', 'README.md', 'tsconfig.json'];
 const names = ['stay-homepage', 'booking-experience'];
 const titles = ['Stay homepage', 'Booking experience'];
+const demoCommits = [
+  ['a81bc42','Polish homepage accessibility',['a70bb41']],
+  ['ab381f9','Add suite availability states',['ef451bb']],
+  ['bc491a4','Build neighbourhood map cards',['8f421ab']],
+  ['a70bb41','Merge gallery into main',['a61bb40','cd271d1']],
+  ['ef451bb','Validate booking dates',['f24a01b']],
+  ['cd271d1','Add responsive image crops',['e75d291']],
+  ['a61bb40','Refine mobile navigation',['c13ef82']],
+  ['f24a01b','Add guest count selector',['b49df10']],
+  ['e75d291','Refine room photography',['e64d290']],
+  ['8f421ab','Add Toronto neighbourhood guide',['8e321aa']],
+  ['c13ef82','Merge stay homepage into main',['6de190c','3ba4e12']],
+  ['b49df10','Add arrival and departure inputs',['6de190c']],
+  ['e64d290','Build gallery layout',['5ab298e']],
+  ['8e321aa','Gather local recommendations',['6de190c']],
+  ['3ba4e12','Build room cards and stay details',['3aa3e11']],
+  ['3aa3e11','Add homepage hero and copy',['5ab298e']],
+  ['6de190c','Add responsive page shell',['5ab298e']],
+  ['5ab298e','Create navigation and booking links',['4ce218a']],
+  ['4ce218a','Define Casa Toronto design tokens',['2ba160d']],
+  ['2ba160d','Add type and colour foundations',['d900c43']], ['d900c43','Set up project',[]]
+].map(([hash, subject, parents], i) => ({ hash, shortHash: hash, subject, parents, body: '', authorName: 'Zach', authorEmail: '', authoredAt: new Date(Date.UTC(2026,10,22-i,12)).toISOString(), committedAt: new Date(Date.UTC(2026,10,22-i,12)).toISOString() }));
+const indexGroups: Record<string, number> = {};
+[['app','layout','navigation','hero','rooms','footer','header','hero-copy','room-detail','routing','seo','metadata','responsive'],['booking','availability','forms','dates','guests','pricing','booking-summary','calendar','date-picker','guest-picker','price-breakdown','availability-api','booking-state','validation','form-tests'],['gallery','neighbourhood','journal','content','assets','suites','images','maps','location','room-data','site-copy','local-guides','image-loader','image-crops','map-markers','journal-posts'],['styles','tokens','accessibility','tests','utilities','buttons','cards','typography','motion','links','icons','colour','spacing','surfaces','transitions','focus','keyboard','layout-tests','formatting','configuration']].forEach((ids,group)=>ids.forEach(id=>{indexGroups[id]=group;}));
+const demoModules = [
+  ['app','App'],['layout','Layout'],['navigation','Navigation'],['hero','Stay hero'],['booking','Booking'],['availability','Availability'],['rooms','Rooms'],['gallery','Gallery'],['neighbourhood','Neighbourhood'],['journal','Journal'],['content','Content'],['styles','Styles'],['tokens','Design tokens'],['assets','Assets'],['forms','Form controls'],['accessibility','Accessibility'],['tests','Tests'],['utilities','Utilities'],['dates','Dates'],['guests','Guests'],['pricing','Pricing'],['suites','Suites'],['images','Images'],['maps','Maps'],['location','Location'],['footer','Footer'],['buttons','Buttons'],['cards','Cards'],['typography','Typography'],['motion','Motion'],['validation','Validation'],['responsive','Responsive'],['header','Header'],['hero-copy','Hero copy'],['room-detail','Room detail'],['booking-summary','Booking summary'],['calendar','Calendar'],['date-picker','Date picker'],['guest-picker','Guest picker'],['price-breakdown','Price breakdown'],['availability-api','Availability API'],['booking-state','Booking state'],['room-data','Room data'],['site-copy','Site copy'],['local-guides','Local guides'],['image-loader','Image loader'],['image-crops','Image crops'],['map-markers','Map markers'],['journal-posts','Journal posts'],['links','Links'],['icons','Icons'],['colour','Colour'],['spacing','Spacing'],['surfaces','Surfaces'],['transitions','Transitions'],['focus','Focus states'],['keyboard','Keyboard'],['form-tests','Form tests'],['layout-tests','Layout tests'],['formatting','Formatting'],['routing','Routing'],['seo','SEO'],['metadata','Metadata'],['configuration','Configuration']
+].map(([id,label], i) => { const group=indexGroups[id] ?? 3; const layer = id === 'app' ? 0 : ['layout','booking','rooms','neighbourhood','journal','tests'].includes(id) ? 1 : group === 3 ? 3 : 2; return {id,label,path:'src/'+id,fileIds:Array.from({length:3},(_,n)=>`file-${id}-${n}`),nodeCount:5+i%12,inDegree:2+i%4,outDegree:2+i%3,centrality:Math.max(.1,.9-i*.012),subsystem:['Website','Reservations','Content & media','Foundations'][group],layer,x:0,y:0,z:0}; });
+// Match the indexer's layered orbital layout so the example reads like a real map.
+const indexSubsystems = [...new Set(demoModules.map(module=>module.subsystem))].sort();
+for (let layer=0; layer<=3; layer++) {
+  const modules = demoModules.filter(module=>module.layer===layer).sort((a,b)=>a.subsystem.localeCompare(b.subsystem)||a.id.localeCompare(b.id));
+  modules.forEach((module,i) => {
+    const baseAngle = Math.PI*2*indexSubsystems.indexOf(module.subsystem)/indexSubsystems.length;
+    const angle = baseAngle+(i-(modules.length-1)/2)*.42;
+    const radius = modules.length===1 ? 0 : 105+i*9;
+    module.x=Math.cos(angle)*radius; module.y=Math.sin(angle)*radius; module.z=(layer-1.5)*140;
+  });
+}
+const demoIndexNodes = demoModules.flatMap(m => [{...m,kind:'module'}, ...m.fileIds.map((id,n) => { const y=1-2*(n+.5)/m.fileIds.length, radial=Math.sqrt(1-y*y), angle=n*Math.PI*(3-Math.sqrt(5)), radius=36+Math.sqrt(m.fileIds.length)*7; return {id,label:[m.label+'.tsx',m.label+'.css',m.label+'.test.tsx'][n],kind:'file',path:m.path+'/'+['index.tsx','styles.css','index.test.tsx'][n],moduleId:m.id,degree:2+n,x:m.x+Math.cos(angle)*radial*radius,y:m.y+y*radius,z:m.z+Math.sin(angle)*radial*radius}; })]);
+const demoEdgePairs = [['app','layout'],['app','booking'],['app','rooms'],['layout','navigation'],['layout','hero'],['hero','content'],['hero','assets'],['booking','availability'],['booking','forms'],['booking','styles'],['rooms','gallery'],['rooms','content'],['gallery','assets'],['neighbourhood','content'],['neighbourhood','assets'],['journal','content'],['styles','tokens'],['forms','tokens'],['forms','accessibility'],['tests','booking'],['tests','rooms'],['tests','navigation'],['utilities','availability'],['app','journal'],['app','neighbourhood'],['layout','styles'],['gallery','styles'],['booking','utilities']];
+demoEdgePairs.push(['booking','dates'],['booking','guests'],['availability','pricing'],['rooms','suites'],['gallery','images'],['neighbourhood','maps'],['maps','location'],['layout','footer'],['forms','buttons'],['rooms','cards'],['styles','typography'],['styles','motion'],['forms','validation'],['layout','responsive'],['cards','tokens'],['hero','images'],['buttons','motion'],['tests','validation']);
+demoModules.forEach((module,i) => { const earlier=demoModules.slice(0,i).filter(other=>other.subsystem===module.subsystem); if (earlier.length) demoEdgePairs.push([module.id,earlier[earlier.length-1].id]); if (earlier.length>2 && i%2===0) demoEdgePairs.push([module.id,earlier[earlier.length-3].id]); });
+const demoEdges = demoEdgePairs.map(([source,target],i) => ({id:'edge-'+i,source,target,relation:'imports',confidence:'EXTRACTED',explanation:'Project dependency'}));
+const demoFileEdges = demoModules.flatMap(m => m.fileIds.map((id,i)=>({id:`edge-${m.id}-${i}`,source:m.id,target:id,relation:'contains',confidence:'EXTRACTED',explanation:'Module file'})));
+const demoIndexGraph = {projectPath:project,nodes:demoIndexNodes,edges:[...demoEdges,...demoFileEdges],focusNodeIds:[],truncated:false,architecture:{modules:demoModules,moduleEdges:demoEdges,cycles:[],layers:[0,1,2,3].map(layer=>demoModules.filter(module=>module.layer===layer).map(module=>module.id))}};
+const demoIndexStatus = {projectPath:project,phase:'ready',progress:1,filesDone:demoModules.length*3,filesTotal:demoModules.length*3,nodes:demoIndexNodes.length,edges:demoEdges.length};
+let demoMemoryEntries = [
+  ['context','Site structure','The homepage composes the stay hero, booking form, room gallery, and neighbourhood guide.'],
+  ['decision','Booking flow','Guests choose dates and a guest count before checking availability.'],
+  ['convention','Component organization','Keep each section and its styles together under src, with shared controls in forms.'],
+  ['style','Visual language','Use warm paper, olive actions, editorial serif headings, and generous spacing.'],
+  ['glossary','Casa Toronto','A calm Toronto stay with a focus on interiors and the waterfront.']
+].map(([kind,title,body],i)=>({id:'memory-'+i,kind,title,body,tags:['casa-toronto'],scopePaths:['src'],source:'extracted',createdAt:Date.now(),updatedAt:Date.now()}));
+const demoMemory = () => ({version:1,projectPath:project,updatedAt:Date.now(),summary:'A Toronto stay website with a calm editorial design.',entries:demoMemoryEntries,build:{builtAtCommit:'a81bc42',builtAgainstGraphHash:'demo',moduleCount:demoModules.length,coveredModules:demoModules.map(m=>m.id),tokensSpent:0,builtAt:Date.now()}});
 const listeners = new Map<string, Set<Function>>();
 let elapsed = 0, paused = true, visible = false, started = false, launched = false, released = 0, lastStep = '', branch = 'main';
+let demoBranches = ['main', 'feature/stay-homepage', 'feature/booking', 'feature/neighbourhood', 'feature/gallery'];
+const demoBranchHeads: Record<string,string> = {'main':'a81bc42','feature/stay-homepage':'3ba4e12','feature/booking':'ab381f9','feature/neighbourhood':'bc491a4','feature/gallery':'cd271d1'};
 let stageData: any[] = [];
 let changes: any[] = [];
 let missionData: Record<string, any> = {};
@@ -116,6 +174,7 @@ function startPromptTyping() {
 function startDemo() {
   if (started || !visible) return;
   started = true;
+  if (featureScene) return;
   if (planningScene) startPlanningScene();
   else if (browserDesignScene) startBrowserDesignScene();
   else startPromptTyping();
@@ -388,10 +447,10 @@ const handlers: Record<string, Function> = {
   'workspace.search': (_: string, query: string) => paths.filter(p=>p.includes(query)).map(path=>({path,name:path.split('/').pop(),type:'file'})),
   'workspace.searchContent': () => [],
   'git.status': status,
-  'git.snapshot': () => ({projectPath:project,status:status(),commits:[],refs:['main','feature/casa-toronto'].map(name=>({name:'refs/heads/'+name,shortName:name,hash:'demo-head',kind:'local',current:name===branch})),remotes:[],identity:{authorName:'',authorEmail:''},sync:{projectPath:project,intervalMs:0,running:false},hasMore:false}),
+  'git.snapshot': () => ({projectPath:project,status:status(),commits: featureScene === 'git' ? demoCommits : [],refs:(featureScene === 'git' ? demoBranches : ['main','feature/casa-toronto']).map(name=>({name:'refs/heads/'+name,shortName:name,hash:featureScene === 'git' ? demoBranchHeads[name] ?? demoCommits[0].hash : 'demo-head',kind:'local',current:name===branch})),remotes:[],identity:{authorName:'',authorEmail:''},sync:{projectPath:project,intervalMs:0,running:false},hasMore:false}),
   'github.repositoryIdentity': () => ({accounts:[],confidence:'unknown',detail:''}),
   'git.compare': (_:string,left:string,right:string) => ({left,right,mergeBase:null,ahead:0,behind:0,conflicted:false,additions:0,deletions:0,files:[]}),
-  'git.commitDetail': () => null,
+  'git.commitDetail': (_:string, hash:string) => { const commit = demoCommits.find(item => item.hash === hash); return commit ? {...commit, files:[{path:hash === 'a81bc42' ? 'src/components/BookingForm.tsx' : 'src/components/StayHero.tsx',state:'modified',additions:24,deletions:3}]} : null; },
   'git.merge': (_:string,request:any) => {branch=request.target;sync();return ok;},
   'git.push': () => ok,
   'git.pull': () => ok,
@@ -399,7 +458,7 @@ const handlers: Record<string, Function> = {
   'git.stages': () => structuredClone(stageData),
   'git.branches': () => ({current:branch,branches:['main','feature/casa-toronto']}),
   'git.checkout': (_: string, name: string) => { branch=name;sync();return ok; },
-  'git.createBranch': (_: string, name: string) => { branch=name;sync();return ok; },
+  'git.createBranch': (_: string, name: string) => { if(featureScene === 'git' && !demoBranches.includes(name))demoBranches.push(name);branch=name;sync();return ok; },
   'git.stageRename': (_: string,id:string,name:string) => { const s=stageData.find(s=>s.id===id);if(s)s.name=name;sync();return ok; },
   'git.stageReorder': (_:string,ids:string[]) => {stageData=ids.map(id=>stageData.find(s=>s.id===id)).filter(Boolean);sync();return ok;},
   'git.stageDelete': (_:string,id:string) => {stageData=stageData.filter(s=>s.id!==id);sync();return ok;},
@@ -467,8 +526,8 @@ const handlers: Record<string, Function> = {
   },
   'browser.captureGuest': () => ({ data: '', mimeType: 'image/png', attachmentPath: 'browser-preview-capture.svg', width: 1200, height: 720 }),
   'handoff.get': () => null,
-  'brand.status': () => ({projectPath:project,phase:'idle'}),
-  'brand.workspaceUrl': () => null,
+  'brand.status': () => ({projectPath:project,phase:featureScene === 'brand' ? 'ready' : 'idle'}),
+  'brand.workspaceUrl': () => featureScene === 'brand' ? '/assets/ux_ui/content/portfolio/mission-control/brand-guideline.html' : null,
   'run.targets': () => [...runTargets],
   'run.add': (_:string, input:any) => {
     const target = {id:'demo-run-'+(++nextRunId),label:input.label,command:input.command,kind:'dev',primary:runTargets.length===0,custom:true};
@@ -502,7 +561,17 @@ const handlers: Record<string, Function> = {
   'terminal.resize': () => ok,
   'terminal.backlog': (id:string) => runSessions.some(session=>session.id===id)?'$ demo\r\nDemo terminal session.\r\n':'',
   'terminal.kill': (id:string) => handlers['run.stop'](id),
-  'skills.list': () => [],
+  'skills.list': () => featureScene === 'skills' ? bundledSkills.map(skill => ({ name: skill.name, description: skill.description, scope: 'user', path: '/bundled/' + skill.name + '/SKILL.md', bundled: true })) : [],
+  'skills.read': (path:string) => bundledSkills.find(skill => path.includes('/' + skill.name + '/'))?.body ?? '',
+  'index.ensure': () => demoIndexStatus,
+  'index.rebuild': () => demoIndexStatus,
+  'index.files': () => demoIndexNodes.filter(node => node.kind === 'file'),
+  'index.graph': () => demoIndexGraph,
+  'index.path': () => demoIndexGraph,
+  'memory.load': demoMemory,
+  'memory.status': () => ({projectPath:project,phase:'ready',updatedAt:Date.now()}),
+  'memory.refresh': demoMemory,
+  'memory.deleteEntry': (_:string,id:string) => { demoMemoryEntries=demoMemoryEntries.filter(entry=>entry.id!==id);return demoMemory(); },
   'ideas.load': () => structuredClone(ideaNotes),
   'ideas.save': (_:string, ideas:any[]) => {ideaNotes=structuredClone(ideas);return ok;},
   'templates.list': () => [],
@@ -524,14 +593,33 @@ const handlers: Record<string, Function> = {
 export function initialize() {
   if (parent === window) { paused = false; visible = true; }
   localStorage.setItem('mc:draft:new:' + project,'');
-  useUi.setState({activeProject:project,selectedProjects:[project],blankMode:false,route:{name:'launchpad'},previewOpen:false});
+  useUi.setState({activeProject:project,selectedProjects:[project],blankMode:false,route: featureScene === 'index' ? {name:'index',projectPath:project} : featureScene === 'git' ? {name:'git',projectPath:project} : featureScene === 'skills' ? {name:'skills'} : {name:'launchpad'},previewOpen:featureScene === 'brand',previewTab:featureScene === 'brand' ? 'brand' : 'preview',canvasWidth:720});
   useWorkspace.setState({changesOnly:true,expanded:{[workspaceKey(project,'')]:true}});
+  if (featureScene === 'git') {
+    changes = [{path:'src/components/BookingForm.tsx',state:'modified',staged:false},{path:'src/styles/booking.css',state:'modified',staged:false},{path:'src/components/StayGallery.tsx',state:'modified',staged:false}];
+    stageData = [{id:'stage-booking',name:'booking-polish',files:changes.slice(0,2)}];
+  }
   useMissions.setState({loaded:true});
   sync();
+  if (featureScene === 'brand') {
+    const id = 'brand-showcase';
+    const prompt = 'Create a brand guideline for Casa Toronto using the site’s colors, typography, and components.';
+    const mission = { id, title:'Casa Toronto brand guideline', prompt, projectPath:project, projectPaths:[project], createdAt:Date.now(), updatedAt:Date.now(), status:'complete', agents:[{role:'solo',roleLabel:'Product designer',sessionKey:id,status:'complete',costUsd:0,activity:'Ready for review',orbState:'breathing'}], skills:[],attachments:[],planMode:false,model:'sonnet',permissionMode:'auto',maxThinkingTokens:16384,totalCostUsd:0,progress:100 };
+    missionData = {[id]:mission};
+    useMissions.setState({missions:{...missionData},activeMissionId:id,loaded:true});
+    useSessions.setState({transcripts:{[id]:[
+      {type:'user',id:'brand-request',text:prompt},
+      {type:'text',id:'brand-intro',content:'I’ll bring the existing visual language together into a practical reference for the team.',streaming:false},
+      {type:'tool',id:'brand-read',toolUseId:'brand-read',name:'Read',input:{file_path:'src/styles/tokens.css'},result:'Reviewed the site’s palette, typography, and component styles.',running:false},
+      {type:'text',id:'brand-result',content:'The guideline is ready in **Styles**. It includes the core palette, type hierarchy, button states, navigation, and booking components. The examples are interactive, so you can explore the variants in context.',streaming:false}
+    ]},statuses:{[id]:'complete'},hasTasks:{[id]:false},taskVersions:{[id]:0}});
+    useUi.setState({brand:{projectPath:project,url:'/assets/ux_ui/content/portfolio/mission-control/brand-guideline.html',status:{projectPath:project,phase:'ready'}}});
+  }
   startDemo();
   const markInteracted = (event: Event) => {
     if (event.type === 'input' && typingTimer !== null) return;
     interacted = true;
+    if (featureScene && event.isTrusted) parent.postMessage({type:'mc-showcase-interaction'}, location.origin);
   };
   for (const event of ['pointerdown','pointermove','keydown','wheel','touchstart','input','change']) {
     window.addEventListener(event, markInteracted, { capture: true, passive: true });
@@ -542,6 +630,7 @@ export function initialize() {
     useUi.setState({route:{name:'launchpad'}});
   });
   window.addEventListener('message', event => {
+    if (featureScene && event.data?.type === 'mc-demo-interaction' && Array.from(document.querySelectorAll('iframe')).some(frame => frame.contentWindow === event.source)) { parent.postMessage({type:'mc-showcase-interaction'}, location.origin); return; }
     if(event.origin===location.origin && event.data?.type==='mc-demo-interaction') { interacted=true; return; }
     if(event.source!==parent || event.origin!==location.origin || event.data?.type!=='mc-demo')return;
     if(event.data.action==='interact')interacted=true;
@@ -561,6 +650,7 @@ export function initialize() {
   setInterval(()=>{
     if(paused || !visible || document.hidden)return;
     elapsed+=.25;
+    if(featureScene) return;
     if(!interacted && (browserDesignScene ? browserAgentFinishedAt !== null && elapsed >= browserAgentFinishedAt + 1 : elapsed >= 37))reset();
     else if(planningScene) {
       if(elapsed>=2 && !launched)startPlanningScene();

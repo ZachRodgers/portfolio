@@ -5,11 +5,13 @@ interface MissionDemoFrameProps {
     src: string;
     title: string;
     showPause?: boolean;
+    showReplay?: boolean;
     tone?: 'default' | 'planning';
     layout?: 'fit' | 'crop';
+    onInteraction?: () => void;
 }
 
-export default function MissionDemoFrame({ src, title, showPause = true, tone = 'default', layout = 'fit' }: MissionDemoFrameProps) {
+export default function MissionDemoFrame({ src, title, showPause = true, showReplay = true, tone = 'default', layout = 'fit', onInteraction }: MissionDemoFrameProps) {
     const frame = useRef<HTMLIFrameElement>(null);
     const viewport = useRef<HTMLDivElement>(null);
     const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -36,11 +38,19 @@ export default function MissionDemoFrame({ src, title, showPause = true, tone = 
         window.addEventListener('message', ready);
         return () => window.removeEventListener('message', ready);
     }, [paused, visible, frameWidth]);
+    useEffect(() => {
+        if (!onInteraction) return;
+        const receive = (event: MessageEvent) => {
+            if (event.origin === window.location.origin && event.source === frame.current?.contentWindow && event.data?.type === 'mc-showcase-interaction') onInteraction();
+        };
+        window.addEventListener('message', receive);
+        return () => window.removeEventListener('message', receive);
+    }, [onInteraction]);
 
-    return <div className={`mission-demo-background${tone === 'planning' ? ' mission-demo-background--planning' : ''}${layout === 'crop' ? ' mission-demo-background--crop' : ''}`}>
+    return <div onPointerDown={onInteraction} onWheel={onInteraction} onKeyDown={onInteraction} className={`mission-demo-background${tone === 'planning' ? ' mission-demo-background--planning' : ''}${layout === 'crop' ? ' mission-demo-background--crop' : ''}`}>
         <div className="mission-playback">
             {showPause && <button aria-label={paused ? 'Play demo' : 'Pause demo'} title={paused ? 'Play' : 'Pause'} onClick={() => { setPaused(value => !value); send('interact'); }}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>}
-            <button aria-label="Replay demo" title="Replay" onClick={() => send('replay')}><RotateCcw size={14} /></button>
+            {showReplay && <button aria-label="Replay demo" title="Replay" onClick={() => send('replay')}><RotateCcw size={14} /></button>}
         </div>
         <div className={`mission-demo-viewport${layout === 'crop' ? ' mission-demo-viewport--crop' : ''}`} ref={viewport} style={{ height: viewportHeight * scale }}>
             <iframe ref={frame} title={title} src={src} loading="lazy" onLoad={() => send()} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: 0, margin: 0, width: frameWidth, height: frameHeight, transform: layout === 'crop' ? 'none' : `scale(${scale})` }} />

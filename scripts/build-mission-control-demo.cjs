@@ -3,6 +3,13 @@ const path = require('path');
 const source = process.env.MISSION_CONTROL_SOURCE || '/home/Zach/Repos/mission-control';
 const esbuild = require(path.join(source, 'node_modules/esbuild'));
 const outdir = path.resolve('public/assets/ux_ui/content/portfolio/mission-control/demo');
+const demoSkills = ['advanced-planning', 'ui-mockup', 'skeleton'].map(name => {
+  const body = fs.readFileSync(path.join(source, 'resources/skills', name, 'SKILL.md'), 'utf8')
+    .split('\n').filter(line => !/claude|codex|anthropic|openai|mission control|\bai\b|assistant|model|tool/i.test(line)).join('\n');
+  const description = /^description:\s*(.*)$/m.exec(body)?.[1] || 'Create visual plans with a clear implementation path and reviewable details.';
+  return { name, description, body };
+});
+fs.writeFileSync(path.resolve('scripts/mission-control-demo/bundled-skills.json'), JSON.stringify(demoSkills));
 esbuild.buildSync({
   entryPoints: ['scripts/mission-control-demo/plan-design-engine.ts'],
   bundle: true, minify: true, target: 'es2022',
@@ -19,6 +26,14 @@ esbuild.build({
   nodePaths: [path.join(source, 'node_modules')],
   loader: { '.woff2': 'file', '.woff': 'file', '.svg': 'dataurl', '.png': 'file' },
   plugins: [{
+    name: 'demo-index-motion',
+    setup(build) {
+      build.onLoad({ filter: /\/renderer\/src\/screens\/Index\/IndexGraph\.tsx$/ }, args => ({
+        contents: fs.readFileSync(args.path, 'utf8').replace("Date.now() >= interactionUntilRef.current && document.visibilityState === 'visible'", "Date.now() >= interactionUntilRef.current && document.visibilityState === 'visible' && !(window as any).__demoPaused").replace('elapsed * 0.000035', 'elapsed * 0.000075').replace('Date.now() + 4_000', 'Date.now() + 800').replace('.slice(0, 8)', '.slice(0, 3)').replace('const timer = window.setTimeout(() => graphRef.current?.zoomToFit(700, 90), 80)\n    return () => window.clearTimeout(timer)', "const timer = window.setTimeout(() => graphRef.current?.zoomToFit(700, 10), 80)\n    const zoom = window.setTimeout(() => { const api = graphRef.current; if (!api || Date.now() < interactionUntilRef.current) return; const camera = api.camera().position; api.cameraPosition({ x: camera.x * .58, y: camera.y * .58, z: camera.z * .58 }, { x: 0, y: 0, z: 0 }, 450) }, 850)\n    return () => { window.clearTimeout(timer); window.clearTimeout(zoom) }"),
+        loader: 'tsx', resolveDir: path.dirname(args.path)
+      }));
+    }
+  }, {
     name: 'demo-model-options',
     setup(build) {
       build.onLoad({ filter: /\/src\/shared\/types\.ts$/ }, args => {
@@ -45,7 +60,7 @@ esbuild.build({
         return {
           contents: contents.replace(
             'selected={section.id === route}',
-            "selected={section.id === route} disabled={section.id !== 'launchpad'} title={section.id !== 'launchpad' ? 'This page is not part of the portfolio demo' : undefined}"
+            "selected={section.id === route} disabled={section.id !== route} title={section.id !== route ? 'This page is not part of the portfolio demo' : undefined}"
           ),
           loader: 'tsx',
           resolveDir: path.dirname(args.path)
@@ -60,7 +75,7 @@ esbuild.build({
         return {
           contents: contents.replace(
             'const [explorerOpen, setExplorerOpen] = useState(true)',
-            "const [explorerOpen, setExplorerOpen] = useState(() => !['planning', 'browser-design'].includes(new URLSearchParams(window.location.search).get('scene') ?? ''))"
+            "const [explorerOpen, setExplorerOpen] = useState(() => !['planning', 'browser-design', 'feature-brand'].includes(new URLSearchParams(window.location.search).get('scene') ?? ''))"
           ),
           loader: 'tsx',
           resolveDir: path.dirname(args.path)

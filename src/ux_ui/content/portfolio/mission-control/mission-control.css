@@ -23,4 +23,11 @@
 @media(max-width:700px) { .mission-demo-background { padding: 38px 10px 10px; } .mission-feature-grid { grid-template-columns: 1fr; gap: 26px; } .mission-browser-notes { grid-template-columns: 1fr; gap: 22px; } }
 .mission-demo-background--crop { padding-left: 0; }
 .mission-demo-viewport--crop { overflow: clip; border-radius: 0 4px 4px 0; }
-@media(prefers-reduced-motion:reduce) { .mission-playback button { transition: none; } }
+.mission-showcase-tabs { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: min(100%, 680px); margin: 0 auto 30px; padding: 4px; border: 1px solid #353535; border-radius: 999px; background: #1d1d1d; }
+.mission-showcase-indicator { position: absolute; inset: 4px auto 4px 4px; width: calc((100% - 8px) / 4); border-radius: 999px; background: #434343; transform: translateX(calc(var(--selected-tab) * 100%)); transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+.mission-showcase-tabs button { position: relative; z-index: 1; border: 0; border-radius: 999px; padding: 10px 6px; color: #aaa; background: transparent; cursor: pointer; font: inherit; font-size: clamp(10px, 1vw, 13px); }
+.mission-showcase-tabs button[aria-selected="true"] { color: #fff; }
+.mission-showcase-tabs button:focus-visible { outline: 2px solid white; outline-offset: 2px; }
+.mission-showcase-description { max-width: 700px; min-height: 54px; margin: 0 auto 24px; text-align: center; }
+.mission-showcase-description p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+@media(prefers-reduced-motion:reduce) { .mission-playback button, .mission-showcase-indicator { transition: none; } }
