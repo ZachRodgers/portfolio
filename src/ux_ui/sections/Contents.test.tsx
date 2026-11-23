@@ -19,6 +19,8 @@ test('preloads all images and only exposes final visible tiles as keyboard links
     const container = document.createElement('div');
     container.innerHTML = renderToStaticMarkup(<Contents time={contentsCues[0].start} />);
     expect(container.querySelectorAll('.ux-contents-art')).toHaveLength(6);
+    expect(Array.from(container.querySelectorAll('.ux-contents-art')).map(image => image.getAttribute('src')))
+        .toEqual(['1.png', '2.png', '3.png', '4.webp', '5.png', '6.webp'].map(name => `/assets/ux_ui/hero/${name}`));
     expect(container.querySelectorAll('a[tabindex="0"]')).toHaveLength(0);
     container.innerHTML = renderToStaticMarkup(<Contents time={contentsEnd} />);
     expect(Array.from(container.querySelectorAll('a[tabindex="0"]')).map(link => link.getAttribute('href')))

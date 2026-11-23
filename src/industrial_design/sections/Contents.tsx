@@ -43,7 +43,8 @@ const Contents: React.FC = () => {
     const [isMobile, setIsMobile] = useState(false);
 
     const getImagePath = (folder: string, name: string): string => {
-        return `/assets/industrial_design/contents/${folder}/${name}.png`;
+        const webp = (folder === 'background' && (name === 'Vital' || name === 'Obsidian')) || (folder === 'overlay' && name === 'Parallel');
+        return `/assets/industrial_design/contents/${folder}/${name}.${webp ? 'webp' : 'png'}`;
     };
 
     const handleProjectClick = (projectNumber: number) => {

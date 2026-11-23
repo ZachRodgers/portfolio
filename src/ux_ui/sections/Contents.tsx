@@ -42,7 +42,7 @@ const Contents: React.FC<{ time: number; revealCount?: number }> = ({ time, reve
                     aria-label={project.name}
                     aria-hidden={!visible || !final}
                     tabIndex={visible && final ? 0 : -1}>
-                    <CellRevealImage className="ux-contents-art" width={900} height={1500} src={`/assets/ux_ui/hero/${cue.image}.png`} visible={visible} durationMs={revealDuration * 1000}
+                    <CellRevealImage className="ux-contents-art" width={900} height={1500} src={`/assets/ux_ui/hero/${cue.image}.${cue.image === 4 || cue.image === 6 ? 'webp' : 'png'}`} visible={visible} durationMs={revealDuration * 1000}
                         revealProgress={revealCount === undefined ? clamp((time - cue.start + revealLead) / revealDuration) : undefined}
                         exitProgress={revealCount === undefined && Number.isFinite(cue.end) ? clamp((time - cue.end + .25) / .25) : 0} />
                     {final && <span className={`ux-contents-brand ux-contents-brand--${logos[cue.column]}`} aria-hidden="true">
