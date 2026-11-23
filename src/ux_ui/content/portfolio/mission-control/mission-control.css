@@ -1,4 +1,10 @@
 .mission-overview { padding: 0; scroll-margin-top: 32px; }
+.ux-project { scroll-margin-top: 32px; }
+.mission-project-hero { width: calc(100% - var(--ux-content-inset) * 2); max-width: 1200px; margin: 0 auto; padding: clamp(40px, 6vw, 76px) 0 0; display: grid; grid-template-columns: minmax(0, 29fr) minmax(0, 71fr); gap: clamp(24px, 3vw, 42px); align-items: center; }
+.mission-project-hero--placeholder { padding-bottom: clamp(40px, 6vw, 76px); }
+.mission-project-identity img { display: block; width: min(100%, 310px); height: auto; }
+.mission-project-hero h2 { margin: 0; font-size: clamp(22px, 2.25vw, 32px); font-weight: 400; line-height: 1.25; letter-spacing: -.025em; text-wrap: balance; }
+@media(max-width:700px) { .mission-project-hero { grid-template-columns: 1fr; gap: 28px; } .mission-project-identity img { width: min(75%, 280px); } }
 .mission-overview-inner { width: calc(100% - var(--ux-content-inset) * 2); max-width: 1200px; margin: 0 auto; padding: clamp(40px, 6vw, 88px) 0; }
 .mission-overview h2 { max-width: 800px; margin: 0 0 36px; font-size: clamp(24px, 2.6vw, 36px); line-height: 1.25; font-weight: 400; letter-spacing: -.025em; }
 .mission-demo-background { position: relative; isolation: isolate; padding: 44px 24px 24px; background: linear-gradient(135deg, #a7a8a1 0%, #92938b 44%, #777970 100%); border-radius: 4px; }

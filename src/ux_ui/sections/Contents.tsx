@@ -34,6 +34,11 @@ const Contents: React.FC<{ time: number; revealCount?: number }> = ({ time, reve
                     className={`ux-contents-tile ${visible ? 'is-visible' : ''} ${final ? 'is-final' : ''}`}
                     style={{ gridColumn: cue.column + 1 }}
                     href={`#${project.id}`}
+                    onClick={event => {
+                        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                        const target = document.getElementById(project.id);
+                        if (target) { event.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+                    }}
                     aria-label={project.name}
                     aria-hidden={!visible || !final}
                     tabIndex={visible && final ? 0 : -1}>

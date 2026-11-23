@@ -1,10 +1,8 @@
 import React from 'react';
-import FrameworkRule from '../../../sections/FrameworkRule';
 import MissionDemoFrame from './MissionDemoFrame';
 
 export default function MissionControlBrowserDesign() {
-    return <section id="mission-control-browser-design" className="mission-overview ux-framework-section mission-browser-section" aria-label="Browser preview and Design Mode">
-        <FrameworkRule />
+    return <section id="mission-control-browser-design" className="mission-overview mission-browser-section" aria-label="Browser preview and Design Mode">
         <div className="mission-browser-layout">
             <MissionDemoFrame
                 src="/assets/ux_ui/content/portfolio/mission-control/demo/index.html?scene=browser-design"

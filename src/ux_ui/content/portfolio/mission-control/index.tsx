@@ -1,13 +1,10 @@
 import React from 'react';
-import FrameworkRule from '../../../sections/FrameworkRule';
 import MissionDemoFrame from './MissionDemoFrame';
 import './mission-control.css';
 
 export default function MissionControl() {
-    return <section id="project-2" className="mission-overview ux-framework-section" aria-labelledby="mission-title">
-        <FrameworkRule />
+    return <section className="mission-overview" aria-label="Mission Control workflows">
         <div className="mission-overview-inner">
-            <h2 id="mission-title">A coding workspace for engineers and designers, from first idea to finished code.</h2>
             <MissionDemoFrame src="/assets/ux_ui/content/portfolio/mission-control/demo/index.html" title="Interactive Mission Control workspace" />
             <div className="mission-feature-grid">
                 <article><h3>Multi-Agent Workflows</h3><p>Delegate separate features to multiple agents working in parallel. Follow each conversation and keep track of progress across the project.</p></article>

@@ -1,5 +1,4 @@
 import React from 'react';
-import FrameworkRule from '../../../sections/FrameworkRule';
 import MissionDemoFrame from './MissionDemoFrame';
 
 const features = [
@@ -18,8 +17,7 @@ const features = [
 ];
 
 export default function MissionControlPlanning() {
-    return <section id="mission-control-planning" className="mission-overview ux-framework-section" aria-label="Questions, previews, and plans">
-        <FrameworkRule />
+    return <section id="mission-control-planning" className="mission-overview" aria-label="Questions, previews, and plans">
         <div className="mission-overview-inner">
             <MissionDemoFrame
                 src="/assets/ux_ui/content/portfolio/mission-control/demo/index.html?scene=planning"

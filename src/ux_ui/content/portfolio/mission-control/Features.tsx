@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import FrameworkRule from '../../../sections/FrameworkRule';
 import MissionDemoFrame from './MissionDemoFrame';
 
 const features = [
@@ -45,8 +44,7 @@ export default function MissionControlFeatures() {
         return () => document.removeEventListener('visibilitychange', onVisibility);
     }, [arm]);
     const feature = features[selected];
-    return <section ref={section} id="mission-control-features" data-feature={feature.id} className="mission-overview ux-framework-section" aria-label="Mission Control features" onPointerDown={interact} onKeyDown={interact} onWheel={interact}>
-        <FrameworkRule />
+    return <section ref={section} id="mission-control-features" data-feature={feature.id} className="mission-overview" aria-label="Mission Control features" onPointerDown={interact} onKeyDown={interact} onWheel={interact}>
         <div className="mission-overview-inner mission-showcase">
             <div className="mission-showcase-tabs" role="tablist" aria-label="Explore Mission Control features" style={{ '--selected-tab': selected } as React.CSSProperties}>
                 <span className="mission-showcase-indicator" aria-hidden="true" />
