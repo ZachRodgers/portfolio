@@ -9,9 +9,11 @@ interface MissionDemoFrameProps {
     tone?: 'default' | 'planning';
     layout?: 'fit' | 'crop';
     onInteraction?: () => void;
+    active?: boolean;
+    eager?: boolean;
 }
 
-export default function MissionDemoFrame({ src, title, showPause = true, showReplay = true, tone = 'default', layout = 'fit', onInteraction }: MissionDemoFrameProps) {
+export default function MissionDemoFrame({ src, title, showPause = true, showReplay = true, tone = 'default', layout = 'fit', onInteraction, active = true, eager = false }: MissionDemoFrameProps) {
     const frame = useRef<HTMLIFrameElement>(null);
     const viewport = useRef<HTMLDivElement>(null);
     const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -21,7 +23,7 @@ export default function MissionDemoFrame({ src, title, showPause = true, showRep
     const frameHeight = 700;
     const viewportHeight = 700;
     const frameWidth = layout === 'crop' ? Math.max(1100, width + 160) : Math.max(1100, width);
-    const send = (action?: string) => frame.current?.contentWindow?.postMessage({ type: 'mc-demo', action, paused, visible, frameWidth }, window.location.origin);
+    const send = (action?: string) => frame.current?.contentWindow?.postMessage({ type: 'mc-demo', action, paused, visible: visible && active, frameWidth }, window.location.origin);
 
     useLayoutEffect(() => {
         const resize = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
@@ -30,14 +32,14 @@ export default function MissionDemoFrame({ src, title, showPause = true, showRep
         return () => { resize.disconnect(); observer.disconnect(); };
     }, []);
     useEffect(() => {
-        const notify = () => frame.current?.contentWindow?.postMessage({ type: 'mc-demo', paused, visible, frameWidth }, window.location.origin);
+        const notify = () => frame.current?.contentWindow?.postMessage({ type: 'mc-demo', paused, visible: visible && active, frameWidth }, window.location.origin);
         notify();
         const ready = (event: MessageEvent) => {
             if (event.origin === window.location.origin && event.source === frame.current?.contentWindow && event.data?.type === 'mc-demo-ready') notify();
         };
         window.addEventListener('message', ready);
         return () => window.removeEventListener('message', ready);
-    }, [paused, visible, frameWidth]);
+    }, [paused, visible, active, frameWidth]);
     useEffect(() => {
         if (!onInteraction) return;
         const receive = (event: MessageEvent) => {
@@ -53,7 +55,7 @@ export default function MissionDemoFrame({ src, title, showPause = true, showRep
             {showReplay && <button aria-label="Replay demo" title="Replay" onClick={() => send('replay')}><RotateCcw size={14} /></button>}
         </div>
         <div className={`mission-demo-viewport${layout === 'crop' ? ' mission-demo-viewport--crop' : ''}`} ref={viewport} style={{ height: viewportHeight * scale }}>
-            <iframe ref={frame} title={title} src={src} loading="lazy" onLoad={() => send()} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: 0, margin: 0, width: frameWidth, height: frameHeight, transform: layout === 'crop' ? 'none' : `scale(${scale})` }} />
+            <iframe ref={frame} title={title} src={src} loading={eager ? 'eager' : 'lazy'} onLoad={() => send()} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: 0, margin: 0, width: frameWidth, height: frameHeight, transform: layout === 'crop' ? 'none' : `scale(${scale})` }} />
         </div>
     </div>;
 }

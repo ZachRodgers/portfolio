@@ -5,15 +5,15 @@ import MissionDemoFrame from './MissionDemoFrame';
 const features = [
     {
         title: 'Questions',
-        copy: 'Mission Control asks focused questions before work begins, so you can choose the direction and shape the result together.'
+        copy: 'Answer questions before work begins to help set the direction and make decisions early.'
     },
     {
         title: 'Preview Canvas',
-        copy: 'Build previews, wireframes, and mockups directly in the app. Choose what feels right before implementation starts.'
+        copy: 'Review interactive previews, wireframes, and mockups alongside the conversation.'
     },
     {
         title: 'Plans & Todo Lists',
-        copy: 'Turn a plan into a working HTML prototype with real components, then follow each task as the work moves forward.'
+        copy: 'Review the plan and its tasks together, then follow progress as the work takes shape.'
     }
 ];
 

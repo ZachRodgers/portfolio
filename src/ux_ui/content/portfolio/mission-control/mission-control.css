@@ -3,6 +3,12 @@
 .mission-overview h2 { max-width: 800px; margin: 0 0 36px; font-size: clamp(24px, 2.6vw, 36px); line-height: 1.25; font-weight: 400; letter-spacing: -.025em; }
 .mission-demo-background { position: relative; isolation: isolate; padding: 44px 24px 24px; background: linear-gradient(135deg, #a7a8a1 0%, #92938b 44%, #777970 100%); border-radius: 4px; }
 .mission-demo-background--planning { background: linear-gradient(135deg, #a5a8ab 0%, #909498 46%, #777c81 100%); }
+#mission-control-browser-design .mission-demo-background { background: linear-gradient(135deg, #b0a79e 0%, #998f86 48%, #80766f 100%); }
+#mission-control-features .mission-demo-background { background: linear-gradient(135deg, #ffffff14, #00000012), var(--showcase-tone); }
+#mission-control-features[data-feature="brand"] { --showcase-tone: #a19d90; }
+#mission-control-features[data-feature="index"] { --showcase-tone: #8f9b99; }
+#mission-control-features[data-feature="git"] { --showcase-tone: #a1978e; }
+#mission-control-features[data-feature="skills"] { --showcase-tone: #9a9a93; }
 .mission-demo-background::before { content: ''; position: absolute; z-index: 0; inset: 0; border-radius: inherit; opacity: .12; pointer-events: none; mix-blend-mode: soft-light; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E"); }
 .mission-demo-viewport { position: relative; width: 100%; overflow: hidden; border-radius: 4px; box-shadow: 0 15px 40px #0003; }
 .mission-demo-viewport iframe { position: absolute; top: 0; left: 0; display: block; margin: 0; border: 0; transform-origin: top left; }
@@ -30,4 +36,7 @@
 .mission-showcase-tabs button:focus-visible { outline: 2px solid white; outline-offset: 2px; }
 .mission-showcase-description { max-width: 700px; min-height: 54px; margin: 0 auto 24px; text-align: center; }
 .mission-showcase-description p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+.mission-showcase-frames { display: grid; }
+.mission-showcase-frame { grid-area: 1 / 1; min-width: 0; visibility: hidden; pointer-events: none; }
+.mission-showcase-frame[data-active="true"] { visibility: visible; pointer-events: auto; }
 @media(prefers-reduced-motion:reduce) { .mission-playback button, .mission-showcase-indicator { transition: none; } }

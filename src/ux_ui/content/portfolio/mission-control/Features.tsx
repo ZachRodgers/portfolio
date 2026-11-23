@@ -3,19 +3,21 @@ import FrameworkRule from '../../../sections/FrameworkRule';
 import MissionDemoFrame from './MissionDemoFrame';
 
 const features = [
-    { id: 'brand', label: 'Brand Guideline', description: 'Keep a living visual reference alongside your work. Explore the colors, typography, components, and interaction patterns that give Casa Toronto its character.' },
-    { id: 'index', label: 'Codebase Index', description: 'Explore the structure of a project in an interactive 3D map. Follow connections between files and modules to find relevant context quickly.' },
-    { id: 'git', label: 'Git Editor', description: 'See branches, commits, and changes together. Review and manage the work without leaving the workspace.' },
-    { id: 'skills', label: 'Skill Manager', description: 'Browse and manage reusable skills that guide planning, mockups, and wireframes across your projects.' },
+    { id: 'brand', label: 'Brand Guideline', description: 'Keep colors, type, and components in one place. Review the guideline alongside the project as it evolves.' },
+    { id: 'index', label: 'Codebase Index', description: 'Explore files, modules, and their connections in a 3D map. Search the index to find the parts of a project you need.' },
+    { id: 'git', label: 'Git Editor', description: 'See branches, commits, and uncommitted changes together, then review and manage them from the workspace.' },
+    { id: 'skills', label: 'Skill Manager', description: 'Browse and manage reusable instructions for tasks such as planning, mockups, and wireframes.' },
 ];
 
 export default function MissionControlFeatures() {
     const [selected, setSelected] = useState(0);
-    const [revision, setRevision] = useState(0);
+    const [revisions, setRevisions] = useState([0, 0, 0, 0]);
+    const [prepared, setPrepared] = useState(false);
     const [inView, setInView] = useState(false);
     const section = useRef<HTMLElement>(null);
     const timer = useRef<number>();
     const lastInteraction = useRef(0);
+    const previous = useRef(0);
     const arm = useCallback((delay: number) => {
         window.clearTimeout(timer.current);
         if (!inView || document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -23,10 +25,16 @@ export default function MissionControlFeatures() {
     }, [inView]);
     const interact = useCallback(() => { lastInteraction.current = Date.now(); arm(10000); }, [arm]);
     useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: .15 });
+        const observer = new IntersectionObserver(([entry]) => { setInView(entry.isIntersecting); if (entry.isIntersecting) setPrepared(true); }, { threshold: .15 });
         if (section.current) observer.observe(section.current);
         return () => observer.disconnect();
     }, []);
+    useEffect(() => {
+        if (previous.current === selected) return;
+        const leaving = previous.current;
+        previous.current = selected;
+        setRevisions(values => values.map((value, index) => index === leaving ? value + 1 : value));
+    }, [selected]);
     useEffect(() => {
         arm(Math.max(4000, lastInteraction.current + 10000 - Date.now()));
         return () => window.clearTimeout(timer.current);
@@ -37,15 +45,17 @@ export default function MissionControlFeatures() {
         return () => document.removeEventListener('visibilitychange', onVisibility);
     }, [arm]);
     const feature = features[selected];
-    return <section ref={section} id="mission-control-features" className="mission-overview ux-framework-section" aria-label="Mission Control features" onPointerDown={interact} onKeyDown={interact} onWheel={interact}>
+    return <section ref={section} id="mission-control-features" data-feature={feature.id} className="mission-overview ux-framework-section" aria-label="Mission Control features" onPointerDown={interact} onKeyDown={interact} onWheel={interact}>
         <FrameworkRule />
         <div className="mission-overview-inner mission-showcase">
             <div className="mission-showcase-tabs" role="tablist" aria-label="Explore Mission Control features" style={{ '--selected-tab': selected } as React.CSSProperties}>
                 <span className="mission-showcase-indicator" aria-hidden="true" />
-                {features.map((item, index) => <button key={item.id} role="tab" aria-selected={selected === index} aria-controls="mission-feature-panel" onClick={() => { interact(); setSelected(index); setRevision(value => value + 1); }}>{item.label}</button>)}
+                {features.map((item, index) => <button key={item.id} role="tab" aria-selected={selected === index} aria-controls="mission-feature-panel" onClick={() => { interact(); setSelected(index); }}>{item.label}</button>)}
             </div>
             <div id="mission-feature-panel" role="tabpanel" className="mission-showcase-description"><p>{feature.description}</p></div>
-            <MissionDemoFrame key={`${feature.id}-${revision}`} src={`/assets/ux_ui/content/portfolio/mission-control/demo/index.html?scene=feature-${feature.id}`} title={`Mission Control ${feature.label}`} tone="planning" showPause={feature.id === 'index'} showReplay={false} onInteraction={interact} />
+            {prepared && <div className="mission-showcase-frames">{features.map((item, index) => <div key={item.id} className="mission-showcase-frame" data-active={selected === index} aria-hidden={selected !== index}>
+                <MissionDemoFrame key={`${item.id}-${revisions[index]}`} src={`/assets/ux_ui/content/portfolio/mission-control/demo/index.html?scene=feature-${item.id}`} title={`Mission Control ${item.label}`} tone="planning" showPause={item.id === 'index'} showReplay={false} onInteraction={interact} active={selected === index && inView} eager />
+            </div>)}</div>}
         </div>
     </section>;
 }
