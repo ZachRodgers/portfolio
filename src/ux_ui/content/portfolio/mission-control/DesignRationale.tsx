@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Lightbulb, X, MousePointer2, Hand, Type, MessageSquare, Image, Square, Layers, Pencil, Paintbrush, Move, Check } from 'lucide-react';
+import { Lightbulb, MousePointer2, Hand, Type, MessageSquare, Image, Square, Layers, Pencil, Paintbrush, Move, Check } from 'lucide-react';
 import './design-rationale.css';
 
 const notes = [
@@ -29,14 +29,14 @@ export default function DesignRationale({ page }: { page: number }) {
     const [dismissed, setDismissed] = useState(false);
     const root = useRef<HTMLDivElement>(null);
     const trigger = useRef<HTMLButtonElement>(null);
-    const open = !dismissed && (hovered || pinned || focused);
+    const open = pinned || (!dismissed && (hovered || focused));
     const note = notes[page];
     const id = `mission-rationale-${page}`;
     const close = () => { setPinned(false); setDismissed(true); };
     useEffect(() => {
         if (!open) return;
         const key = (event: KeyboardEvent) => { if (event.key === 'Escape') { setPinned(false); setDismissed(true); trigger.current?.focus(); } };
-        const outside = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) { setPinned(false); setDismissed(true); } };
+        const outside = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node) && !trigger.current?.contains(event.target as Node)) { setPinned(false); setDismissed(true); } };
         const frameFocus = () => {
             window.setTimeout(() => {
                 if (document.activeElement instanceof HTMLIFrameElement) close();
@@ -49,18 +49,17 @@ export default function DesignRationale({ page }: { page: number }) {
     }, [open]);
     return <div ref={root} className={`mission-rationale mission-rationale--${page}`} data-open={open}
         onPointerEnter={event => { if (event.pointerType === 'mouse') { setHovered(true); setDismissed(false); } }}
-        onPointerLeave={() => { setHovered(false); setDismissed(false); }}
-        onFocus={() => setFocused(true)}
-        onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node)) { setFocused(false); setDismissed(false); } }}>
+        onPointerLeave={() => setHovered(false)}
+        onFocus={event => { if (event.target instanceof HTMLElement && event.target.matches(':focus-visible')) setFocused(true); }}
+        onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setFocused(false); }}>
         <button ref={trigger} className="rationale-trigger" aria-expanded={open} aria-controls={id} aria-label={`Design rationale: ${note.title}`}
-            onFocus={() => setDismissed(false)}
+            onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setDismissed(false); }}
             onClick={() => { if (pinned) close(); else { setDismissed(false); setPinned(true); } }}>
             <Lightbulb size={25} strokeWidth={1.5} /><span>but why?</span>
         </button>
-        <aside id={id} className="rationale-paper" aria-label={`Design rationale: ${note.title}`} aria-hidden={!open}>
-            <button className="rationale-close" aria-label="Close design rationale" tabIndex={open ? 0 : -1} onClick={() => { trigger.current?.focus(); close(); }}><X size={19}/></button>
-            <h3>{note.title}</h3>
-            <svg className="rationale-arrow" viewBox="0 0 100 60" aria-hidden="true"><path d={arrows[page]} /></svg>
+        <aside id={id} className={`rationale-paper${pinned ? ' is-pinned' : ''}`} aria-label={`Design rationale: ${note.title}`} aria-hidden={!open}>
+            <h3 className="rationale-title">{note.title}</h3>
+            <svg className="rationale-arrow" viewBox="0 0 100 60" aria-hidden="true"><path className="rationale-arrow-shaft" pathLength="1" d={arrows[page].split(' M')[0]} /><path className="rationale-arrow-head" pathLength="1" d={`M${arrows[page].split(' M')[1]}`} /></svg>
             <p>{note.text}</p>
             {page === 1 && <div className="rationale-wireframes" aria-label="Concept wireframes: conversation beside preview, then a review checklist">
                 <div className="rationale-wireframe"><i/><div><span/><span/><span/></div><b/></div>
