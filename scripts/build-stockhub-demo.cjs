@@ -10,6 +10,14 @@ const out='public/assets/ux_ui/content/portfolio/stockhub/demo';fs.mkdirSync(out
     for(const [before,after] of changes){if(!contents.includes(before))throw new Error('Inventory preview source changed: '+before);contents=contents.replace(before,after)}
     return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
   });
+  b.onLoad({filter:/\/src\/components\/layout\/protected-sidebar\.tsx$/},args=>{
+    let contents=fs.readFileSync(args.path,'utf8');
+    const before='<SidebarProvider className="flex-1">';
+    if(!contents.includes(before))throw new Error('Protected sidebar source changed');
+    contents=contents.replace(before, '<SidebarProvider defaultOpen={false} className="flex-1"><SidebarOpening />');
+    contents=contents.replace('"use client";', '"use client";\nimport { SidebarOpening } from "' + path.resolve('scripts/stockhub-demo/sidebar-opening.tsx') + '";');
+    return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
+  });
   b.onLoad({filter:/\/src\/components\/warehouse-selector\.tsx$/},args=>{
     let contents=fs.readFileSync(args.path,'utf8');
     for(const [before,after] of [['All Warehouses','All Locations'],['All warehouses','All locations'],['No warehouses found','No locations found'],['\n              Warehouses\n','\n              Locations\n'],['alt="Warehouse"','alt="Location"'],['className="w-[--radix-dropdown-menu-trigger-width] min-w-52 rounded-lg"','className="stockhub-location-menu w-[--radix-dropdown-menu-trigger-width] min-w-52 rounded-lg"']]) {if(!contents.includes(before))throw new Error('Location selector source changed: '+before);contents=contents.split(before).join(after)}
@@ -24,7 +32,6 @@ fs.copyFileSync('public/assets/ux_ui/hero/stockhub.png',out+'/assets/stockhub.pn
 for(const name of ['warehouse.svg'])fs.copyFileSync(path.join(source,'public',name),out+'/assets/'+name);
 const fontClass=/\.(\_\_className_[a-z0-9]+)\s*\{font-family: 'Geist'/.exec(css)?.[1];
 if(!fontClass)throw new Error('Geist body class missing from product CSS');
-const notices=new Map();for(const input of Object.keys(result.metafile.inputs)){let dir=path.dirname(path.resolve(input));while(dir!==path.dirname(dir)){if(fs.existsSync(path.join(dir,'package.json'))){const pkg=JSON.parse(fs.readFileSync(path.join(dir,'package.json'),'utf8'));const license=fs.readdirSync(dir).find(f=>/^licen[sc]e(?:\.|$)/i.test(f));if(license)notices.set(pkg.name,fs.readFileSync(path.join(dir,license),'utf8'));break;}dir=path.dirname(dir);}}fs.writeFileSync(out+'/LICENSES.txt',[...notices].map(([name,body])=>name+'\n'+body).join('\n\n'));
 fs.writeFileSync(out+'/index.html','<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stockhub · Cedar & Bolt</title><link rel="stylesheet" href="app.css"></head><body class="'+fontClass+'"><div id="root"></div><script src="app.js"></script></body></html>');
 fs.writeFileSync(out+'/source-manifest.json',JSON.stringify(Object.keys(result.metafile.inputs).filter(f=>f.startsWith(source+'/src')).map(f=>({path:path.relative(source,f),sha256:crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex')})),null,2));
 })().catch(e=>{console.error(e);process.exit(1)});
