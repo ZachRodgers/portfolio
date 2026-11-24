@@ -1,0 +1,8 @@
+.stockhub-brand { overflow: hidden; }
+.stockhub-brand img { display: block; width: 130px; height: auto; max-width: none; filter: brightness(0); }
+.dark .stockhub-brand img { filter: none; }
+.group[data-collapsible="icon"] .stockhub-brand { width: 20px; }
+.dark .stockhub-location-menu [role="menuitemcheckbox"]:not([data-disabled]):is(:hover, :focus, [data-highlighted]) {
+  background-color: oklch(0.32 0 0);
+  color: var(--accent-foreground);
+}

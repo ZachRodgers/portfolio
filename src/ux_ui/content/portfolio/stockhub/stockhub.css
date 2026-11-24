@@ -1,0 +1,19 @@
+.stockhub-overview .mission-feature-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.stockhub-why { display:block; margin:36px auto 0; border:0; background:transparent; color:#aaa; font:22px 'Caveat',sans-serif; cursor:default; }
+@media(max-width:700px){.stockhub-overview .mission-feature-grid{grid-template-columns:1fr}}
+.stockhub-browser-bar { height: 48px; box-sizing: border-box; display: flex; align-items: center; gap: 18px; padding: 0 18px; color: #929292; background: #161616; border-bottom: 1px solid #292929; font-family: Arial, sans-serif; font-size: 12px; }
+.stockhub-browser-navigation, .stockhub-browser-actions { display: flex; align-items: center; flex: none; }
+.stockhub-browser-navigation { gap: 16px; }
+.stockhub-browser-actions { justify-content: flex-end; gap: 18px; }
+.stockhub-window-controls { display: flex; align-items: center; gap: 7px; }
+.stockhub-window-controls span { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; color: #1d1d1d; background: #686868; }
+.stockhub-browser-address { height: 28px; flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px; box-sizing: border-box; padding: 0 16px; background: #242424; border-radius: 999px; color: #bcbcbc; }
+.stockhub-browser-favicon { display: block; width: 12px; height: 12px; flex: 0 0 12px; overflow: hidden; opacity: .72; }
+.stockhub-browser-favicon img { display: block; max-width: none; width: 80px; height: auto; }
+.stockhub-overview .mission-demo-viewport iframe { border-radius: 0; }
+
+.stockhub-window-controls svg { display: block; flex: none; }
+[data-theme="light"] .stockhub-browser-bar { background: #f1f1f1; border-bottom-color: #dedede; color: #707070; }
+[data-theme="light"] .stockhub-browser-address { background: #fff; color: #535353; }
+[data-theme="light"] .stockhub-browser-favicon img { filter: brightness(0); }
+[data-theme="light"] .stockhub-window-controls span { background: #d3d3d3; color: #f7f7f7; }

@@ -1,3 +1,4 @@
+import Stockhub from '../content/portfolio/stockhub';
 import React from 'react';
 import MissionControl from '../content/portfolio/mission-control';
 import MissionControlPlanning from '../content/portfolio/mission-control/Planning';
@@ -27,7 +28,7 @@ const Portfolio: React.FC = () => (
             <MissionControlBrowserDesign />
             <MissionControlFeatures />
         </section>
-        <ProjectPlaceholder id="project-3" name="Stockhub" logo="/assets/ux_ui/hero/stockhub.png" description="A modern dashboard that makes 50 years of product data easy to use." />
+        <section id="project-3" className="ux-project ux-framework-section" aria-labelledby="stockhub-title"><FrameworkRule /><header className="mission-project-hero"><div className="mission-project-identity"><img src="/assets/ux_ui/hero/stockhub.png" alt="Stockhub" /></div><h2 id="stockhub-title">From the stockroom to the sales counter. Inventory, in reach.</h2></header><Stockhub /></section>
     </div>
 );
 

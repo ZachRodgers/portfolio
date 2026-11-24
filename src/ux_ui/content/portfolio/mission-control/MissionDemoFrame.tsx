@@ -1,8 +1,12 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Pause, Play, RotateCcw } from 'lucide-react';
+import { Pause, Play, RotateCcw, Sun, Moon } from 'lucide-react';
 
 interface MissionDemoFrameProps {
     src: string;
+    nativeWidth?: number;
+    nativeHeight?: number;
+    browserBar?: React.ReactNode;
+    themeControl?: boolean;
     title: string;
     showPause?: boolean;
     showReplay?: boolean;
@@ -13,16 +17,18 @@ interface MissionDemoFrameProps {
     eager?: boolean;
 }
 
-export default function MissionDemoFrame({ src, title, showPause = true, showReplay = true, tone = 'default', layout = 'fit', onInteraction, active = true, eager = false }: MissionDemoFrameProps) {
+export default function MissionDemoFrame({ src, title, showPause = true, showReplay = true, tone = 'default', layout = 'fit', onInteraction, active = true, eager = false, nativeWidth = 1100, nativeHeight = 700, browserBar, themeControl = false }: MissionDemoFrameProps) {
     const frame = useRef<HTMLIFrameElement>(null);
     const viewport = useRef<HTMLDivElement>(null);
     const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const [theme, setTheme] = useState<'light' | 'dark'>(() => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     const [visible, setVisible] = useState(false);
-    const [width, setWidth] = useState(1100);
-    const scale = layout === 'crop' ? 1 : Math.min(1, width / 1100);
-    const frameHeight = 700;
-    const viewportHeight = 700;
-    const frameWidth = layout === 'crop' ? Math.max(1100, width + 160) : Math.max(1100, width);
+    const [width, setWidth] = useState(nativeWidth);
+    const scale = layout === 'crop' ? 1 : Math.min(1, width / nativeWidth);
+    const frameHeight = nativeHeight;
+    const browserBarHeight = browserBar ? 48 : 0;
+    const viewportHeight = nativeHeight + browserBarHeight;
+    const frameWidth = layout === 'crop' ? Math.max(nativeWidth, width + 160) : Math.max(nativeWidth, width);
     const send = (action?: string) => frame.current?.contentWindow?.postMessage({ type: 'mc-demo', action, paused, visible: visible && active, frameWidth }, window.location.origin);
 
     useLayoutEffect(() => {
@@ -49,13 +55,29 @@ export default function MissionDemoFrame({ src, title, showPause = true, showRep
         return () => window.removeEventListener('message', receive);
     }, [onInteraction]);
 
+    useEffect(() => {
+        if (!themeControl) return;
+        const receive = (event: MessageEvent) => {
+            if (event.origin === window.location.origin && event.source === frame.current?.contentWindow && event.data?.type === 'stockhub-theme' && (event.data.theme === 'dark' || event.data.theme === 'light')) setTheme(event.data.theme);
+        };
+        window.addEventListener('message', receive);
+        return () => window.removeEventListener('message', receive);
+    }, [themeControl]);
+    const toggleTheme = () => {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+        frame.current?.contentWindow?.postMessage({ type: 'stockhub-set-theme', theme: next }, window.location.origin);
+    };
+
     return <div onPointerDown={onInteraction} onWheel={onInteraction} onKeyDown={onInteraction} className={`mission-demo-background${tone === 'planning' ? ' mission-demo-background--planning' : ''}${layout === 'crop' ? ' mission-demo-background--crop' : ''}`}>
         <div className="mission-playback">
+            {themeControl && <button aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} onClick={toggleTheme}>{theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}</button>}
             {showPause && <button aria-label={paused ? 'Play demo' : 'Pause demo'} title={paused ? 'Play' : 'Pause'} onClick={() => { setPaused(value => !value); send('interact'); }}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>}
             {showReplay && <button aria-label="Replay demo" title="Replay" onClick={() => send('replay')}><RotateCcw size={14} /></button>}
         </div>
         <div className={`mission-demo-viewport${layout === 'crop' ? ' mission-demo-viewport--crop' : ''}`} ref={viewport} style={{ height: viewportHeight * scale }}>
-            <iframe ref={frame} title={title} src={src} loading={eager ? 'eager' : 'lazy'} onLoad={() => send()} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: 0, margin: 0, width: frameWidth, height: frameHeight, transform: layout === 'crop' ? 'none' : `scale(${scale})` }} />
+            {browserBar && <div data-theme={themeControl ? theme : undefined} style={{ position: 'absolute', top: 0, left: 0, width: frameWidth, height: browserBarHeight, transform: `scale(${scale})`, transformOrigin: 'top left' }}>{browserBar}</div>}
+            <iframe ref={frame} title={title} src={src} loading={eager ? 'eager' : 'lazy'} onLoad={() => send()} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: browserBarHeight * scale, margin: 0, width: frameWidth, height: frameHeight, transform: layout === 'crop' ? 'none' : `scale(${scale})` }} />
         </div>
     </div>;
 }
