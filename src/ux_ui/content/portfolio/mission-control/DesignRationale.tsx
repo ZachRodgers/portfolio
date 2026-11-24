@@ -1,25 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Lightbulb, MousePointer2, Hand, Type, MessageSquare, Image, Square, Layers, Pencil, Paintbrush, Move, Check } from 'lucide-react';
+import { Lightbulb, MousePointer2, Hand, Type, MessageSquare, Image, Square, Layers, PenTool, Paintbrush, Move, Check } from 'lucide-react';
 import './design-rationale.css';
 
 const notes = [
-    { title: 'But why?', eyebrow: '01 / The workspace', text: 'A conversation alone can’t hold the whole project. Plans, previews, and changes belong together, so the next decision has context.', question: 'Interview prompt', prompt: 'Where does context get lost between the chat, editor, and preview?' },
-    { title: 'Make the plan visible.', eyebrow: '02 / Planning & previews', text: 'Put something concrete beside the conversation. It’s easier to discuss a direction when you can see it.', question: 'Usability test to run', prompt: 'Can someone compare directions and identify the next step?' },
-    { title: 'What makes the cut?', eyebrow: '03 / Design Mode', text: 'Familiar visual controls, focused on editing a real page. An initial scope to test with designers:', question: 'Test the boundary', prompt: 'Direct manipulation or a comment? Test where designers draw the line.' },
-    { title: 'Keep the intent intact.', eyebrow: '04 / Consistency', text: 'One good screen isn’t enough. A shared reference for type, color, and components helps the next screen feel like part of the same product.', question: 'Validation plan', prompt: 'Compare a second screen with and without a brand reference. Track visual drift and correction effort.' }
+    { title: 'The ultimate partner.', text: 'Conversations with engineers and designers revealed a gap: the CLI can feel limiting, while much of an IDE goes unused. What could a workspace built for agentic work look like?' },
+    { title: 'Planning matters.', text: 'Agents work best with a plan, but long Markdown files are easy to skim past. Mission Control brings plans to life with previews, graphics, and HTML that highlights what matters.' },
+    { title: 'Designed for designers.', text: 'Feedback from designer friends shaped familiar, Figma-like controls, so they can work visually without reading code.' },
+    { title: 'Backed by research.', text: 'Research points to faster codebase retrieval and challenges with visual consistency. Mission Control indexes the codebase and builds a brand reference from its components and colors, with visual controls for the team.' }
 ];
 const arrows = [
-    'M87 10 C48 2 71 43 21 45 M32 34 L20 45 L35 51',
+    'M70 51 C38 49 42 27 44 11 M34 21 L44 10 L53 21',
     'M12 12 C17 37 42 48 76 39 M64 33 L77 39 L68 49',
-    'M88 48 C55 56 68 14 27 17 M39 9 L26 17 L38 25',
+    'M72 8 C48 17 73 35 66 61 C62 78 48 92 39 108 M38 96 L39 109 L52 106',
     'M12 45 C24 12 52 10 80 23 M69 15 L81 23 L69 30',
 ];
 
 const choices = [
     [MousePointer2, 'Select', true], [Hand, 'Pan', true], [Move, 'Spacing', true],
     [Type, 'Text', true], [MessageSquare, 'Comment', true], [Paintbrush, 'Color', true],
-    [Image, 'Images', true], [Square, 'Corners', true], [Layers, 'Components', false],
-    [Pencil, 'Freehand', false], [Square, 'Vector shapes', false], [Layers, 'Layer effects', false],
+    [Square, 'Divs', true], [Image, 'Images', false], [Layers, 'Components', false],
+    [PenTool, 'Pen', false], [Square, 'Shapes', false],
 ] as const;
 
 export default function DesignRationale({ page }: { page: number }) {
@@ -59,8 +59,9 @@ export default function DesignRationale({ page }: { page: number }) {
         </button>
         <aside id={id} className={`rationale-paper${pinned ? ' is-pinned' : ''}`} aria-label={`Design rationale: ${note.title}`} aria-hidden={!open}>
             <h3 className="rationale-title">{note.title}</h3>
-            <svg className="rationale-arrow" viewBox="0 0 100 60" aria-hidden="true"><path className="rationale-arrow-shaft" pathLength="1" d={arrows[page].split(' M')[0]} /><path className="rationale-arrow-head" pathLength="1" d={`M${arrows[page].split(' M')[1]}`} /></svg>
+            {page !== 3 && <svg className="rationale-arrow" viewBox={page === 2 ? '0 0 100 120' : '0 0 100 60'} aria-hidden="true"><path className="rationale-arrow-shaft" pathLength="1" d={arrows[page].split(' M')[0]} /><path className="rationale-arrow-head" pathLength="1" d={`M${arrows[page].split(' M')[1]}`} /></svg>}
             <p>{note.text}</p>
+            {page === 3 && <div className="rationale-sources"><a href="https://arxiv.org/abs/2608.01507" target="_blank" rel="noreferrer">Repository retrieval ↗</a><a href="https://www.mdpi.com/2073-431X/15/4/238" target="_blank" rel="noreferrer">Interface consistency ↗</a></div>}
             {page === 1 && <div className="rationale-wireframes" aria-label="Concept wireframes: conversation beside preview, then a review checklist">
                 <div className="rationale-wireframe"><i/><div><span/><span/><span/></div><b/></div>
                 <span className="rationale-sketch-note">make it tangible →</span>
