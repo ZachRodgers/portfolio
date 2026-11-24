@@ -1,3 +1,4 @@
+import DesignRationale from './DesignRationale';
 import React from 'react';
 import MissionDemoFrame from './MissionDemoFrame';
 import './mission-control.css';
@@ -12,5 +13,6 @@ export default function MissionControl() {
                 <article><h3>Git Control</h3><p>Review diffs, manage branches, and decide when to commit or merge. Familiar Git controls stay close to the work, without the clutter of a full IDE.</p></article>
             </div>
         </div>
+        <DesignRationale page={0} />
     </section>;
 }

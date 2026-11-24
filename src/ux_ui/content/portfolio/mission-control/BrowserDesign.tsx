@@ -1,3 +1,4 @@
+import DesignRationale from './DesignRationale';
 import React from 'react';
 import MissionDemoFrame from './MissionDemoFrame';
 
@@ -21,5 +22,6 @@ export default function MissionControlBrowserDesign() {
                 </article>
             </aside>
         </div>
+        <DesignRationale page={2} />
     </section>;
 }

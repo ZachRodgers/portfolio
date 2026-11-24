@@ -1,3 +1,4 @@
+import DesignRationale from './DesignRationale';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MissionDemoFrame from './MissionDemoFrame';
 
@@ -55,5 +56,6 @@ export default function MissionControlFeatures() {
                 <MissionDemoFrame key={`${item.id}-${revisions[index]}`} src={`/assets/ux_ui/content/portfolio/mission-control/demo/index.html?scene=feature-${item.id}`} title={`Mission Control ${item.label}`} tone="planning" showPause={item.id === 'index'} showReplay={false} onInteraction={interact} active={selected === index && inView} eager />
             </div>)}</div>}
         </div>
+        <DesignRationale page={3} />
     </section>;
 }

@@ -1,3 +1,4 @@
+import DesignRationale from './DesignRationale';
 import React from 'react';
 import MissionDemoFrame from './MissionDemoFrame';
 
@@ -32,5 +33,6 @@ export default function MissionControlPlanning() {
                 </article>)}
             </div>
         </div>
+        <DesignRationale page={1} />
     </section>;
 }
