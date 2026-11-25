@@ -31,3 +31,8 @@
 .stockhub-alert-bottom p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
 .stockhub-alert-bottom .stockhub-why { margin: 0; justify-self: end; }
 @media(max-width: 700px) { .stockhub-alert-bottom { grid-template-columns: 1fr; gap: 26px; } }
+
+.stockhub-tone-inventory .mission-demo-background { background: linear-gradient(135deg, #a7a8a1 0%, #92938b 48%, #777970 100%); }
+.stockhub-tone-orders .mission-demo-background { background: linear-gradient(135deg, #a5a8ab 0%, #909498 48%, #777c81 100%); }
+.stockhub-tone-alerts .mission-demo-background { background: linear-gradient(135deg, #b0a79e 0%, #998f86 48%, #80766f 100%); }
+.stockhub-tone-fourth .mission-demo-background { background: linear-gradient(135deg, #a9a7a8 0%, #939192 48%, #797778 100%); }

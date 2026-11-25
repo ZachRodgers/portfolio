@@ -19,3 +19,5 @@ Order Lookup opens the first order and its three line items on initial load and 
 Order line item links open the product History view with the selected item and status. Fictional history records are derived from the same orders, and shipment document links return to Order Lookup. Navigation stays inside the preview; replay returns to its starting screen.
 
 The third section renders Stock Alerts with its sidebar initially collapsed and its preview aligned to the left rail. Thirty invented stock and usage records are derived from the same hardware items. Alert calculations use the product's flag rules; searches, filtering, sorting, details, export, defaults, and temporary overrides run locally. Defaults and overrides persist in browser storage.
+
+Each StockHub preview has its own muted backdrop. The `.stockhub-tone-fourth` variant is reserved for the remaining section.
