@@ -1,8 +1,26 @@
 import {items} from './items';
 import {orderGroups} from './orders';
+import {alertRows, alertSettings, saveAlertSettings, updateOverride} from './alerts';
 const loadedPages = new Set<number | string>();
 window.fetch=async(input:any, options?: RequestInit)=>{const u=new URL(String(input),location.origin),p=u.searchParams;const q=(p.get('search')||'').toLowerCase();let rows=items.filter(r=>(!q||[r.item_number,r.description,r.reel_id].some(v=>p.get('exact')==='1'?v.toLowerCase()===q:v.toLowerCase().includes(q)))&&(!p.get('warehouses')||p.get('warehouses')!.split(',').includes(r.warehouse)));const col=p.get('sort')||'item_number';rows.sort((a,b)=>String(a[col as keyof typeof a]).localeCompare(String(b[col as keyof typeof b]),undefined,{numeric:true})*(p.get('order')==='desc'?-1:1));let body:any;
 if (u.pathname === '/api/me') body = {user: {role:'user'}};
+else if (u.pathname.startsWith('/api/stock-alerts')) {
+  if(u.pathname.endsWith('/version')) body={version:'cedar-bolt-alerts-v1'};
+  else if(u.pathname.endsWith('/settings')) body=options?.method === 'PUT' ? saveAlertSettings(JSON.parse(String(options.body))) : alertSettings();
+  else if(u.pathname.endsWith('/overrides')) {updateOverride(JSON.parse(String(options?.body)),options?.method==='DELETE');body={ok:true};}
+  else {
+    const settings=alertSettings();const term=(p.get('search')||'').toLowerCase();const allowed=(p.get('warehouses')||'').split(',').filter(Boolean);const flag=p.get('flag');
+    let alerts=alertRows().filter(row=>(!allowed.length||allowed.includes(row.branch))&&(!term||[row.product_number,row.sap,row.keyword,row.description].some(v=>v.toLowerCase().includes(term)))&&(!flag||(flag==='alert' ? row.flag==='alert'||row.flag==='critical' : row.flag===flag)));
+    const col=p.get('sort')||'product_number';const direction=p.get('order')==='desc'?-1:1;
+    alerts.sort((a,b)=>String(a[col as keyof typeof a]??'').localeCompare(String(b[col as keyof typeof b]??''),undefined,{numeric:true})*direction);
+    const page=Number(p.get('page')||1),limit=Number(p.get('limit')||8),key='alerts-'+page;
+    if(limit===8&&!loadedPages.has(key)){
+      const signal=options?.signal;if(signal?.aborted)throw new DOMException('Aborted','AbortError');
+      await new Promise<void>((resolve,reject)=>{const abort=()=>{window.clearTimeout(timer);reject(new DOMException('Aborted','AbortError'));};const timer=window.setTimeout(()=>{signal?.removeEventListener('abort',abort);resolve()},1000);signal?.addEventListener('abort',abort,{once:true});});loadedPages.add(key);
+    }
+    body={rows:alerts.slice((page-1)*limit,page*limit),total:alerts.length,reportAnchorDate:'2026-12-01',peakMonths:settings.peakMonths,bufferMonths:settings.bufferMonths,flagFilter:flag||'all'};
+  }
+}
 else if (u.pathname.startsWith('/api/history')) {
   if (u.pathname.endsWith('/version')) body={version:'cedar-bolt-history-v1'};
   else if (u.pathname.endsWith('/item-totals')) {
@@ -90,6 +108,6 @@ else if(u.pathname==='/api/inventory'){
   body={rows:rows.slice((page-1)*limit,page*limit),total:rows.length};
 }
 else throw new Error('Unavailable demo endpoint');return new Response(JSON.stringify(body),{headers:{'Content-Type':'application/json'}})};
-window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===parent&&e.data?.action==='replay'){const scene=new URLSearchParams(location.search).get('scene');try{sessionStorage.removeItem('stockhub:shared-search:'+(scene||'inventory'))}catch{}history.replaceState(null,'',location.pathname+(scene==='orders'?'?scene=orders':''));location.reload()}});
+window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===parent&&e.data?.action==='replay'){const scene=new URLSearchParams(location.search).get('scene');try{sessionStorage.removeItem('stockhub:shared-search:'+(scene||'inventory'))}catch{}history.replaceState(null,'',location.pathname+(scene ? '?scene='+encodeURIComponent(scene) : ''));location.reload()}});
 
 document.addEventListener('submit',event=>{if((event.target as HTMLFormElement).getAttribute('action')==='/auth/sign-out')event.preventDefault()});

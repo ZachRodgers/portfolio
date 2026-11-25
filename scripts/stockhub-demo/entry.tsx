@@ -4,6 +4,7 @@ import {createRoot} from 'react-dom/client';
 import Inventory from '@/app/(protected)/inventory/page';
 import OrderLookup from '@/app/(protected)/order-lookup/page';
 import History from '@/app/(protected)/history/page';
+import StockAlerts from '@/app/(protected)/stock-alerts/page';
 import {usePathname} from './stubs';
 import {ProtectedSidebar} from '@/components/layout/protected-sidebar';
 import {ThemeProvider} from '@/components/theme-provider';
@@ -30,7 +31,7 @@ function ThemeBridge() {
 function App() {
   const pathname = usePathname();
   return <ThemeProvider><ThemeBridge /><div className="h-svh flex flex-col overflow-hidden">
-    <ProtectedSidebar user={user}>{pathname === '/history' ? <History /> : pathname === '/order-lookup' ? <OrderLookup /> : <Inventory />}</ProtectedSidebar>
+    <ProtectedSidebar user={user}>{pathname === '/history' ? <History /> : pathname === '/order-lookup' ? <OrderLookup /> : pathname === '/stock-alerts' ? <StockAlerts /> : <Inventory />}</ProtectedSidebar>
   </div><Toaster /></ThemeProvider>;
 }
 createRoot(document.getElementById('root')!).render(<App />);

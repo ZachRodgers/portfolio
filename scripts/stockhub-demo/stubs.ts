@@ -23,7 +23,7 @@ export function useRouter(){return {push:navigate, back:()=>window.history.back(
 export function usePathname(){
   const search=useSyncExternalStore(subscribe,snapshot,snapshot);
   const params=new URLSearchParams(search);
-  return params.get('view') === 'history' ? '/history' : params.get('scene') === 'orders' ? '/order-lookup' : '/inventory';
+  return params.get('view') === 'history' ? '/history' : params.get('scene') === 'orders' ? '/order-lookup' : params.get('scene') === 'alerts' ? '/stock-alerts' : '/inventory';
 }
 export function useSearchParams(){
   const search=useSyncExternalStore(subscribe,snapshot,snapshot);

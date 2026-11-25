@@ -4318,3 +4318,5 @@
 .dark [data-order-status="closed"], .dark [data-order-status="cancelled"] { background: #351c20; border-color: #87454b; color: #f2a9af; }
 .dark [data-order-status="pending"] { background: #352a14; border-color: #856a32; color: #f1d18c; }
 .dark [data-order-status="backorder"] { background: #382416; border-color: #915a32; color: #f2ba88; }
+.dark [data-alert-status="critical"] { background-color: color-mix(in oklab, var(--color-red-950) 40%, var(--background)); }
+.dark [data-alert-status="alert"] { background-color: color-mix(in oklab, var(--color-amber-950) 40%, var(--background)); }

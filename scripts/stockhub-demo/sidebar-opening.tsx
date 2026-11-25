@@ -4,6 +4,7 @@ import {useSidebar} from '@/components/ui/sidebar';
 export function SidebarOpening() {
   const {setOpen} = useSidebar();
   useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('scene') === 'alerts') return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setOpen(true);
       return;

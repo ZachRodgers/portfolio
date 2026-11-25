@@ -26,6 +26,14 @@ const out='public/assets/ux_ui/content/portfolio/stockhub/demo';fs.mkdirSync(out
     for(const [before,after] of initialChanges){if(!contents.includes(before))throw new Error('Order preview source changed: '+before);contents=contents.replace(before,after)}
     return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
   });
+  b.onLoad({filter:/\/src\/app\/\(protected\)\/stock-alerts\/page\.tsx$/},args=>{
+    let contents=fs.readFileSync(args.path,'utf8');
+    for(const [before,after] of [['const PAGE_SIZE = 10;', 'const PAGE_SIZE = 8;'],['>Branch</SortableHead>', '>Location</SortableHead>'],['17 + 12 + visibleBufferCols.length','15 + 12 + visibleBufferCols.length'],['<TableCell className={cn(\n                    "whitespace-nowrap sticky right-0 z-10', '<TableCell data-alert-status={suppressed ? "suppressed" : row.flag ?? "normal"} className={cn(\n                    "whitespace-nowrap sticky right-0 z-10']]) {
+      if(!contents.includes(before))throw new Error('Stock alerts preview source changed: '+before);
+      contents=before === '17 + 12 + visibleBufferCols.length' ? contents.split(before).join(after) : contents.replace(before,after);
+    }
+    return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
+  });
   b.onLoad({filter:/\/src\/app\/\(protected\)\/history\/page\.tsx$/},args=>{
     let contents=fs.readFileSync(args.path,'utf8');
     for(const [before,after] of [['const PAGE_SIZE = 10;', 'const PAGE_SIZE = 8;'],['Nedco Doc','Order #'],['Warehouse','Location']]) {
