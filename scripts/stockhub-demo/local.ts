@@ -1,9 +1,13 @@
 import {items} from './items';
+import {navigate} from './stubs';
+import {adminResponse, beginUpload, finishUpload} from './admin';
 import {orderGroups} from './orders';
 import {alertRows, alertSettings, saveAlertSettings, updateOverride} from './alerts';
 const loadedPages = new Set<number | string>();
 window.fetch=async(input:any, options?: RequestInit)=>{const u=new URL(String(input),location.origin),p=u.searchParams;const q=(p.get('search')||'').toLowerCase();let rows=items.filter(r=>(!q||[r.item_number,r.description,r.reel_id].some(v=>p.get('exact')==='1'?v.toLowerCase()===q:v.toLowerCase().includes(q)))&&(!p.get('warehouses')||p.get('warehouses')!.split(',').includes(r.warehouse)));const col=p.get('sort')||'item_number';rows.sort((a,b)=>String(a[col as keyof typeof a]).localeCompare(String(b[col as keyof typeof b]),undefined,{numeric:true})*(p.get('order')==='desc'?-1:1));let body:any;
-if (u.pathname === '/api/me') body = {user: {role:'user'}};
+if (u.pathname === '/api/me') body = {user: {id:'cedar-bolt-demo',role:new URLSearchParams(location.search).get('scene')==='admin'?'admin':'user'}};
+else if (u.pathname.startsWith('/api/admin/')) body=adminResponse(u.pathname,p,options);
+else if(new URLSearchParams(location.search).get('scene')==='admin' && /^\/api\/(inventory|orders|receipts|adjustments|stock-alerts|cancelled-orders)\/(upload-url|process)$/.test(u.pathname) && options?.method==='POST') {const payload=JSON.parse(String(options.body));body=u.pathname.endsWith('/upload-url') ? beginUpload(u.pathname,payload) : finishUpload(payload.uploadId);}
 else if (u.pathname.startsWith('/api/stock-alerts')) {
   if(u.pathname.endsWith('/version')) body={version:'cedar-bolt-alerts-v1'};
   else if(u.pathname.endsWith('/settings')) body=options?.method === 'PUT' ? saveAlertSettings(JSON.parse(String(options.body))) : alertSettings();
@@ -110,4 +114,29 @@ else if(u.pathname==='/api/inventory'){
 else throw new Error('Unavailable demo endpoint');return new Response(JSON.stringify(body),{headers:{'Content-Type':'application/json'}})};
 window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===parent&&e.data?.action==='replay'){const scene=new URLSearchParams(location.search).get('scene');try{sessionStorage.removeItem('stockhub:shared-search:'+(scene||'inventory'))}catch{}history.replaceState(null,'',location.pathname+(scene ? '?scene='+encodeURIComponent(scene) : ''));location.reload()}});
 
+// Keep native links inside the preview, including anchors outside the router adapter.
+document.addEventListener('click', event=>{
+  if(event.defaultPrevented || !(event.target instanceof Element)) return;
+  const link=event.target.closest<HTMLAnchorElement>('a[href]');
+  if(!link || link.hasAttribute('download')) return;
+  event.preventDefault();
+  navigate(link.href);
+});
+document.addEventListener('auxclick', event=>{
+  if(!(event.target instanceof Element)) return;
+  const link=event.target.closest<HTMLAnchorElement>('a[href]');
+  if(link && !link.hasAttribute('download')) event.preventDefault();
+});
+
 document.addEventListener('submit',event=>{if((event.target as HTMLFormElement).getAttribute('action')==='/auth/sign-out')event.preventDefault()});
+
+if(new URLSearchParams(location.search).get('scene')==='admin') {
+  class DemoUpload {
+    status=0; upload:{onprogress?: (event:{lengthComputable:boolean;loaded:number;total:number})=>void}={};
+    onload?: ()=>void; onerror?: ()=>void; private url='';
+    open(_method:string,url:string){this.url=url}
+    setRequestHeader(){}
+    send(file:File){if(!this.url.startsWith('demo-upload://')){this.onerror?.();return;}window.setTimeout(()=>{this.upload.onprogress?.({lengthComputable:true,loaded:file.size,total:file.size||1});this.status=200;this.onload?.()},250)}
+  }
+  window.XMLHttpRequest=DemoUpload as unknown as typeof XMLHttpRequest;
+}

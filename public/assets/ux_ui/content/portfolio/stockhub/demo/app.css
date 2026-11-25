@@ -4320,3 +4320,15 @@
 .dark [data-order-status="backorder"] { background: #382416; border-color: #915a32; color: #f2ba88; }
 .dark [data-alert-status="critical"] { background-color: color-mix(in oklab, var(--color-red-950) 40%, var(--background)); }
 .dark [data-alert-status="alert"] { background-color: color-mix(in oklab, var(--color-amber-950) 40%, var(--background)); }
+@media (min-width: 768px) {
+  .stockhub-analytics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.stockhub-upload-grid { width: min(880px, 100%); max-height: calc(100% - 96px); overflow-y: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-content: start; margin: auto; }
+.stockhub-upload-grid > h2 { grid-column: 1 / -1; font-size: 1.25rem; }
+.stockhub-upload-grid > div { padding: 12px; }
+.stockhub-upload-grid > div:nth-child(2), .stockhub-upload-grid > div:last-child { grid-row: 2; gap: 8px; }
+@media (max-width: 700px) {
+  .stockhub-upload-grid { grid-template-columns: 1fr; max-height: calc(100% - 110px); }
+  .stockhub-upload-grid > h2 { grid-column: auto; }
+  .stockhub-upload-grid > div:nth-child(2), .stockhub-upload-grid > div:last-child { grid-row: auto; }
+}

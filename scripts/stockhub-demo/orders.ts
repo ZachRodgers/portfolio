@@ -1,4 +1,5 @@
 import {items} from './items';
+import {team} from './people';
 
 export const orderGroups = Array.from({length: 24}, (_, index) => {
   const status = index % 3 === 0 ? 'pending' : 'closed';
@@ -9,7 +10,7 @@ export const orderGroups = Array.from({length: 24}, (_, index) => {
     order_date: `2026-10-${day}`,
     ship_date: status === 'closed' ? `2026-11-${String(1 + index % 20).padStart(2, '0')}` : null,
     warehouse: index % 2 ? 'Ottawa' : 'Toronto',
-    ordered_by: ['Morgan Lee', 'Sam Rivera', 'Taylor Chen', 'Jordan Patel'][index % 4],
+    ordered_by: team[1 + index % 4].name,
     status,
   };
   const rows = Array.from({length: index === 23 ? 3 : 2 + index % 3}, (_, line) => {

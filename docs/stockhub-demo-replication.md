@@ -10,7 +10,7 @@ The demo-only branding adapter uses the portfolio StockHub wordmark (cropped to 
 
 The portfolio preview displays eight rows per page, uses Toronto and Ottawa locations, narrows the description column, and hides the Bin table column; item details retain the bin. These presentation adaptations are applied during the demo build.
 
-On load or replay, the sidebar starts collapsed and opens after a short delay (immediately for reduced motion). A visitor interaction cancels the automatic opening. The inventory adapter delays the first successful request for each eight-row page by one second so the product's existing skeleton appears; returning to an already loaded page is immediate. Reloading the preview resets this sequence.
+On load or replay, each preview starts with the sidebar collapsed; visitors can open it at any time. The inventory adapter delays the first successful request for each eight-row page by one second so the product's existing skeleton appears; returning to an already loaded page is immediate. Reloading the preview resets this sequence.
 
 The second section renders the original Order Lookup screen using 24 fictional orders and line items linked to the same hardware products. Its local adapter supports browsing, searching, sorting, location and status filters, expansion, pagination, and export. The preview isolates each section's search state; links to workflows not yet included do not navigate away from the demonstration.
 
@@ -21,3 +21,9 @@ Order line item links open the product History view with the selected item and s
 The third section renders Stock Alerts with its sidebar initially collapsed and its preview aligned to the left rail. Thirty invented stock and usage records are derived from the same hardware items. Alert calculations use the product's flag rules; searches, filtering, sorting, details, export, defaults, and temporary overrides run locally. Defaults and overrides persist in browser storage.
 
 Each StockHub preview has its own muted backdrop. The `.stockhub-tone-fourth` variant is reserved for the remaining section.
+
+The fourth section uses the original Analytics, Users, CSV Uploads, and admin bar components. Analytics starts selected and the showcase cycles after ten seconds of inactivity while visible; interaction postpones cycling and reduced motion disables it. The dropdown and admin bar stay synchronized. User changes and upload records are stored locally. Invitations are not sent, uploads are simulated without reading file contents or changing stock, with simulated upload feedback shown after an upload action. Replay returns to Analytics.
+
+The analytics calendar uses a fictional daily upload history, backed by matching local audit records. The CSV upload overlay uses a compact two-column layout when space allows.
+
+Preview navigation uses local demo URLs, including the admin breadcrumb. Native links that bypass the router are contained within the preview, and unsupported routes do not open portfolio pages. File downloads remain available.

@@ -7,22 +7,31 @@ const subscribe = (callback: () => void) => {
 };
 const snapshot = () => window.location.search;
 export function useTelemetry(){return {track:()=>{}}}
-export function navigate(href: string) {
-  const target = new URL(href, window.location.origin);
-  if (!['/history', '/order-lookup'].includes(target.pathname)) {
-    toast.info('Explore this workflow in its portfolio section.');
-    return;
-  }
+export function previewHref(href: string): string | null {
+  let target: URL;
+  try { target = new URL(href, window.location.origin); } catch { return null; }
+  if (target.origin !== window.location.origin) return null;
+  if (target.pathname === '/admin') target.pathname = '/admin/analytics';
+  const isAdmin = new URLSearchParams(location.search).get('scene') === 'admin';
+  const allowed = isAdmin ? ['/admin/analytics','/admin/users','/admin/csv-uploads'] : ['/history','/order-lookup'];
+  if (!allowed.includes(target.pathname)) return null;
   const params = new URLSearchParams(target.search);
-  params.set('scene', 'orders');
-  if (target.pathname === '/history') params.set('view', 'history');
-  window.history.pushState(null, '', `${window.location.pathname}?${params}`);
+  params.set('scene', isAdmin ? 'admin' : 'orders');
+  if (isAdmin) params.set('view', target.pathname.split('/').pop()!);
+  else if (target.pathname === '/history') params.set('view', 'history');
+  return `${window.location.pathname}?${params}`;
+}
+export function navigate(href: string) {
+  const destination = previewHref(href);
+  if (!destination) { toast.info('Explore this workflow in its portfolio section.'); return; }
+  window.history.pushState(null, '', destination);
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
-export function useRouter(){return {push:navigate, back:()=>window.history.back()}}
+export function useRouter(){return {push:navigate, replace:navigate, back:()=>window.history.back()}}
 export function usePathname(){
   const search=useSyncExternalStore(subscribe,snapshot,snapshot);
   const params=new URLSearchParams(search);
+  if(params.get('scene') === 'admin') {const view=params.get('view');return ['/admin/users','/admin/csv-uploads'].includes('/admin/'+view) ? '/admin/'+view : '/admin/analytics';}
   return params.get('view') === 'history' ? '/history' : params.get('scene') === 'orders' ? '/order-lookup' : params.get('scene') === 'alerts' ? '/stock-alerts' : '/inventory';
 }
 export function useSearchParams(){

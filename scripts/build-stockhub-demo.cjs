@@ -26,6 +26,14 @@ const out='public/assets/ux_ui/content/portfolio/stockhub/demo';fs.mkdirSync(out
     for(const [before,after] of initialChanges){if(!contents.includes(before))throw new Error('Order preview source changed: '+before);contents=contents.replace(before,after)}
     return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
   });
+  b.onLoad({filter:/\/src\/components\/admin\/create-user-modal\.tsx$/},args=>{
+    let contents=fs.readFileSync(args.path,'utf8');
+    for(const [before,after] of [['An invite email will be sent. The user will set their own password and complete\n            account setup before signing in.', 'This creates a local demo account. No invitation email is sent.'],['Invite sent to ${email}', 'Demo account added: ${email}'],['Send Invite','Add Demo User']]) {
+      if(!contents.includes(before))throw new Error('Create user preview source changed: '+before);
+      contents=contents.replace(before,after);
+    }
+    return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
+  });
   b.onLoad({filter:/\/src\/app\/\(protected\)\/stock-alerts\/page\.tsx$/},args=>{
     let contents=fs.readFileSync(args.path,'utf8');
     for(const [before,after] of [['const PAGE_SIZE = 10;', 'const PAGE_SIZE = 8;'],['>Branch</SortableHead>', '>Location</SortableHead>'],['17 + 12 + visibleBufferCols.length','15 + 12 + visibleBufferCols.length'],['<TableCell className={cn(\n                    "whitespace-nowrap sticky right-0 z-10', '<TableCell data-alert-status={suppressed ? "suppressed" : row.flag ?? "normal"} className={cn(\n                    "whitespace-nowrap sticky right-0 z-10']]) {
@@ -51,8 +59,38 @@ const out='public/assets/ux_ui/content/portfolio/stockhub/demo';fs.mkdirSync(out
     let contents=fs.readFileSync(args.path,'utf8');
     const before='<SidebarProvider className="flex-1">';
     if(!contents.includes(before))throw new Error('Protected sidebar source changed');
-    contents=contents.replace(before, '<SidebarProvider defaultOpen={false} className="flex-1"><SidebarOpening />');
-    contents=contents.replace('"use client";', '"use client";\nimport { SidebarOpening } from "' + path.resolve('scripts/stockhub-demo/sidebar-opening.tsx') + '";');
+    contents=contents.replace(before, '<SidebarProvider defaultOpen={false} className="flex-1">');
+    const breadcrumb='<BreadcrumbLink href={crumb.href} className="text-foreground hover:text-foreground/70">{crumb.label}</BreadcrumbLink>';
+    if(!contents.includes(breadcrumb))throw new Error('Protected breadcrumb source changed');
+    contents=contents.replace(breadcrumb, '<BreadcrumbLink asChild><Link href={crumb.href} className="text-foreground hover:text-foreground/70">{crumb.label}</Link></BreadcrumbLink>');
+    contents=contents.replace('"use client";', '"use client";\nimport Link from "next/link";');
+    return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
+  });
+  b.onLoad({filter:/\/src\/components\/app-sidebar\.tsx$/},args=>{
+    let contents=fs.readFileSync(args.path,'utf8');
+    const before='title: "Cancelled Orders"';
+    if(!contents.includes(before))throw new Error('Sidebar label changed');
+    contents=contents.replace(before,'title: "Cancelled"');
+    return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
+  });
+  b.onLoad({filter:/\/src\/app\/\(protected\)\/admin\/analytics\/page\.tsx$/},args=>{
+    let contents=fs.readFileSync(args.path,'utf8');
+    const before='className="grid grid-cols-1 gap-4 xl:grid-cols-2"';
+    if(!contents.includes(before))throw new Error('Analytics grid source changed');
+    contents=contents.split(before).join('className="stockhub-analytics-grid grid grid-cols-1 gap-4 xl:grid-cols-2"');
+    return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
+  });
+  b.onLoad({filter:/\/src\/app\/\(protected\)\/admin\/csv-uploads\/page\.tsx$/},args=>{
+    let contents=fs.readFileSync(args.path,'utf8');
+    const before='                            Cancelled Orders\n                          </Badge>';
+    if(!contents.includes(before))throw new Error('Cancelled upload badge changed');
+    contents=contents.replace(before,'                            Cancelled\n                          </Badge>');
+    const overlay='className="mx-auto flex w-full max-w-lg flex-col gap-4"';
+    if(!contents.includes(overlay))throw new Error('CSV upload overlay source changed');
+    contents=contents.replace(overlay,'className="stockhub-upload-grid"');
+    const successMessages=contents.match(/toast\.success\((?:successMessage\(rowCount\)|`[^`]*\$\{rowCount\.toLocaleString\(\)\}[^`]*`)\);/g) || [];
+    if(successMessages.length!==5)throw new Error('CSV upload success messages changed');
+    for(const message of successMessages) contents=contents.replace(message, 'toast.success("Upload simulated; no data was imported.");');
     return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
   });
   b.onLoad({filter:/\/src\/components\/warehouse-selector\.tsx$/},args=>{

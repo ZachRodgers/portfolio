@@ -7,6 +7,9 @@ interface MissionDemoFrameProps {
     nativeHeight?: number;
     browserBar?: React.ReactNode;
     themeControl?: boolean;
+    adminPage?: string;
+    onAdminPageChange?: (page: string) => void;
+    onReplay?: () => void;
     title: string;
     showPause?: boolean;
     showReplay?: boolean;
@@ -17,7 +20,7 @@ interface MissionDemoFrameProps {
     eager?: boolean;
 }
 
-export default function MissionDemoFrame({ src, title, showPause = true, showReplay = true, tone = 'default', layout = 'fit', onInteraction, active = true, eager = false, nativeWidth = 1100, nativeHeight = 700, browserBar, themeControl = false }: MissionDemoFrameProps) {
+export default function MissionDemoFrame({ src, title, showPause = true, showReplay = true, tone = 'default', layout = 'fit', onInteraction, active = true, eager = false, nativeWidth = 1100, nativeHeight = 700, browserBar, themeControl = false, adminPage, onAdminPageChange, onReplay }: MissionDemoFrameProps) {
     const frame = useRef<HTMLIFrameElement>(null);
     const viewport = useRef<HTMLDivElement>(null);
     const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -63,6 +66,18 @@ export default function MissionDemoFrame({ src, title, showPause = true, showRep
         window.addEventListener('message', receive);
         return () => window.removeEventListener('message', receive);
     }, [themeControl]);
+    useEffect(() => {
+        if (!adminPage) return;
+        frame.current?.contentWindow?.postMessage({type:'stockhub-admin-set-page', page:adminPage}, window.location.origin);
+    }, [adminPage]);
+    useEffect(() => {
+        if (!onAdminPageChange) return;
+        const receive = (event: MessageEvent) => {
+            if (event.origin === window.location.origin && event.source === frame.current?.contentWindow && event.data?.type === 'stockhub-admin-page' && typeof event.data.page === 'string') onAdminPageChange(event.data.page);
+        };
+        window.addEventListener('message', receive);
+        return () => window.removeEventListener('message', receive);
+    }, [onAdminPageChange]);
     const toggleTheme = () => {
         const next = theme === 'dark' ? 'light' : 'dark';
         setTheme(next);
@@ -73,11 +88,11 @@ export default function MissionDemoFrame({ src, title, showPause = true, showRep
         <div className="mission-playback">
             {themeControl && <button aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} onClick={toggleTheme}>{theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}</button>}
             {showPause && <button aria-label={paused ? 'Play demo' : 'Pause demo'} title={paused ? 'Play' : 'Pause'} onClick={() => { setPaused(value => !value); send('interact'); }}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>}
-            {showReplay && <button aria-label="Replay demo" title="Replay" onClick={() => send('replay')}><RotateCcw size={14} /></button>}
+            {showReplay && <button aria-label="Replay demo" title="Replay" onClick={() => { onReplay?.(); send('replay'); }}><RotateCcw size={14} /></button>}
         </div>
         <div className={`mission-demo-viewport${layout === 'crop' ? ' mission-demo-viewport--crop' : ''}`} ref={viewport} style={{ height: viewportHeight * scale }}>
             {browserBar && <div data-theme={themeControl ? theme : undefined} style={{ position: 'absolute', top: 0, left: 0, width: frameWidth, height: browserBarHeight, transform: `scale(${scale})`, transformOrigin: 'top left' }}>{browserBar}</div>}
-            <iframe ref={frame} title={title} src={src} loading={eager ? 'eager' : 'lazy'} onLoad={() => send()} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: browserBarHeight * scale, margin: 0, width: frameWidth, height: frameHeight, transform: layout === 'crop' ? 'none' : `scale(${scale})` }} />
+            <iframe ref={frame} title={title} src={src} loading={eager ? 'eager' : 'lazy'} onLoad={() => { send(); if (adminPage) frame.current?.contentWindow?.postMessage({type:'stockhub-admin-set-page', page:adminPage}, window.location.origin); }} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: browserBarHeight * scale, margin: 0, width: frameWidth, height: frameHeight, transform: layout === 'crop' ? 'none' : `scale(${scale})` }} />
         </div>
     </div>;
 }
