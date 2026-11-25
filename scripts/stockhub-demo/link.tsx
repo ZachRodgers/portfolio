@@ -1,5 +1,6 @@
 import React from 'react';
-import {toast} from 'sonner';
+import {navigate, usePathname} from './stubs';
 export default React.forwardRef<HTMLAnchorElement, any>(function Link({href, onClick, children, ...props},ref){
-  return <a {...props} ref={ref} href={href} onClick={event=>{event.preventDefault();onClick?.(event);if(href!=='/inventory')toast.info('This preview covers Inventory. More workflows are coming.')}}>{children}</a>;
+  const path=usePathname();
+  return <a {...props} ref={ref} href={href} onClick={event=>{event.preventDefault();onClick?.(event);if(href!==path)navigate(href)}}>{children}</a>;
 });

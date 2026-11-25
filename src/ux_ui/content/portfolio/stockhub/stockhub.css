@@ -17,3 +17,9 @@
 [data-theme="light"] .stockhub-browser-address { background: #fff; color: #535353; }
 [data-theme="light"] .stockhub-browser-favicon img { filter: brightness(0); }
 [data-theme="light"] .stockhub-window-controls span { background: #d3d3d3; color: #f7f7f7; }
+
+.stockhub-order-bottom { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px; padding-top: 32px; align-items: start; }
+.stockhub-order-bottom .stockhub-why { margin: 0; justify-self: start; }
+.stockhub-order-bottom h3 { margin: 0 0 12px; font-size: 17px; font-weight: 500; line-height: 1.4; }
+.stockhub-order-bottom p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
+@media(max-width: 700px) { .stockhub-order-bottom { grid-template-columns: 1fr; gap: 26px; } .stockhub-order-bottom article { grid-row: 1; } }

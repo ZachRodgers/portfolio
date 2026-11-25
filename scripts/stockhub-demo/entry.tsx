@@ -2,6 +2,9 @@ import React, {useEffect} from 'react';
 import {useTheme} from 'next-themes';
 import {createRoot} from 'react-dom/client';
 import Inventory from '@/app/(protected)/inventory/page';
+import OrderLookup from '@/app/(protected)/order-lookup/page';
+import History from '@/app/(protected)/history/page';
+import {usePathname} from './stubs';
 import {ProtectedSidebar} from '@/components/layout/protected-sidebar';
 import {ThemeProvider} from '@/components/theme-provider';
 import {Toaster} from '@/components/ui/sonner';
@@ -25,8 +28,9 @@ function ThemeBridge() {
   return null;
 }
 function App() {
+  const pathname = usePathname();
   return <ThemeProvider><ThemeBridge /><div className="h-svh flex flex-col overflow-hidden">
-    <ProtectedSidebar user={user}><Inventory /></ProtectedSidebar>
+    <ProtectedSidebar user={user}>{pathname === '/history' ? <History /> : pathname === '/order-lookup' ? <OrderLookup /> : <Inventory />}</ProtectedSidebar>
   </div><Toaster /></ThemeProvider>;
 }
 createRoot(document.getElementById('root')!).render(<App />);

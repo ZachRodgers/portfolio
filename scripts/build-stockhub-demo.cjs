@@ -10,6 +10,35 @@ const out='public/assets/ux_ui/content/portfolio/stockhub/demo';fs.mkdirSync(out
     for(const [before,after] of changes){if(!contents.includes(before))throw new Error('Inventory preview source changed: '+before);contents=contents.replace(before,after)}
     return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
   });
+  b.onLoad({filter:/\/src\/app\/\(protected\)\/order-lookup\/page\.tsx$/},args=>{
+    let contents=fs.readFileSync(args.path,'utf8');
+    for(const [before,after] of [['const PAGE_SIZE = 10;', 'const PAGE_SIZE = 8;'],['Nedco Doc','Order #'],['Warehouse','Location']]) {
+      if(!contents.includes(before))throw new Error('Order lookup source changed: '+before);
+      if(before === 'Warehouse') contents=contents.replace(/(?<=["">])Warehouse(?=["<])/g, 'Location');
+      else contents=contents.split(before).join(after);
+    }
+    const initialChanges = [
+      ['useEffect, useState, useCallback, useMemo, Suspense', 'useEffect, useState, useCallback, useMemo, useRef, Suspense'],
+      ['const [browseHeaders, setBrowseHeaders] = useState<OrderHeader[]>([]);', 'const [browseHeaders, setBrowseHeaders] = useState<OrderHeader[]>([]);\n  const initialOrderOpened = useRef(false);'],
+      ['setBrowseHeaders(body.headers ?? []);', 'setBrowseHeaders(body.headers ?? []);\n        if (!initialOrderOpened.current && body.headers?.[0]?.nedco_document) {\n          initialOrderOpened.current = true;\n          const first = body.headers[0].nedco_document;\n          setExpandedOrders([first]);\n          void loadBrowseRows(first);\n        }'],
+      ['<span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-semibold ${badgeClasses(status)}`}>', '<span data-order-status={status.toLowerCase()} className={`inline-block rounded-full border px-2 py-0.5 text-xs font-semibold ${badgeClasses(status)}`}>']
+    ];
+    for(const [before,after] of initialChanges){if(!contents.includes(before))throw new Error('Order preview source changed: '+before);contents=contents.replace(before,after)}
+    return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
+  });
+  b.onLoad({filter:/\/src\/app\/\(protected\)\/history\/page\.tsx$/},args=>{
+    let contents=fs.readFileSync(args.path,'utf8');
+    for(const [before,after] of [['const PAGE_SIZE = 10;', 'const PAGE_SIZE = 8;'],['Nedco Doc','Order #'],['Warehouse','Location']]) {
+      if(!contents.includes(before))throw new Error('History preview source changed: '+before);
+      if(before === 'Warehouse') contents=contents.replace(/(?<=["\>])Warehouse(?=["<])/g, 'Location');
+      else contents=contents.split(before).join(after);
+    }
+    return {contents,loader:'tsx',resolveDir:path.dirname(args.path)};
+  });
+  b.onLoad({filter:/\/src\/lib\/shared-search\.ts$/},args=>{
+    const contents=fs.readFileSync(args.path,'utf8').replace('"stockhub:shared-search"', '"stockhub:shared-search:" + (new URLSearchParams(window.location.search).get("scene") || "inventory")');
+    return {contents,loader:'ts',resolveDir:path.dirname(args.path)};
+  });
   b.onLoad({filter:/\/src\/components\/layout\/protected-sidebar\.tsx$/},args=>{
     let contents=fs.readFileSync(args.path,'utf8');
     const before='<SidebarProvider className="flex-1">';
