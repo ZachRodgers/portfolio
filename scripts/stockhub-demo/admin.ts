@@ -2,6 +2,7 @@ import {team} from './people';
 type DemoUser={id:string;email:string;name:string|null;role:string;status:string;created_at:string;activity:number[]};
 type Upload={id:string;file_name:string;file_type:string;uploaded_at:string;uploaded_by:string;row_count:number;processing_time_ms:number;status:string};
 const usersKey='stockhub-demo:admin-users',uploadsKey='stockhub-demo:admin-uploads';
+export function resetAdminDemo(){try{localStorage.removeItem(usersKey);localStorage.removeItem(uploadsKey);}catch{}}
 const previousNames=['zach','morgan','sam','taylor','jordan','alex','riley','jamie'];
 const activityDays = [
   [0, 5, 9, 15, 20],

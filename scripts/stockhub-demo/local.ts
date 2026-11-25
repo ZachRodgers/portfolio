@@ -1,8 +1,9 @@
 import {items} from './items';
 import {navigate} from './stubs';
-import {adminResponse, beginUpload, finishUpload} from './admin';
+import {adminResponse, beginUpload, finishUpload, resetAdminDemo} from './admin';
 import {orderGroups} from './orders';
 import {alertRows, alertSettings, saveAlertSettings, updateOverride} from './alerts';
+if (new URLSearchParams(location.search).get('scene') === 'admin') resetAdminDemo();
 const loadedPages = new Set<number | string>();
 window.fetch=async(input:any, options?: RequestInit)=>{const u=new URL(String(input),location.origin),p=u.searchParams;const q=(p.get('search')||'').toLowerCase();let rows=items.filter(r=>(!q||[r.item_number,r.description,r.reel_id].some(v=>p.get('exact')==='1'?v.toLowerCase()===q:v.toLowerCase().includes(q)))&&(!p.get('warehouses')||p.get('warehouses')!.split(',').includes(r.warehouse)));const col=p.get('sort')||'item_number';rows.sort((a,b)=>String(a[col as keyof typeof a]).localeCompare(String(b[col as keyof typeof b]),undefined,{numeric:true})*(p.get('order')==='desc'?-1:1));let body:any;
 if (u.pathname === '/api/me') body = {user: {id:'cedar-bolt-demo',role:new URLSearchParams(location.search).get('scene')==='admin'?'admin':'user'}};
@@ -112,7 +113,7 @@ else if(u.pathname==='/api/inventory'){
   body={rows:rows.slice((page-1)*limit,page*limit),total:rows.length};
 }
 else throw new Error('Unavailable demo endpoint');return new Response(JSON.stringify(body),{headers:{'Content-Type':'application/json'}})};
-window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===parent&&e.data?.action==='replay'){const scene=new URLSearchParams(location.search).get('scene');try{sessionStorage.removeItem('stockhub:shared-search:'+(scene||'inventory'))}catch{}history.replaceState(null,'',location.pathname+(scene ? '?scene='+encodeURIComponent(scene) : ''));location.reload()}});
+window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===parent&&e.data?.action==='replay'){const scene=new URLSearchParams(location.search).get('scene');if(scene==='admin')resetAdminDemo();try{sessionStorage.removeItem('stockhub:shared-search:'+(scene||'inventory'))}catch{}history.replaceState(null,'',location.pathname+(scene ? '?scene='+encodeURIComponent(scene) : ''));location.reload()}});
 
 // Keep native links inside the preview, including anchors outside the router adapter.
 document.addEventListener('click', event=>{

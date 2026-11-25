@@ -22,7 +22,7 @@ The third section renders Stock Alerts with its sidebar initially collapsed and 
 
 Each StockHub preview has its own muted backdrop. The `.stockhub-tone-fourth` variant is reserved for the remaining section.
 
-The fourth section uses the original Analytics, Users, CSV Uploads, and admin bar components. Analytics starts selected and the showcase cycles after ten seconds of inactivity while visible; interaction postpones cycling and reduced motion disables it. The dropdown and admin bar stay synchronized. User changes and upload records are stored locally. Invitations are not sent, uploads are simulated without reading file contents or changing stock, with simulated upload feedback shown after an upload action. Replay returns to Analytics.
+The fourth section uses the original Analytics, Users, CSV Uploads, and admin bar components. Analytics starts selected and the showcase cycles after ten seconds of inactivity while visible; interaction postpones cycling and reduced motion disables it. The dropdown and admin bar stay synchronized. User changes and upload records are kept locally during a playthrough and reset on reload or replay. Invitations are not sent, uploads are simulated without reading file contents or changing stock, with simulated upload feedback shown after an upload action. Replay returns to Analytics.
 
 The analytics calendar uses a fictional daily upload history, backed by matching local audit records. The CSV upload overlay uses a compact two-column layout when space allows.
 
