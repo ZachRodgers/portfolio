@@ -367,7 +367,19 @@ function startPlanningScene() {
     openPlanningPreview();
   }, 500);
   tickPlanningScene();
-  requestAnimationFrame(() => requestAnimationFrame(() => document.querySelector('[aria-label^="Question 1 of"]')?.scrollIntoView({ block: 'center' })));
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const question = document.querySelector<HTMLElement>('[aria-label^="Question 1 of"]');
+    if (!question) return;
+    for (let container = question.parentElement; container && container !== document.body; container = container.parentElement) {
+      const overflow = getComputedStyle(container).overflowY;
+      if ((overflow === 'auto' || overflow === 'scroll') && container.scrollHeight > container.clientHeight) {
+        const questionRect = question.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        container.scrollTop += questionRect.top - containerRect.top - (container.clientHeight - questionRect.height) / 2;
+        break;
+      }
+    }
+  }));
 }
 function tickPlanningScene() {
   if (!launched) return;
