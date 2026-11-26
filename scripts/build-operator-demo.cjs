@@ -42,6 +42,12 @@ b.onLoad({filter:/pages\/Dashboard\/(Emissions|DwellTime)\.tsx$/},args=>{
  } else contents=contents.replace('Last week, on average vehicles parked for', 'In this period, vehicles parked for');
  return {contents:contents.replaceAll('/assets/','./assets/'),loader:'tsx',resolveDir:path.dirname(args.path)};
 });
+b.onLoad({filter:/components\/Walkthrough\/steps\.ts$/},args=>{
+ const sourceText=fs.readFileSync(args.path,'utf8');
+ const downloadStep=/  \{\n    id: "download",[\s\S]*?(?=  \{\n    id: "ai-ask",)/;
+ if(!downloadStep.test(sourceText))throw new Error('Walkthrough download step changed');
+ return {contents:sourceText.replace(downloadStep,''),loader:'ts',resolveDir:path.dirname(args.path)};
+});
 b.onLoad({filter:/components\/ai\/Chat\.tsx$/},args=>{
   let contents=fs.readFileSync(args.path,'utf8');
   const changes=[
