@@ -1,3 +1,4 @@
+import Parallel from '../content/portfolio/parallel';
 import Stockhub from '../content/portfolio/stockhub';
 import React from 'react';
 import MissionControl from '../content/portfolio/mission-control';
@@ -6,17 +7,9 @@ import MissionControlBrowserDesign from '../content/portfolio/mission-control/Br
 import MissionControlFeatures from '../content/portfolio/mission-control/Features';
 import FrameworkRule from './FrameworkRule';
 
-const ProjectPlaceholder = ({ id, name, logo, description }: { id: string; name: string; logo: string; description: string }) => <section id={id} className="ux-project ux-framework-section" aria-label={`${name} project`}>
-    <FrameworkRule />
-    <header className="mission-project-hero mission-project-hero--placeholder">
-        <div className="mission-project-identity"><img src={logo} alt={name} /></div>
-        <h2>{description}</h2>
-    </header>
-</section>;
-
 const Portfolio: React.FC = () => (
     <div id="portfolio">
-        <ProjectPlaceholder id="project-1" name="Parallel" logo="/assets/ux_ui/hero/parallel.png" description="An AI-powered parking platform for drivers and operators." />
+        <section id="project-1" className="ux-project ux-framework-section" aria-label="Parallel project"><FrameworkRule /><header className="mission-project-hero"><div className="mission-project-identity"><img src="/assets/ux_ui/hero/parallel.png" alt="Parallel" /></div><h2>An AI-powered parking platform for drivers and operators.</h2></header><Parallel /></section>
         <section id="project-2" className="ux-project ux-framework-section" aria-labelledby="mission-project-title">
             <FrameworkRule />
             <header className="mission-project-hero">

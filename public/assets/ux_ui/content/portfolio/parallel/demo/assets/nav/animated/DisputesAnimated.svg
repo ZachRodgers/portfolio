@@ -1,0 +1,50 @@
+<svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+<defs>
+<style>
+  @keyframes gavelBang {
+    /* Rest */
+    0%   { transform: translate(0px, 0px) rotate(0deg); }
+
+    /* First hit: lift up-left and tilt back */
+    15%  { transform: translate(-1.8px, -1.8px) rotate(-30deg); }
+    /* SLAM down fast - overshoot slightly past rest */
+    23%  { transform: translate(0.3px, 0.3px) rotate(3deg); }
+    /* Sharp rebound */
+    27%  { transform: translate(-0.3px, -0.3px) rotate(-3deg); }
+    /* Settle */
+    32%  { transform: translate(0px, 0px) rotate(0deg); }
+
+    /* Brief pause */
+    38%  { transform: translate(0px, 0px) rotate(0deg); }
+
+    /* Second hit: slightly smaller lift */
+    50%  { transform: translate(-1.4px, -1.4px) rotate(-25deg); }
+    /* SLAM */
+    57%  { transform: translate(0.2px, 0.2px) rotate(2deg); }
+    /* Tiny rebound */
+    61%  { transform: translate(-0.15px, -0.15px) rotate(-1.5deg); }
+    /* Settle */
+    66%  { transform: translate(0px, 0px) rotate(0deg); }
+
+    /* Hold at rest */
+    100% { transform: translate(0px, 0px) rotate(0deg); }
+  }
+  .gavel {
+    transform-origin: 5.7px 5.1px;
+    animation: gavelBang 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+</style>
+<clipPath id="clip0_gavel">
+  <rect width="11" height="11" fill="white"/>
+</clipPath>
+</defs>
+<g >
+  <g class="gavel">
+    <path d="M6.41649 5.95834L2.5752 9.79918C2.48492 9.88949 2.37773 9.96114 2.25976 10.01C2.14178 10.0589 2.01534 10.0841 1.88764 10.0841C1.62973 10.0842 1.38237 9.98174 1.19997 9.79941C1.01758 9.61707 0.915082 9.36975 0.915039 9.11184C0.914996 8.85393 1.01741 8.60657 1.19974 8.42418L5.04241 4.58289" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7.3335 7.33331L10.0835 4.58331" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9.85417 4.81248L6.1875 1.14581" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M3.6665 3.66669L6.4165 0.916687" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M3.896 3.4375L7.56266 7.10417" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</g>
+</svg>

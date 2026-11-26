@@ -10,7 +10,9 @@
     "eject": "react-scripts eject",
     "build:mission-control-demo": "node scripts/build-mission-control-demo.cjs",
     "test:mission-control-demo": "node scripts/test-mission-control-demo.cjs",
-    "build:stockhub-demo": "node scripts/build-stockhub-demo.cjs"
+    "build:stockhub-demo": "node scripts/build-stockhub-demo.cjs",
+    "build:operator-demo": "node scripts/build-operator-demo.cjs",
+    "test:operator-demo": "node scripts/test-operator-demo.cjs"
   },
   "dependencies": {
     "@types/react": "^18.2.0",
