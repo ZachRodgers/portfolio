@@ -1,0 +1,31 @@
+.plate-badge {
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 100px;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.disputes-table th,
+.disputes-table td {
+  white-space: nowrap;
+}
+
+.cameras-preview-skeleton {
+  margin-top: 24px;
+}
+
+.cameras-preview-skeleton-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 28px;
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--stroke-dark-grey);
+}
+
+.cameras-preview-skeleton-row .skeleton-block {
+  display: block;
+  width: 75%;
+  height: 20px;
+  border-radius: 4px;
+}

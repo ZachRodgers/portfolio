@@ -25,5 +25,15 @@ export default function Parallel() {
   </div>
   <div className="mission-rationale"><button className="rationale-trigger" disabled title="Design rationale coming soon"><Lightbulb size={18}/><span>But why?</span></button></div>
  </section>
+ <section className="mission-overview stockhub-overview stockhub-tone-orders" aria-label="Parallel Superadmin interactive demo">
+  <div className="mission-overview-inner">
+   <MissionDemoFrame src="/assets/ux_ui/content/portfolio/parallel/superadmin/index.html" title="Parallel Superadmin interactive demo" showPause={false} themeControl scaleMethod="zoom" nativeWidth={1440} nativeHeight={900} browserBar={<BrowserBar />}/>
+   <div className="mission-feature-grid">
+    <article><h3>Superadmin</h3><p>Manage the devices and records behind a parking lot. Explore cameras, plate recognition events, parking sessions, and disputes in one workspace.</p></article>
+    <article><h3>Tools and knowledge</h3><p>Review and edit the documents and agents that support the platform. Changes in this interactive preview use local demo data.</p></article>
+   </div>
+  </div>
+  <div className="mission-rationale"><button className="rationale-trigger" disabled title="Design rationale coming soon"><Lightbulb size={18}/><span>But why?</span></button></div>
+ </section>
  </>;
 }

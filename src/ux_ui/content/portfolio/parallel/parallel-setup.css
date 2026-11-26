@@ -73,3 +73,13 @@
   .parallel-setup .setup-slides-container { height: auto; }
   .parallel-setup .setup-grid { height: 480px; grid-template-rows: repeat(3, minmax(0, 1fr)); }
 }
+
+/* The Operator favicon is a square icon, not the cropped StockHub wordmark. */
+.parallel-browser-bar .stockhub-browser-favicon { width: 15px; height: 15px; flex-basis: 15px; opacity: 1; border-radius: 3px; }
+.parallel-browser-bar .stockhub-browser-favicon img,
+[data-theme="light"] .parallel-browser-bar .stockhub-browser-favicon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: none;
+}

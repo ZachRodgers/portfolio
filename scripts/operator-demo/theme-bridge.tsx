@@ -22,6 +22,7 @@ export default function DemoBridge() {
       } else if (event.data?.type === 'mc-demo' && event.data.action === 'replay') {
         replayKeys.forEach(key => localStorage.removeItem(key));
         sessionStorage.removeItem('operator_demo_walkthrough_session');
+        if (process.env.SUPERADMIN_DEMO === 'true') sessionStorage.removeItem('superadmin_preview_mode');
         window.location.reload();
       }
     };

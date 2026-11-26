@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowLeft, ArrowRight, Menu, Minus, RotateCw, X, Maximize2 } from 'lucide-react';
 
 export default function BrowserBar() {
-    return <div className="stockhub-browser-bar" aria-hidden="true">
+    return <div className="stockhub-browser-bar parallel-browser-bar" aria-hidden="true">
         <div className="stockhub-browser-navigation"><ArrowLeft size={15} /><ArrowRight size={15} /><RotateCw size={14} /></div>
         <div className="stockhub-browser-address">
             <span className="stockhub-browser-favicon"><img src="/assets/ux_ui/content/portfolio/parallel/demo/favicon.png" alt="" /></span>

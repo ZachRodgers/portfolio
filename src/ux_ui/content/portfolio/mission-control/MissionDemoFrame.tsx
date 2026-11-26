@@ -32,6 +32,7 @@ export default function MissionDemoFrame({ src, title, showPause = true, showRep
     const frameHeight = nativeHeight;
     const browserBarHeight = browserBar ? 48 : 0;
     const viewportHeight = nativeHeight + browserBarHeight;
+    const joinOverlap = browserBar && scaleMethod === 'zoom' && layout !== 'crop' ? 1 : 0;
     const frameWidth = layout === 'crop' ? Math.max(nativeWidth, width + 160) : Math.max(nativeWidth, width);
     const send = (action?: string) => frame.current?.contentWindow?.postMessage({ type: 'mc-demo', action, paused, visible: visible && active, frameWidth }, window.location.origin);
 
@@ -91,9 +92,9 @@ export default function MissionDemoFrame({ src, title, showPause = true, showRep
             {showPause && <button aria-label={paused ? 'Play demo' : 'Pause demo'} title={paused ? 'Play' : 'Pause'} onClick={() => { setPaused(value => !value); send('interact'); }}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>}
             {showReplay && <button aria-label="Replay demo" title="Replay" onClick={() => { onReplay?.(); send('replay'); }}><RotateCcw size={14} /></button>}
         </div>
-        <div className={`mission-demo-viewport${layout === 'crop' ? ' mission-demo-viewport--crop' : ''}`} ref={viewport} style={{ height: viewportHeight * scale }}>
+        <div className={`mission-demo-viewport${layout === 'crop' ? ' mission-demo-viewport--crop' : ''}`} ref={viewport} style={{ height: viewportHeight * scale - joinOverlap }}>
             {browserBar && <div data-theme={themeControl ? theme : undefined} style={{ position: 'absolute', top: 0, left: 0, width: frameWidth, height: browserBarHeight, transform: `scale(${scale})`, transformOrigin: 'top left' }}>{browserBar}</div>}
-            <iframe ref={frame} title={title} src={src} loading={eager ? 'eager' : 'lazy'} onLoad={() => { send(); if (adminPage) frame.current?.contentWindow?.postMessage({type:'stockhub-admin-set-page', page:adminPage}, window.location.origin); }} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: scaleMethod === 'zoom' && layout !== 'crop' ? browserBarHeight : browserBarHeight * scale, margin: 0, width: frameWidth, height: frameHeight, ...(scaleMethod === 'zoom' && layout !== 'crop' ? { zoom: scale } : { transform: layout === 'crop' ? 'none' : `scale(${scale})` }) }} />
+            <iframe ref={frame} title={title} src={src} loading={eager ? 'eager' : 'lazy'} onLoad={() => { send(); if (adminPage) frame.current?.contentWindow?.postMessage({type:'stockhub-admin-set-page', page:adminPage}, window.location.origin); }} style={{ position: 'absolute', left: layout === 'crop' ? 'auto' : 0, right: layout === 'crop' ? 0 : 'auto', top: scaleMethod === 'zoom' && layout !== 'crop' ? browserBarHeight - joinOverlap / scale : browserBarHeight * scale, margin: 0, width: frameWidth, height: frameHeight, ...(scaleMethod === 'zoom' && layout !== 'crop' ? { zoom: scale } : { transform: layout === 'crop' ? 'none' : `scale(${scale})` }) }} />
         </div>
     </div>;
 }
