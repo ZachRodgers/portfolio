@@ -2,12 +2,14 @@ import React from 'react';
 import { Lightbulb } from 'lucide-react';
 import BrowserBar from './BrowserBar';
 import Setup from './Setup';
+import OperatorVideo from './OperatorVideo';
 import './parallel-setup.css';
 import MissionDemoFrame from '../mission-control/MissionDemoFrame';
 import '../stockhub/stockhub.css';
 import '../mission-control/design-rationale.css';
 export default function Parallel() {
  return <>
+ <OperatorVideo />
  <section className="mission-overview parallel-setup" aria-label="Explore Parallel setup">
   <div className="mission-overview-inner parallel-setup-inner">
    <Setup />
