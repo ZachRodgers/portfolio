@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './DynamicNav.css';
 
 export interface PortfolioImage {
@@ -32,8 +32,8 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath, portfol
     const [inPortfolio, setInPortfolio] = useState(!portfolioOnly);
     const [isVisible, setIsVisible] = useState(false);
     const [expandedProject, setExpandedProject] = useState<number | null>(null);
-    const [isDirectClick, setIsDirectClick] = useState(false);
-    const [targetProject, setTargetProject] = useState<number | null>(null);
+    const jumpTarget = useRef<number | null>(null);
+    const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         const checkVisibility = () => {
@@ -68,9 +68,7 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath, portfol
 
                     if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
                         currentProject = project.number;
-                        if (!isDirectClick && targetProject !== project.number) {
-                            setTimeout(() => setExpandedProject(project.number), 100);
-                        }
+
                     }
 
                     project.pages.forEach((page) => {
@@ -93,43 +91,55 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath, portfol
                 }
             });
 
-            setActiveProject(currentProject);
-            setActivePage(currentPage);
+            setActiveProject(jumpTarget.current ?? currentProject);
+            setActivePage(jumpTarget.current !== null && jumpTarget.current !== currentProject ? null : currentPage);
             setPassedPages(newPassedPages);
 
 
-            if (!currentProject && !isDirectClick) {
-                setExpandedProject(null);
+            if (jumpTarget.current === null) {
+                setExpandedProject(currentProject);
+            } else {
+                if (settleTimer.current) clearTimeout(settleTimer.current);
+                settleTimer.current = setTimeout(() => {
+                    jumpTarget.current = null;
+                    handleScroll();
+                }, 180);
             }
         };
 
-        window.addEventListener('scroll', handleScroll);
+        const cancelJump = () => {
+            if (jumpTarget.current === null) return;
+            jumpTarget.current = null;
+            if (settleTimer.current) clearTimeout(settleTimer.current);
+            handleScroll();
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('wheel', cancelJump, { passive: true });
+        window.addEventListener('touchstart', cancelJump, { passive: true });
         handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [projects, isDirectClick, targetProject, portfolioOnly]);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('wheel', cancelJump);
+            window.removeEventListener('touchstart', cancelJump);
+            if (settleTimer.current) clearTimeout(settleTimer.current);
+        };
+    }, [projects, portfolioOnly]);
+
+    const jumpTo = (element: HTMLElement, projectNumber: number) => {
+        if (settleTimer.current) clearTimeout(settleTimer.current);
+        jumpTarget.current = projectNumber;
+        setExpandedProject(projectNumber);
+        setActiveProject(projectNumber);
+        element.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        settleTimer.current = setTimeout(() => {
+            jumpTarget.current = null;
+            window.dispatchEvent(new Event('scroll'));
+        }, 300);
+    };
 
     const scrollToProject = (projectNumber: number) => {
-        setIsDirectClick(true);
-        setTargetProject(projectNumber);
-
-        if (expandedProject !== null && expandedProject !== projectNumber) {
-            setExpandedProject(null);
-            setTimeout(() => {
-                setExpandedProject(projectNumber);
-            }, 150);
-        } else {
-            setExpandedProject(projectNumber);
-        }
-
         const section = document.getElementById(`project-${projectNumber}`);
-        if (section) {
-            section.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        setTimeout(() => {
-            setIsDirectClick(false);
-            setTargetProject(null);
-        }, 1000);
+        if (section) jumpTo(section, projectNumber);
     };
 
     const scrollToPage = (projectNumber: number, pageName: string) => {
@@ -140,7 +150,7 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath, portfol
                 const elementId = page.sectionId || `${page.projectName.toLowerCase()}-${page.pageName.toLowerCase()}`;
                 const element = document.getElementById(elementId);
                 if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
+                    jumpTo(element, projectNumber);
                 }
             }
         }

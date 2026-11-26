@@ -121,3 +121,9 @@
     }
 }
 @media (max-width: 1600px) { .ux-portfolio-nav-rail { display: none; } }
+
+/* Keep project lists from overlapping while they open and close. */
+.ux-page .dynamic-nav .pages-list { overflow: hidden; transition: max-height .3s ease, opacity .2s ease, transform .3s ease; }
+.ux-page .dynamic-nav .pages-list.expanded { max-height: 180px; }
+.ux-page .dynamic-nav .pages-list.expanded .page-item { animation: none; opacity: .3; transform: none; }
+@media (prefers-reduced-motion: reduce) { .ux-page .dynamic-nav .pages-list { transition: none; } }
