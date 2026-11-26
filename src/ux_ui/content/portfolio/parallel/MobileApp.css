@@ -1,0 +1,12 @@
+.parallel-mobile-app { position: relative; background: #101010; padding: 56px 24px 72px; color: #fff; }
+.parallel-mobile-layout { display: grid; grid-template-columns: minmax(260px, 38%) 1fr; gap: clamp(28px, 5vw, 72px); align-items: center; max-width: 1200px; margin: 0 auto; }
+.parallel-mobile-phone { display: flex; justify-content: center; align-items: center; width: 88%; justify-self: center; min-height: 600px; padding: 20px; border-radius: 4px; background: linear-gradient(135deg, #a7a8a1 0%, #92938b 44%, #777970 100%); }
+.parallel-mobile-phone img { display: block; height: min(76vh, 680px); width: auto; max-width: 100%; object-fit: contain; }
+.parallel-mobile-content { max-width: 680px; }
+.parallel-mobile-slider { --mobile-tab-width: calc((100% - 8px) / 3); grid-template-columns: repeat(3, minmax(0, 1fr)) !important; margin: 0 0 40px !important; }
+.parallel-mobile-slider .mission-showcase-indicator { width: var(--mobile-tab-width); transform: translateX(calc(var(--selected-tab) * 100%)); }
+.parallel-mobile-content p { color: #b8b8b8; line-height: 1.65; margin: 0 0 14px; }
+.parallel-mobile-downloads { display: flex; gap: 12px; margin-top: 0; padding-top: 120px; flex-wrap: wrap; align-items: center; }
+.parallel-mobile-downloads img { display: block; width: 120px; height: 40px; object-fit: contain; }
+.parallel-mobile-downloads a:last-child img { width: 120px; }
+@media(max-width:700px) { .parallel-mobile-layout { grid-template-columns: 1fr; } .parallel-mobile-phone { min-height: 480px; } .parallel-mobile-phone img { height: min(62vh, 560px); } }

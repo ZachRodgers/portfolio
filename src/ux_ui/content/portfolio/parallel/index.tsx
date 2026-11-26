@@ -7,6 +7,7 @@ import './parallel-setup.css';
 import MissionDemoFrame from '../mission-control/MissionDemoFrame';
 import '../stockhub/stockhub.css';
 import '../mission-control/design-rationale.css';
+import MobileApp from './MobileApp';
 export default function Parallel() {
  return <>
  <OperatorVideo />
@@ -35,5 +36,6 @@ export default function Parallel() {
   </div>
   <div className="mission-rationale"><button className="rationale-trigger" disabled title="Design rationale coming soon"><Lightbulb size={18}/><span>But why?</span></button></div>
  </section>
+ <MobileApp />
  </>;
 }
