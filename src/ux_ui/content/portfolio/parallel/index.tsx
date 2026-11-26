@@ -20,8 +20,8 @@ export default function Parallel() {
   <div className="mission-overview-inner">
    <MissionDemoFrame src="/assets/ux_ui/content/portfolio/parallel/demo/index.html" title="Parallel Operator interactive tutorial" showPause={false} themeControl scaleMethod="zoom" nativeWidth={1440} nativeHeight={900} browserBar={<BrowserBar />}/>
    <div className="mission-feature-grid">
-    <article><h3>Learn by doing</h3><p>A guided walkthrough brings the operator portal to life. Explore parking analytics, adjust pricing, and manage vehicles with highlights that lead you to the next action.</p></article>
-    <article><h3>From question to action</h3><p>Ask about your lot, review a proposed change, and approve it right in the conversation. This interactive demo uses fictional parking data and simulated responses.</p></article>
+    <article><h3>Operator Portal</h3><p>We designed the operator portal around our customers, drawing on market research and conversations with parking operators. Their day-to-day needs shaped a single place to understand and manage their lots.</p></article>
+    <article><h3>Parallel AI</h3><p>Customers and the industry wanted a more efficient, automated way to manage parking. Parallel AI brought that into the portal, helping operators turn questions into action. It became a selling point in our acquisition.</p></article>
    </div>
   </div>
   <DesignRationale project="parallel" page={1} />
@@ -31,7 +31,7 @@ export default function Parallel() {
    <MissionDemoFrame src="/assets/ux_ui/content/portfolio/parallel/superadmin/index.html" title="Parallel Superadmin interactive demo" showPause={false} themeControl scaleMethod="zoom" nativeWidth={1440} nativeHeight={900} browserBar={<BrowserBar />}/>
    <div className="mission-feature-grid">
     <article><h3>Superadmin</h3><p>Manage the devices and records behind a parking lot. Explore cameras, plate recognition events, parking sessions, and disputes in one workspace.</p></article>
-    <article><h3>Tools and knowledge</h3><p>Review and edit the documents and agents that support the platform. Changes in this interactive preview use local demo data.</p></article>
+    <article><h3>Automation</h3><p>Parallel is designed to run automatically. Once cameras are online, AI handles plate recognition while the system manages tasks like billing and reboots. Superadmins can see what is happening, diagnose issues, and step in when needed.</p></article>
    </div>
   </div>
   <DesignRationale project="parallel" page={2} />

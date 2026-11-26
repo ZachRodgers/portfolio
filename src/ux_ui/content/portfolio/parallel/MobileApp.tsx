@@ -14,9 +14,9 @@ export default function MobileApp() {
                     <span className="mission-showcase-indicator" aria-hidden="true" />
                     {slides.map(slide => <button key={slide} role="tab" aria-selected={active === slide} onClick={() => setActive(slide)}>{slide}</button>)}
                 </div>
-                <p>Parking is unpredictable. Parallel removes the guesswork: cameras check you in automatically, and you just check out.</p>
-                <p>You have 48 hours to pay, with reminders. Enable autopay to stay clear. Unpaid plates may be flagged across Parallel lots.</p>
-                <p>Look for the blue check. Everything updates in real time, with no hidden fees or surprises.</p>
+                <p>Cameras check you in when you arrive. When you leave, Parallel handles the rest.</p>
+                <p>You have 48 hours to pay, and reminders help you keep track. Turn on autopay if you’d rather not think about it. Unpaid plates may be flagged across Parallel lots.</p>
+                <p>A blue check confirms your payment, and updates appear in real time.</p>
                 <div className="parallel-mobile-downloads">
                     <a href="https://apps.apple.com/" aria-label="Download on the App Store"><img src="/assets/parallel_app_ios_download.svg" alt="Download on the App Store" /></a>
                     <a href="https://play.google.com/store" aria-label="Get it on Google Play"><img src="/assets/parallel_app_android_download.svg" alt="Get it on Google Play" /></a>
