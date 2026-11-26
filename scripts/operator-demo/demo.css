@@ -1,0 +1,260 @@
+
+/* Keep the walkthrough's welcome and completion dialogs visually balanced. */
+body.walkthrough-active .modal-overlay .modal > h2 {
+  text-align: center;
+}
+body.walkthrough-active .modal-overlay .modal-actions:has(> button:only-child) {
+  justify-content: center;
+}
+
+/* Allow full plate labels and keep the violation details legible at preview scale. */
+.violators-table .plate-badge,
+.vehicle-detail-panel .plate-badge {
+  width: auto;
+  min-width: 80px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+.violator-plate-cell,
+.violators-table thead th:nth-child(2) { width: 120px; }
+.vehicle-detail-label { font-size: 12px; }
+.vehicle-detail-confidence-values,
+.vehicle-detail-location,
+.vehicle-detail-notes { font-size: 14px; }
+.violators-table .violator-actions-cell {
+  padding-left: 0;
+  padding-right: 8px;
+}
+.violators-table .row-action-trigger img + span {
+  display: none;
+}
+
+/* Keep dashboard cards and their loading placeholders the same size as values animate. */
+.revenue-content .metrics-container {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+}
+.revenue-content .metrics-container > .metric {
+  box-sizing: border-box;
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  min-height: 174px;
+  container-type: inline-size;
+}
+.revenue-content .metrics-container > .metric .metric-value {
+  font-size: clamp(22px, 17cqi, 42px);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.revenue-content .metrics-container > .metric .previous-cycle {
+  font-size: clamp(12px, 6.3cqi, 16px);
+  white-space: nowrap;
+}
+.revenue-content .revenue-skeleton-metrics {
+  padding-bottom: 0;
+}
+.revenue-content .revenue-skeleton-card {
+  height: 174px;
+}
+@container content (max-width: 800px) {
+  .revenue-content .metrics-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .revenue-content .metrics-container > .metric {
+    min-height: 150px;
+  }
+  .revenue-content .revenue-skeleton-card {
+    height: 150px;
+  }
+}
+@media (max-width: 480px) {
+  .revenue-content .metrics-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .revenue-content .metrics-container > .metric {
+    min-height: 150px;
+  }
+  .revenue-content .revenue-skeleton-card {
+    height: 150px;
+  }
+}
+
+/* The walkthrough itself provides the tutorial in this preview. */
+.tutorial-button-container { display: none !important; }
+.date-search > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 52px;
+}
+.date-search .date-navigation {
+  background: var(--white);
+  padding-left: 4px;
+}
+.date-search:hover .date-navigation {
+  background: var(--background-off-white);
+}
+
+/* Keep labels, plates, and controls inside the compact embedded workspace. */
+.sidebar.desktop:not(.collapsed) .sidebar-lot-button { box-sizing: border-box; min-width: 0; }
+.occupants-table .plate-badge,
+.registry-table .plate-badge,
+.violators-table .plate-badge,
+.vehicle-detail-panel .plate-badge {
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  font-size: 16px;
+  padding: 7px 8px;
+}
+.occupants-table .validate-button {
+  box-sizing: border-box;
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+.occupants-table .validate-button .validate-icon,
+.occupants-table .validate-button .unvalidate-icon { flex: 0 0 14px; margin-right: 5px; }
+.search-and-actions .search-bar,
+.actions-row .search-bar { min-width: 0; }
+.search-bar input, .violators-search input { min-width: 0; width: 100%; }
+.registry-mobile-wrapper .actions-row > *,
+.occupants-actions > * { min-width: 0; }
+.registry-mobile-wrapper .actions-row button,
+.occupants-actions button { white-space: nowrap; }
+.registry-table th:first-child,
+.registry-table td:first-child { width: 132px; min-width: 132px; }
+.violators-table .violator-plate-cell,
+.violators-table thead th:nth-child(2) { width: 128px; }
+.violators-table .violator-stack-primary,
+.violators-table .violators-date-single { font-weight: 500; }
+.vehicle-detail-location-value { font-size: 12px; white-space: nowrap; letter-spacing: -0.02em; }
+.vehicle-detail-location { min-width: 0; }
+.occupancy-metric-value { white-space: nowrap; }
+
+@container content (max-width: 1050px) {
+  .occupants-mobile-wrapper .search-and-actions,
+  .registry-mobile-wrapper .actions-row { gap: 8px; }
+  .occupants-actions .clear-all-button { min-width: 90px; padding-inline: 10px; }
+  .occupants-actions .auto-button { min-width: 105px; padding-inline: 10px; }
+  .registry-mobile-wrapper .upload-wrapper { width: auto; flex: 0 0 auto; }
+  .registry-mobile-wrapper .ignore-list-wrapper { width: auto; flex: 0 0 auto; }
+  .registry-mobile-wrapper .actions-row button { padding-inline: 12px; }
+  .registry-mobile-wrapper .desktop-save-button { width: auto; min-width: 80px; }
+  .registry-table.app-table.app-table-secondary-hover td,
+  .app-table.registry-table th { padding-left: 10px; padding-right: 10px; }
+  .registry-table th:first-child,
+  .registry-table td:first-child { width: 125px; min-width: 125px; }
+  .registry-table th:nth-child(2), .registry-table td:nth-child(2) { width: 17%; }
+  .registry-table th:nth-child(3), .registry-table td:nth-child(3) { width: 25%; }
+  .registry-table th:nth-child(4), .registry-table td:nth-child(4) { width: 18%; }
+  .registry-table th:nth-child(5), .registry-table td:nth-child(5) { width: 12%; }
+  .registry-table .action-buttons-container { gap: 5px; }
+  .violators-page-wrapper { padding: 18px; }
+  .violators-body { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  .violators-toolbar { grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+  .violators-action-button { padding-inline: 8px; gap: 4px; }
+  .violators-table th, .violators-table td { padding-left: 5px; padding-right: 5px; }
+  .violators-table .violator-plate-cell,
+  .violators-table thead th:nth-child(2) { width: 110px; }
+}
+@container content (max-width: 740px) {
+  .registry-mobile-wrapper .actions-row { flex-wrap: wrap; justify-content: flex-start; }
+  .registry-mobile-wrapper .registry-search-bar { flex: 1 0 100%; max-width: none; }
+  .registry-mobile-wrapper .desktop-save-button { margin-left: auto; }
+  .occupants-mobile-wrapper .search-and-actions { flex-wrap: wrap; }
+  .occupants-mobile-wrapper .search-bar { flex: 1 0 100%; max-width: none; }
+  .violators-toolbar { grid-template-columns: minmax(0,1fr); gap: 8px; }
+  .violators-toolbar-actions { grid-template-columns: repeat(2, minmax(0, 150px)); }
+  .violators-body { grid-template-columns: minmax(0,1fr); }
+  .violators-side { width: min(100%, 360px); }
+  .registry-mobile-wrapper .table-container,
+  .occupants-mobile-wrapper .table-container { overflow-x: auto; }
+  .registry-table { min-width: 680px; }
+  .occupants-table { min-width: 600px; }
+}
+
+@container content (max-width: 1050px) {
+  .dashboard-header .controls-row { flex-wrap: wrap; gap: 8px; }
+  .dashboard-header .controls-row > div:nth-child(2) { min-width: 0; }
+  .dashboard-header .timeframe-selector { margin-left: 0; flex: 0 0 auto; }
+  .dashboard-header .date-search { width: auto; flex: 1 1 160px; min-width: 0; box-sizing: border-box; }
+  .registry-table th, .registry-table td { font-size: 13px; }
+  .registry-table th { white-space: nowrap; }
+  .registry-table.app-table.app-table-secondary-hover tbody tr { border-bottom: 1px solid var(--stroke-dark-grey); }
+  .violators-table .violator-stack-primary { white-space: nowrap; font-size: 13px; }
+  .violators-table .violators-date-single { white-space: nowrap; font-size: 13px; }
+  .violators-table .status-pill { font-size: 10px; padding-inline: 6px; }
+  .violators-table thead th { font-size: 13px; }
+  .violators-table .violator-plate-cell,
+  .violators-table thead th:nth-child(2) { width: 102px; }
+  .violators-table .plate-badge { font-size: 14px; padding: 6px; }
+  .violators-table .violator-count-cell,
+  .violators-table thead th:nth-child(3) { min-width: 94px; }
+}
+@container content (max-width: 1050px) {
+  .dashboard-header .controls-row > div:nth-child(2) {
+    width: auto !important;
+    flex: 0 0 auto;
+  }
+  .dashboard-header .date-search { margin-left: -20px; }
+  .emissions-main-box { gap: 10px; padding-inline: 20px; }
+  .emissions-metric-section { min-width: 0; margin-right: 0; }
+  .emissions-metric-label { font-size: 16px; }
+  .emissions-metric-value { font-size: 42px; }
+  .emissions-bar-section { min-width: 110px; padding-left: 14px; }
+  .emissions-bar-horizontal-line-inner { width: 100%; }
+  .emissions-bar-horizontal-label { position: static; transform: none; font-size: 10px; padding: 0; white-space: nowrap; }
+  .registry-table td { font-size: 14px; }
+}
+@container content (max-width: 740px) {
+  .registry-mobile-wrapper .upload-wrapper { display: flex; }
+  .registry-mobile-wrapper .registry-table {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+  .registry-mobile-wrapper .registry-table th,
+  .registry-mobile-wrapper .registry-table td { min-width: 0; }
+  .registry-mobile-wrapper .registry-table th:nth-child(1),
+  .registry-mobile-wrapper .registry-table td:nth-child(1) { width: 25%; }
+  .registry-mobile-wrapper .registry-table th:nth-child(2),
+  .registry-mobile-wrapper .registry-table td:nth-child(2) { width: 29%; }
+  .registry-mobile-wrapper .registry-table th:nth-child(5),
+  .registry-mobile-wrapper .registry-table td:nth-child(5) { width: 24%; }
+  .registry-mobile-wrapper .registry-table th:nth-child(6),
+  .registry-mobile-wrapper .registry-table td:nth-child(6) { width: 22%; }
+  .registry-mobile-wrapper .registry-table .registry-input { box-sizing: border-box; min-width: 0; }
+  .emissions-evbrands-airquality-row { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 12px; }
+  .emissions-evbrands-box, .emissions-airquality-box { min-width: 0; padding: 20px; box-sizing: border-box; }
+  .emissions-evbrands-box { flex-wrap: wrap; }
+  .emissions-airquality-box { overflow-wrap: anywhere; }
+  .emissions-bar-horizontal-label { position: absolute; top: -18px; left: 0; right: auto; }
+}
+@container content (max-width: 1050px) {
+  .emissions-bar-section { position: relative; padding-bottom: 18px; }
+  .emissions-bar-horizontal-label {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .emissions-bar-section::after {
+    content: "Ottawa EV average: 4%";
+    position: absolute;
+    bottom: 0;
+    left: 14px;
+    color: var(--text-medium);
+    font-size: 10px;
+    white-space: nowrap;
+  }
+}
