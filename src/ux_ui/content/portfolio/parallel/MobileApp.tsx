@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lightbulb } from 'lucide-react';
+import DesignRationale from '../mission-control/DesignRationale';
 import './MobileApp.css';
 
 const slides = ['Map', 'Paid', 'Alert'];
@@ -21,9 +21,9 @@ export default function MobileApp() {
                     <a href="https://apps.apple.com/" aria-label="Download on the App Store"><img src="/assets/parallel_app_ios_download.svg" alt="Download on the App Store" /></a>
                     <a href="https://play.google.com/store" aria-label="Get it on Google Play"><img src="/assets/parallel_app_android_download.svg" alt="Get it on Google Play" /></a>
                     <a href="/" aria-label="Open Parallel on the web"><img src="/assets/parallel_app_web.svg" alt="Parallel web app" /></a>
+                    <DesignRationale project="parallel" page={3} />
                 </div>
             </div>
         </div>
-        <div className="mission-rationale"><button className="rationale-trigger" disabled title="Design rationale coming soon"><Lightbulb size={18}/><span>But why?</span></button></div>
     </section>;
 }

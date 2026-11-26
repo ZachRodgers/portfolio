@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lightbulb } from 'lucide-react';
+import DesignRationale from '../mission-control/DesignRationale';
 import BrowserBar from './BrowserBar';
 import Setup from './Setup';
 import OperatorVideo from './OperatorVideo';
@@ -24,7 +24,7 @@ export default function Parallel() {
     <article><h3>From question to action</h3><p>Ask about your lot, review a proposed change, and approve it right in the conversation. This interactive demo uses fictional parking data and simulated responses.</p></article>
    </div>
   </div>
-  <div className="mission-rationale"><button className="rationale-trigger" disabled title="Design rationale coming soon"><Lightbulb size={18}/><span>But why?</span></button></div>
+  <DesignRationale project="parallel" page={1} />
  </section>
  <section className="mission-overview stockhub-overview stockhub-tone-orders" aria-label="Parallel Superadmin interactive demo">
   <div className="mission-overview-inner">
@@ -34,7 +34,7 @@ export default function Parallel() {
     <article><h3>Tools and knowledge</h3><p>Review and edit the documents and agents that support the platform. Changes in this interactive preview use local demo data.</p></article>
    </div>
   </div>
-  <div className="mission-rationale"><button className="rationale-trigger" disabled title="Design rationale coming soon"><Lightbulb size={18}/><span>But why?</span></button></div>
+  <DesignRationale project="parallel" page={2} />
  </section>
  <MobileApp />
  </>;

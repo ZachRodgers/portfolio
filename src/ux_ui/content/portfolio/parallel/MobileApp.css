@@ -10,3 +10,66 @@
 .parallel-mobile-downloads img { display: block; width: 120px; height: 40px; object-fit: contain; }
 .parallel-mobile-downloads a:last-child img { width: 120px; }
 @media(max-width:700px) { .parallel-mobile-layout { grid-template-columns: 1fr; } .parallel-mobile-phone { min-height: 480px; } .parallel-mobile-phone img { height: min(62vh, 560px); } }
+
+.parallel-mobile-downloads .parallel-rationale { position:relative; right:auto; bottom:auto; margin-left:auto; }
+.parallel-rationale.mission-rationale--3 .rationale-paper > * { top:0; left:0; }
+.parallel-rationale.mission-rationale--3 .rationale-paper { padding:65px 80px; }
+@media(max-width:700px) { .parallel-mobile-downloads .parallel-rationale { margin-left:0; } }
+
+/* Keep each note's content comfortably inside its irregular paper shape. */
+.mission-rationale.parallel-rationale.mission-rationale--1 .rationale-paper { width:590px; height:490px; padding:72px 95px; }
+.mission-rationale.parallel-rationale.mission-rationale--1 .rationale-arrow { left:20px; right:auto; top:175px; transform:none; }
+.mission-rationale.parallel-rationale.mission-rationale--3 .rationale-paper { padding:75px 115px; }
+.mission-rationale.parallel-rationale.mission-rationale--3 .rationale-paper > .rationale-arrow { position:absolute; left:36px; top:165px; }
+.mission-rationale.parallel-rationale.mission-rationale--3 .parallel-rationale-icons { grid-template-columns:repeat(3,1fr); margin-left:0; margin-right:0; }
+@media(max-width:700px) {
+ .mission-rationale.parallel-rationale.mission-rationale--1 .rationale-paper,
+ .mission-rationale.parallel-rationale.mission-rationale--3 .rationale-paper { padding:48px 48px; }
+}
+
+.mission-rationale.parallel-rationale.mission-rationale--1 .rationale-paper { height:560px; padding:70px 95px; }
+.parallel-rationale-icons img { width:21px; height:21px; object-fit:contain; filter:brightness(0) saturate(100%) opacity(.75); }
+.parallel-rationale.mission-rationale--1 .parallel-rationale-icons { grid-template-columns:repeat(5,1fr); gap:12px 6px; }
+.parallel-rationale.mission-rationale--1 .parallel-rationale-icons span { font-size:8px; }
+.parallel-app-sketches { display:flex; justify-content:center; gap:18px; margin-top:20px; }
+.parallel-app-sketch { width:55px; height:94px; box-sizing:border-box; padding:9px 6px; border:1px solid #92988c; border-radius:8px; background:#e6e7e1; transform:rotate(-4deg); }
+.parallel-app-sketch:nth-child(2) { transform:rotate(3deg); }
+.parallel-app-sketch:nth-child(3) { transform:rotate(-2deg); }
+.parallel-app-sketch i,.parallel-app-sketch span,.parallel-app-sketch em { display:block; height:3px; margin-bottom:5px; background:#aeb5a8; border-radius:2px; }
+.parallel-app-sketch i { width:45%; margin:0 auto 8px; }
+.parallel-app-sketch span:nth-of-type(2) { width:70%; }
+.parallel-app-sketch em { height:7px; margin-top:7px; }
+.sketch-map,.sketch-card { display:block; height:32px; margin-bottom:7px; border:1px solid #adb4a8; background:repeating-linear-gradient(35deg, transparent 0 8px, #c2c8bd 9px 10px); }
+.sketch-card { height:20px; background:#cbd0c6; }
+.sketch-check { display:block; margin:10px auto; width:22px; height:22px; border:1px solid #92988c; border-radius:50%; color:#727c6c; text-align:center; line-height:22px; }
+.mission-rationale[data-open="false"] .parallel-app-sketches { opacity:0; }
+.mission-rationale[data-open="true"] .parallel-app-sketches { animation:rationale-details .4s .44s ease-out both; }
+@media(max-width:700px) { .mission-rationale.parallel-rationale.mission-rationale--1 .rationale-paper { height:auto; } }
+@media(prefers-reduced-motion:reduce) { .mission-rationale[data-open="true"] .parallel-app-sketches { animation:none; } }
+
+.mission-rationale.parallel-rationale.mission-rationale--1 .rationale-paper { padding-left:85px; padding-right:85px; }
+.parallel-rationale.mission-rationale--1 .parallel-rationale-icons { margin-left:0; margin-right:0; gap:12px 3px; }
+.parallel-rationale.mission-rationale--1 .parallel-rationale-icons > div { min-width:0; }
+.parallel-rationale.mission-rationale--1 .parallel-rationale-icons span { font-size:8px; white-space:nowrap; }
+.parallel-rationale-icons img.has-inset { width:32px; height:21px; object-fit:contain; transform:scale(1.55); }
+.mission-rationale.parallel-rationale.mission-rationale--3 .rationale-paper > .rationale-arrow { transform:scaleX(-1); }
+.parallel-app-sketches { gap:8px; margin:20px -15px 0; }
+.parallel-app-sketch { flex:0 1 51px; min-width:0; height:88px; padding:8px 5px; background:transparent; }
+.parallel-app-sketch b { display:block; position:relative; height:31px; margin-bottom:7px; border:1px solid #a1a99b; background:linear-gradient(to top right, transparent calc(50% - .5px), #a1a99b 50%, transparent calc(50% + .5px)), linear-gradient(to bottom right, transparent calc(50% - .5px), #a1a99b 50%, transparent calc(50% + .5px)); }
+@media(max-width:700px) { .mission-rationale.parallel-rationale.mission-rationale--1 .rationale-paper { padding:48px 38px; } .parallel-app-sketches { gap:5px; } }
+
+.parallel-app-sketch { background:#e5e6e1; border-color:#979c91; }
+.parallel-app-sketch i,.parallel-app-sketch span,.parallel-app-sketch em { background:#b8bdb2; }
+.parallel-app-sketch b { background-color:#c9cdc4; }
+.sketch-screen-map b { height:38px; }
+.sketch-screen-detail b { height:25px; }
+.sketch-screen-detail em,.sketch-screen-payment em,.sketch-screen-confirmation em { height:7px; background:#aeb5a8; }
+.sketch-screen-payment b { height:19px; margin-top:8px; }
+.sketch-screen-confirmation b { height:24px; width:24px; margin:8px auto 8px; border-radius:50%; }
+.sketch-screen-reminders b { height:16px; margin-bottom:5px; }
+
+/* Center the walkthrough content within the paper's asymmetric outline. */
+.mission-rationale.parallel-rationale.mission-rationale--1 .rationale-paper { padding-left:105px; padding-right:65px; }
+@media(max-width:700px) {
+ .mission-rationale.parallel-rationale.mission-rationale--1 .rationale-paper { padding-left:48px; padding-right:28px; }
+}

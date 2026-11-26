@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Maximize, Minimize, Pause, Play, RotateCcw } from 'lucide-react';
 import './OperatorVideo.css';
+import DesignRationale from '../mission-control/DesignRationale';
 
 const VIDEO = '/assets/ux_ui/content/portfolio/parallel/video/operator.mp4';
 const POSTER = '/assets/ux_ui/content/portfolio/parallel/video/operator.png';
@@ -91,5 +92,6 @@ export default function OperatorVideo() {
                 </div>
             </div>
         </div>
+        <DesignRationale project="parallel" page={0} />
     </section>;
 }
