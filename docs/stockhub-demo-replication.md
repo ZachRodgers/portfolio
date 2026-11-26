@@ -10,7 +10,7 @@ The demo-only branding adapter uses the portfolio StockHub wordmark (cropped to 
 
 The portfolio preview displays eight rows per page, uses Toronto and Ottawa locations, narrows the description column, and hides the Bin table column; item details retain the bin. These presentation adaptations are applied during the demo build.
 
-On load or replay, each preview starts with the sidebar collapsed; visitors can open it at any time. The inventory adapter delays the first successful request for each eight-row page by one second so the product's existing skeleton appears; returning to an already loaded page is immediate. Reloading the preview resets this sequence.
+On load or replay, Inventory and Order Lookup start with the sidebar collapsed and open it when the preview comes into view; interaction cancels the automatic opening. Stock Alerts and Admin start collapsed. Visitors can toggle any sidebar at any time. The inventory adapter delays the first successful request for each eight-row page by one second so the product's existing skeleton appears; returning to an already loaded page is immediate. Reloading the preview resets this sequence.
 
 The second section renders the original Order Lookup screen using 24 fictional orders and line items linked to the same hardware products. Its local adapter supports browsing, searching, sorting, location and status filters, expansion, pagination, and export. The preview isolates each section's search state; links to workflows not yet included do not navigate away from the demonstration.
 

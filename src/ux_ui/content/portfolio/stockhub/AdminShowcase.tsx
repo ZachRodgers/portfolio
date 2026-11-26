@@ -4,9 +4,9 @@ import {Check, ChevronDown} from 'lucide-react';
 import MissionDemoFrame from '../mission-control/MissionDemoFrame';
 
 const pages = [
-    {id:'analytics', label:'Analytics', title:'Understand activity at a glance', text:'See sign-ins, account status, upload cadence, and frequently used areas in one place. These fictional signals help Cedar & Bolt spot changes and check that information is arriving as expected.'},
-    {id:'users', label:'Users', title:'Manage access in one place', text:'Review account activity and roles, invite a colleague, or pause access as the team changes. The accounts in this preview are fictional, and no invitations are sent.'},
-    {id:'csv-uploads', label:'CSV Uploads', title:'Keep data moving', text:'Review recent extracts, their processing status, row counts, and upload times. The history gives administrators a clear place to investigate a missing or failed update.'},
+    {id:'analytics', label:'Analytics', title:'Understand activity at a glance', text:'Bring sign-ins, account distribution, upload cadence, and usage insights into one view. Administrators can identify active areas and investigate gaps in data delivery.'},
+    {id:'users', label:'Users', title:'Manage access in one place', text:'Make roles, account status, and recent activity visible at a glance. Administrators can manage access and pause accounts from the same workspace their team uses.'},
+    {id:'csv-uploads', label:'CSV Uploads', title:'Keep data moving', text:'Give administrators a clear audit trail for data extracts. Processing status, row counts, and upload times make it easier to spot a missed update and investigate what happened.'},
 ];
 export default function AdminShowcase() {
     const [selected,setSelected]=useState('analytics');
@@ -51,7 +51,7 @@ export default function AdminShowcase() {
                         {pages.map((item,index)=><button key={item.id} ref={node=>{optionRefs.current[index]=node}} type="button" role="option" aria-selected={selected===item.id} onClick={()=>{setSelected(item.id);closeMenu(true);interact()}} onKeyDown={event=>{let next=index;if(event.key==='ArrowDown')next=(index+1)%pages.length;else if(event.key==='ArrowUp')next=(index+pages.length-1)%pages.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=pages.length-1;else if(event.key==='Escape'){event.preventDefault();closeMenu(true);return}else return;event.preventDefault();optionRefs.current[next]?.focus()}}><span>{item.label}</span>{selected===item.id && <Check size={14} aria-hidden="true" />}</button>)}
                     </div>}
                 </div>
-                <div id="stockhub-admin-panel" className="stockhub-admin-description" aria-live="polite"><p>{page.text}</p></div>
+                <div id="stockhub-admin-panel" className="stockhub-admin-description" aria-live="polite"><h3>Admin Mode</h3><p>{page.text}</p></div>
                 <button className="stockhub-why" disabled title="Design rationale coming in a later pass">But why?</button>
             </div>
             <MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html?scene=admin" title="Stockhub interactive administration" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900} adminPage={selected} onAdminPageChange={change} onReplay={() => { interact(); setSelected('analytics'); }} onInteraction={interact} active={visible}/>

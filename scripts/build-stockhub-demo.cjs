@@ -59,7 +59,8 @@ const out='public/assets/ux_ui/content/portfolio/stockhub/demo';fs.mkdirSync(out
     let contents=fs.readFileSync(args.path,'utf8');
     const before='<SidebarProvider className="flex-1">';
     if(!contents.includes(before))throw new Error('Protected sidebar source changed');
-    contents=contents.replace(before, '<SidebarProvider defaultOpen={false} className="flex-1">');
+    contents=contents.replace(before, '<SidebarProvider defaultOpen={false} className="flex-1"><SidebarOpening />');
+    contents=contents.replace('"use client";', '"use client";\nimport { SidebarOpening } from "' + path.resolve('scripts/stockhub-demo/sidebar-opening.tsx') + '";');
     const breadcrumb='<BreadcrumbLink href={crumb.href} className="text-foreground hover:text-foreground/70">{crumb.label}</BreadcrumbLink>';
     if(!contents.includes(breadcrumb))throw new Error('Protected breadcrumb source changed');
     contents=contents.replace(breadcrumb, '<BreadcrumbLink asChild><Link href={crumb.href} className="text-foreground hover:text-foreground/70">{crumb.label}</Link></BreadcrumbLink>');

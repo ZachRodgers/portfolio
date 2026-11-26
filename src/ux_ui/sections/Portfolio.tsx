@@ -28,7 +28,7 @@ const Portfolio: React.FC = () => (
             <MissionControlBrowserDesign />
             <MissionControlFeatures />
         </section>
-        <section id="project-3" className="ux-project ux-framework-section" aria-labelledby="stockhub-title"><FrameworkRule /><header className="mission-project-hero"><div className="mission-project-identity"><img src="/assets/ux_ui/hero/stockhub.png" alt="Stockhub" /></div><h2 id="stockhub-title">From the stockroom to the sales counter. Inventory, in reach.</h2></header><Stockhub /></section>
+        <section id="project-3" className="ux-project ux-framework-section" aria-labelledby="stockhub-title"><FrameworkRule /><header className="mission-project-hero"><div className="mission-project-identity"><img src="/assets/ux_ui/hero/stockhub.png" alt="Stockhub" /></div><h2 id="stockhub-title">A modern dashboard that makes 50 years of product data easy to use.</h2></header><Stockhub /></section>
     </div>
 );
 

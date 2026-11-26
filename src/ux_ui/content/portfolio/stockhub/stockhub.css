@@ -47,5 +47,6 @@
 .stockhub-admin-menu button { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; padding: 10px 11px; border: 0; border-radius: 7px; background: transparent; color: #c8c8c8; text-align: left; font: inherit; font-size: 13px; cursor: pointer; }
 .stockhub-admin-menu button:hover, .stockhub-admin-menu button:focus-visible { background: #343434; color: #fff; }
 .stockhub-admin-menu button[aria-selected="true"] { color: #fff; }
+.stockhub-admin-description h3 { margin: 0 0 6px; font-size: 17px; font-weight: 500; line-height: 1.4; }
 .stockhub-admin-description p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
 @media(max-width:700px) {.stockhub-admin-top { grid-template-columns: minmax(0,1fr) max-content; gap: 16px; } .stockhub-admin-description { grid-column: 1 / -1; grid-row: 2; } .stockhub-admin-select-trigger { min-width: 145px; } }

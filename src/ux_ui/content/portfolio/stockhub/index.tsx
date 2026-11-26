@@ -3,4 +3,37 @@ import BrowserBar from './BrowserBar';
 import AdminShowcase from './AdminShowcase';
 import MissionDemoFrame from '../mission-control/MissionDemoFrame';
 import './stockhub.css';
-export default function Stockhub(){return <><section className="mission-overview stockhub-overview stockhub-tone-inventory" aria-label="Stockhub inventory preview"><div className="mission-overview-inner"><MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html" title="Stockhub interactive hardware inventory" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900}/><div className="mission-feature-grid"><article><h3>A morning at Cedar & Bolt</h3><p>A customer needs hardware for a weekend repair. Search 30 fictional products, check availability across Toronto and Ottawa, and find the right bin before heading into the stockroom.</p></article><article><h3>From a question to an answer</h3><p>Sort stock levels, inspect an item, compare quantities, or export the current selection. Explore the real inventory interface with a fictional retailer’s stock.</p></article></div><button className="stockhub-why" disabled title="Design rationale coming in a later pass">But why?</button></div></section><section id="stockhub-orders" className="mission-overview stockhub-overview stockhub-tone-orders" aria-label="Stockhub order lookup"><div className="mission-overview-inner"><MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html?scene=orders" title="Stockhub interactive order lookup" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900}/><div className="stockhub-order-bottom"><button className="stockhub-why" disabled title="Design rationale coming in a later pass">But why?</button><article><h3>Every order, in context</h3><p>When a customer calls about a delivery, the answer should be close at hand. Search an order number, customer reference, or item to see its status and line items together. Filter by location or status, then expand an order to trace what was ordered and shipped.</p></article></div></div></section><section id="stockhub-alerts" className="mission-overview stockhub-overview stockhub-tone-alerts" aria-label="Stockhub stock alerts"><div className="mission-overview-inner"><div className="stockhub-alert-frame"><MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html?scene=alerts" title="Stockhub interactive stock alerts" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900}/></div><div className="stockhub-alert-bottom"><article><h3>Keep a closer eye on stock</h3><p>Replace spreadsheet checks with a shared view of stock and demand. Cedar &amp; Bolt can review flagged products, adjust peak months and buffers, and make temporary exceptions as conditions change.</p></article><button className="stockhub-why" disabled title="Design rationale coming in a later pass">But why?</button></div></div></section><AdminShowcase /></>}
+
+export default function Stockhub() {
+    return <>
+        <section className="mission-overview stockhub-overview stockhub-tone-inventory" aria-label="Stockhub inventory preview">
+            <div className="mission-overview-inner">
+                <MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html" title="Stockhub interactive hardware inventory" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900} />
+                <div className="mission-feature-grid">
+                    <article><h3>Inventory</h3><p>A searchable, sortable inventory puts item details and stock levels in one place. On-hand, committed, and available quantities sit side by side, making the next decision easier to see.</p></article>
+                    <article><h3>Multi-Warehouse</h3><p>A shared location selector carries across the workspace. Staff can work with one warehouse or compare several at once, without switching accounts or repeating their search.</p></article>
+                </div>
+                <button className="stockhub-why" disabled title="Design rationale coming in a later pass">But why?</button>
+            </div>
+        </section>
+        <section id="stockhub-orders" className="mission-overview stockhub-overview stockhub-tone-orders" aria-label="Stockhub order lookup">
+            <div className="mission-overview-inner">
+                <MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html?scene=orders" title="Stockhub interactive order lookup" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900} />
+                <div className="stockhub-order-bottom">
+                    <button className="stockhub-why" disabled title="Design rationale coming in a later pass">But why?</button>
+                    <article><h3>Order Lookup</h3><p>Search by item or order reference, then expand a result to inspect its line items and status. Links carry the item into History, connecting the details needed to trace an order without moving between separate tools.</p></article>
+                </div>
+            </div>
+        </section>
+        <section id="stockhub-alerts" className="mission-overview stockhub-overview stockhub-tone-alerts" aria-label="Stockhub stock alerts">
+            <div className="mission-overview-inner">
+                <div className="stockhub-alert-frame"><MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html?scene=alerts" title="Stockhub interactive stock alerts" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900} /></div>
+                <div className="stockhub-alert-bottom">
+                    <article><h3>Stock Alerts</h3><p>Turn a wide spreadsheet into a focused view of stock and demand. Configurable peak months and buffers help surface exceptions, while temporary overrides let staff respond when the numbers need context.</p></article>
+                    <button className="stockhub-why" disabled title="Design rationale coming in a later pass">But why?</button>
+                </div>
+            </div>
+        </section>
+        <AdminShowcase />
+    </>;
+}
