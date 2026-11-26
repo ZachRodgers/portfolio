@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import BrowserBar from './BrowserBar';
 import {Check, ChevronDown} from 'lucide-react';
 import MissionDemoFrame from '../mission-control/MissionDemoFrame';
+import DesignRationale from '../mission-control/DesignRationale';
 
 const pages = [
     {id:'analytics', label:'Analytics', title:'Understand activity at a glance', text:'Bring sign-ins, account distribution, upload cadence, and usage insights into one view. Administrators can identify active areas and investigate gaps in data delivery.'},
@@ -52,7 +53,7 @@ export default function AdminShowcase() {
                     </div>}
                 </div>
                 <div id="stockhub-admin-panel" className="stockhub-admin-description" aria-live="polite"><h3>Admin Mode</h3><p>{page.text}</p></div>
-                <button className="stockhub-why" disabled title="Design rationale coming in a later pass">But why?</button>
+                <DesignRationale project="stockhub" page={3} />
             </div>
             <MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html?scene=admin" title="Stockhub interactive administration" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900} adminPage={selected} onAdminPageChange={change} onReplay={() => { interact(); setSelected('analytics'); }} onInteraction={interact} active={visible}/>
         </div>
