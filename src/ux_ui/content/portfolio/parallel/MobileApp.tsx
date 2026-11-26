@@ -6,7 +6,7 @@ const slides = ['Map', 'Paid', 'Alert'];
 
 export default function MobileApp() {
     const [active, setActive] = useState('Map');
-    return <section className="parallel-mobile-app" aria-label="Parallel mobile app">
+    return <section id="parallel-mobile" className="parallel-mobile-app" aria-label="Parallel mobile app">
         <div className="parallel-mobile-layout">
             <div className="parallel-mobile-phone" aria-label="Mobile app preview coming soon"><img src="/assets/ux_ui/content/portfolio/parallel/mobile/phone_border.png" alt="" /></div>
             <div className="parallel-mobile-content">

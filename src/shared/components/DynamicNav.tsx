@@ -8,24 +8,28 @@ export interface PortfolioImage {
     pageName: string;
     fileName: string;
     fullPath: string;
+    sectionId?: string;
 }
 
 export interface Project {
     number: number;
     name: string;
     iconName: string;
+    iconPath?: string;
     pages: PortfolioImage[];
 }
 
 interface DynamicNavProps {
     projects: Project[];
     iconBasePath: string;
+    portfolioOnly?: boolean;
 }
 
-const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
+const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath, portfolioOnly = false }) => {
     const [activeProject, setActiveProject] = useState<number | null>(null);
     const [activePage, setActivePage] = useState<string | null>(null);
     const [passedPages, setPassedPages] = useState<Set<string>>(new Set());
+    const [inPortfolio, setInPortfolio] = useState(!portfolioOnly);
     const [isVisible, setIsVisible] = useState(false);
     const [expandedProject, setExpandedProject] = useState<number | null>(null);
     const [isDirectClick, setIsDirectClick] = useState(false);
@@ -45,6 +49,11 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
     useEffect(() => {
         const handleScroll = () => {
             const scrollPosition = window.scrollY + window.innerHeight / 2;
+            if (portfolioOnly) {
+                const portfolio = document.getElementById("portfolio");
+                const rect = portfolio?.getBoundingClientRect();
+                setInPortfolio(!!rect && rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2);
+            }
             const newPassedPages = new Set<string>();
 
             let currentProject: number | null = null;
@@ -65,7 +74,7 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
                     }
 
                     project.pages.forEach((page) => {
-                        const elementId = `${page.projectName.toLowerCase()}-${page.pageName.toLowerCase()}`;
+                        const elementId = page.sectionId || `${page.projectName.toLowerCase()}-${page.pageName.toLowerCase()}`;
                         const element = document.getElementById(elementId);
                         if (element) {
                             const imageRect = element.getBoundingClientRect();
@@ -97,7 +106,7 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
         window.addEventListener('scroll', handleScroll);
         handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [projects, isDirectClick, targetProject]);
+    }, [projects, isDirectClick, targetProject, portfolioOnly]);
 
     const scrollToProject = (projectNumber: number) => {
         setIsDirectClick(true);
@@ -128,7 +137,7 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
         if (project) {
             const page = project.pages.find(p => p.pageName === pageName);
             if (page) {
-                const elementId = `${page.projectName.toLowerCase()}-${page.pageName.toLowerCase()}`;
+                const elementId = page.sectionId || `${page.projectName.toLowerCase()}-${page.pageName.toLowerCase()}`;
                 const element = document.getElementById(elementId);
                 if (element) {
                     element.scrollIntoView({ behavior: 'smooth' });
@@ -137,7 +146,7 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
         }
     };
 
-    if (!isVisible || projects.length === 0) return null;
+    if (!isVisible || !inPortfolio || projects.length === 0) return null;
 
     return (
         <nav className="dynamic-nav">
@@ -146,10 +155,12 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
                     <div key={project.number} className="project-nav-item">
                         <div
                             className={`project-icon ${activeProject === project.number ? 'active' : ''}`}
+                            role="button" tabIndex={0} aria-label={`Go to ${project.name}`}
+                            onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); scrollToProject(project.number); } }}
                             onClick={() => scrollToProject(project.number)}
                         >
                             <img
-                                src={`${iconBasePath}/${project.iconName}.svg`}
+                                src={project.iconPath || `${iconBasePath}/${project.iconName}.svg`}
                                 alt={project.name}
                                 onError={(e) => {
                                     console.error(`Failed to load icon: ${project.iconName}.svg`);
@@ -171,6 +182,8 @@ const DynamicNav: React.FC<DynamicNavProps> = ({ projects, iconBasePath }) => {
                                     <div
                                         key={page.pageName}
                                         className={`page-item ${isActive ? 'active' : ''} ${isPassed ? 'passed' : ''}`}
+                                        role="button" tabIndex={expandedProject === project.number ? 0 : -1}
+                                        onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); scrollToPage(project.number, page.pageName); } }}
                                         onClick={() => scrollToPage(project.number, page.pageName)}
                                     >
                                         <span className="page-dot"></span>

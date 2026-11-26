@@ -7,7 +7,7 @@ import './stockhub.css';
 
 export default function Stockhub() {
     return <>
-        <section className="mission-overview stockhub-overview stockhub-tone-inventory" aria-label="Stockhub inventory preview">
+        <section id="stockhub-inventory" className="mission-overview stockhub-overview stockhub-tone-inventory" aria-label="Stockhub inventory preview">
             <div className="mission-overview-inner">
                 <MissionDemoFrame src="/assets/ux_ui/content/portfolio/stockhub/demo/index.html" title="Stockhub interactive hardware inventory" showPause={false} themeControl browserBar={<BrowserBar />} nativeWidth={1440} nativeHeight={900} />
                 <div className="mission-feature-grid">

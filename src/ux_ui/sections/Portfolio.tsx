@@ -7,8 +7,9 @@ import MissionControlBrowserDesign from '../content/portfolio/mission-control/Br
 import MissionControlFeatures from '../content/portfolio/mission-control/Features';
 import FrameworkRule from './FrameworkRule';
 
-const Portfolio: React.FC = () => (
+const Portfolio: React.FC<{ navigation?: React.ReactNode }> = ({ navigation }) => (
     <div id="portfolio">
+        {navigation && <div className="ux-portfolio-nav-rail">{navigation}</div>}
         <section id="project-1" className="ux-project ux-framework-section" aria-label="Parallel project"><FrameworkRule /><header className="mission-project-hero"><div className="mission-project-identity"><img src="/assets/ux_ui/hero/parallel.png" alt="Parallel" /></div><h2>An AI-powered parking platform for drivers and operators.</h2></header><Parallel /></section>
         <section id="project-2" className="ux-project ux-framework-section" aria-labelledby="mission-project-title">
             <FrameworkRule />

@@ -54,7 +54,7 @@ export default function OperatorVideo() {
     };
     const progress = duration > 0 ? current / duration * 100 : 0;
 
-    return <section className="mission-overview parallel-video-section" aria-label="Parallel Operator demo video">
+    return <section id="parallel-video" className="mission-overview parallel-video-section" aria-label="Parallel Operator demo video">
         <div className="mission-overview-inner parallel-video-inner">
             <div className="demo-video-wrapper">
                 <div ref={container} className="demo-video-container"

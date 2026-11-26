@@ -8,7 +8,11 @@ import Portfolio from './sections/Portfolio';
 import Branding from '../shared/sections/Branding';
 import Footer from '../shared/components/Footer';
 import DynamicNav from '../shared/components/DynamicNav';
-import content from './content/page.json';
+const projects = [
+    { number: 1, name: 'Parallel', iconName: 'parallel', iconPath: '/assets/ux_ui/hero/parallel.png', sections: [['Overview', 'parallel-video'], ['Setup', 'parallel-setup'], ['Operator Portal', 'parallel-operator'], ['Superadmin', 'parallel-superadmin'], ['Mobile App', 'parallel-mobile']] },
+    { number: 2, name: 'Mission Control', iconName: 'mission_control', iconPath: '/assets/ux_ui/hero/mission_control.png', sections: [['Workflows', 'mission-control-workflows'], ['Planning', 'mission-control-planning'], ['Browser Design', 'mission-control-browser-design'], ['Features', 'mission-control-features']] },
+    { number: 3, name: 'Stockhub', iconName: 'stockhub', iconPath: '/assets/ux_ui/hero/stockhub.png', sections: [['Inventory', 'stockhub-inventory'], ['Orders', 'stockhub-orders'], ['Stock Alerts', 'stockhub-alerts'], ['Admin', 'stockhub-admin']] },
+].map(project => ({ ...project, pages: project.sections.map(([pageName, sectionId], index) => ({ projectNumber: project.number, projectName: project.name, pageNumber: index + 1, pageName, sectionId, fileName: '', fullPath: '' })) }));
 import FrameworkRule from './sections/FrameworkRule';
 import './UxUi.css';
 
@@ -51,10 +55,9 @@ const UxUi: React.FC<PageProps> = ({ mainRoute }) => {
         <div className="App ux-page">
             <LoadingScreen isLoading={isLoading} />
             {!isLoading && <>
-            <DynamicNav projects={content.projects} iconBasePath={content.projectIconBasePath} />
             <Hero audioElement={audio} failed={failed} />
             <div className="ux-framework-section"><FrameworkRule className="ux-resume-rule" /><Resume /></div>
-            <Portfolio />
+            <Portfolio navigation={<DynamicNav projects={projects} iconBasePath="" />} />
             <div className="ux-framework-section"><FrameworkRule /><Branding /></div>
             <div className="ux-framework-section"><FrameworkRule />
             <Footer projectSource={uxFooterProjects} currentRoute="/ux_ui" mainRoute={mainRoute} resumeRoute="/ux_ui" pages={footerPages} />

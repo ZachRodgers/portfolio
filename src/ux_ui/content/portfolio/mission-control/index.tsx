@@ -4,7 +4,7 @@ import MissionDemoFrame from './MissionDemoFrame';
 import './mission-control.css';
 
 export default function MissionControl() {
-    return <section className="mission-overview" aria-label="Mission Control workflows">
+    return <section id="mission-control-workflows" className="mission-overview" aria-label="Mission Control workflows">
         <div className="mission-overview-inner">
             <MissionDemoFrame src="/assets/ux_ui/content/portfolio/mission-control/demo/index.html" title="Interactive Mission Control workspace" />
             <div className="mission-feature-grid">

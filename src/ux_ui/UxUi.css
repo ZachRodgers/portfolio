@@ -73,3 +73,51 @@
 }
 .ux-page .skills-grid { grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); gap: 2px; }
 .ux-page .resume-studio .skill-icon { width: min(100%, 45px); height: auto; aspect-ratio: 1; }
+
+/* The rail confines the sticky navigation to the case studies. */
+.ux-page #portfolio { position: relative; }
+.ux-portfolio-nav-rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(50% + 656px + 12px);
+    width: calc((100% - 1312px) / 2 - 12px);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.ux-page .dynamic-nav {
+    position: sticky;
+    top: 50vh;
+    left: auto;
+    max-width: 100%;
+    pointer-events: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 1rem 0.5rem;
+}
+.ux-page .dynamic-nav .nav-content { gap: 0; }
+.ux-page .dynamic-nav .project-icon {
+    width: min(140px, calc((100vw - 1312px) / 2 - 28px));
+    height: 62px;
+    margin: 0 0 0 2.5px;
+    justify-content: flex-start;
+    transform: none;
+    transform-origin: left center;
+}
+.ux-page .dynamic-nav .project-icon.active { transform: none; }
+.ux-page .dynamic-nav .project-icon img {
+    width: 100%;
+    height: auto;
+    max-height: 50px;
+    object-fit: contain;
+    object-position: left center;
+    filter: none;
+}
+@supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .ux-portfolio-nav-rail { animation: ux-nav-reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 25%; }
+        @keyframes ux-nav-reveal { from { opacity: 0; } to { opacity: 1; } }
+    }
+}
+@media (max-width: 1600px) { .ux-portfolio-nav-rail { display: none; } }
