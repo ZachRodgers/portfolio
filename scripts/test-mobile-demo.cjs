@@ -16,6 +16,10 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
       if (new URL(response.url()).hostname === 'api.thunderforest.com') tileStatuses.push(response.status());
     });
     await page.goto('http://localhost:8786/assets/ux_ui/content/portfolio/parallel/mobile/demo/index.html', { waitUntil: 'domcontentloaded' });
+    await page.getByRole('status',{name:'Loading app'}).waitFor();
+    await page.screenshot({path:'.mission/preview/1b391e11/mobile-loader.png'});
+    await page.getByRole('status',{name:'Loading app'}).waitFor({state:'detached',timeout:7000});
+    assert((await page.locator('.mobile-marker-pop').count()) > 0, 'Map markers animate on reveal');
     await page.getByText('Enter LotID', { exact: true }).waitFor();
     assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
     assert.equal(await page.locator('svg[viewBox="0 0 133 32"]').count(), 0, 'Map uses the native pill without the web wordmark');
@@ -112,14 +116,14 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
     for (const feature of ['Parked', 'Alert']) {
       await page.evaluate(feature => window.postMessage({ mobileFeature: feature }, location.origin), feature);
       await page.getByText(feature === 'Parked' ? 'You are currently parked at' : 'Pay Bill', { exact: true }).waitFor();
-      await page.waitForSelector('.leaflet-container');
+      await page.waitForSelector('.leaflet-container:visible');
       await page.waitForTimeout(700);
       const maps=await page.locator('.leaflet-container').count(); assert(maps >= 1, 'Visit card map is present');
       if (feature === 'Parked') { await page.getByText('End Visit',{exact:true}).waitFor(); assert.equal(await page.getByText('You owe',{exact:false}).count(),0); }
       await page.screenshot({path:'.mission/preview/1b391e11/visit-'+feature+'.png'});
     }
     await page.getByText('Pay Bill', { exact: true }).click();
-    await page.getByText('.... 4242', { exact: true }).click();
+    await page.locator('div:visible').filter({hasText:/^\.\.\.\. 4242$/}).last().click();
     await page.getByText('Pay $8.00', { exact: true }).last().click();
     await page.getByText('Payment Success!', { exact: true }).waitFor();
     assert.deepEqual(errors, []);
@@ -138,7 +142,7 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
     await live.getByText('End Visit',{exact:true}).click();
     await live.getByText('Confirm Departure',{exact:true}).waitFor();
     await live.getByText('End Visit',{exact:true}).last().click();
-    await live.getByText('Enter LotID',{exact:true}).waitFor();
+    await live.locator('div:visible').filter({hasText:/^Enter LotID$/}).last().waitFor();
     await live.close();
     if (process.env.MOBILE_TEST_ROOT === 'build') {
       await page.setViewportSize({width: 1440, height: 1000});
@@ -155,6 +159,9 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
       assert.equal(await mobile.locator('.parallel-mobile-screen').evaluate(el=>getComputedStyle(el).overflow),'hidden');
       const app = page.frameLocator('#parallel-mobile iframe');
       await app.getByText('Enter LotID', {exact:true}).waitFor();
+      assert.equal(await mobile.getByRole('link',{name:'Download on the App Store'}).getAttribute('href'),'https://apps.apple.com/ca/app/parallel-mobile/id6751863179');
+      assert.equal(await mobile.getByRole('link',{name:'Get it on Google Play'}).getAttribute('href'),'https://play.google.com/store/apps/details?id=com.parkwithparallel.app');
+      assert.equal(await mobile.getByRole('link',{name:'Open Parallel on the web'}).getAttribute('href'),'https://pay.parkwithparallel.com/');
       await mobile.getByRole('tab', {name:'Parked', exact:true}).click();
       await app.getByText('You are currently parked at', {exact:true}).waitFor();
       const replay = mobile.locator('.mission-playback button[aria-label="Replay demo"]');

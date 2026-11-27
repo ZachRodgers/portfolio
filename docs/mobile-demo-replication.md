@@ -33,3 +33,7 @@ The preview uses a fixed Toronto demo location for nearby suggestions and any si
 Profile data uses a fictional email and Zach Rodgers. Visit history contains three paid visits and one permit visit with shortened addresses; no real parking or payments are displayed.
 
 Expanded search and lot sheets leave a small horizontal inset and bottom clearance so their rounded corners remain visible inside the phone frame.
+
+The mobile preview preloads behind the original app loading mark and reveals the map when visible and ready, with a staggered marker entrance. The loading overlay and marker entrance respect reduced-motion settings. Replay restarts the preview.
+
+The preview uses the product navigator’s normal screen setup and remounts it when a showcase tab changes, ensuring that the map can mount on initial load. `node scripts/test-mobile-startup.cjs` verifies the loader clears and map controls mount without network access.
