@@ -1,0 +1,122 @@
+const { spawn } = require('child_process');
+const assert = require('assert');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || '/home/Zach/.cache/ms-playwright-go/1.50.1/package');
+const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.MOBILE_TEST_ROOT || 'public']);
+(async () => {
+  await new Promise(resolve => setTimeout(resolve, 500));
+  const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox'] });
+  try {
+    const page = await browser.newPage({ viewport: { width: 393, height: 830 }, colorScheme: 'dark' });
+    page.setDefaultTimeout(12000);
+    const errors = [];
+    const tileStatuses = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('response', response => {
+      if (new URL(response.url()).hostname === 'api.thunderforest.com') tileStatuses.push(response.status());
+    });
+    await page.goto('http://localhost:8786/assets/ux_ui/content/portfolio/parallel/mobile/demo/index.html', { waitUntil: 'domcontentloaded' });
+    await page.getByText('Enter LotID', { exact: true }).waitFor();
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
+    assert.equal(await page.locator('svg[viewBox="0 0 133 32"]').count(), 0, 'Map uses the native pill without the web wordmark');
+    assert.equal(await page.getByText('DEMO123', {exact:true}).evaluate(el => getComputedStyle(el).color), 'rgb(0, 0, 0)');
+    for (const label of ['Select vehicle','Open wallet','Parking history','Account settings']) await page.getByRole('button',{name:label,exact:true}).waitFor();
+    await page.waitForFunction(() => document.querySelectorAll('.leaflet-tile-loaded').length > 0);
+    await page.waitForTimeout(1200);
+    await page.waitForFunction(() => { const tiles = [...document.querySelectorAll('img.leaflet-tile')]; return tiles.length > 0 && tiles.every(tile => tile.complete && tile.naturalWidth > 0); });
+    assert(tileStatuses.some(status => status === 200), 'Atlas must return a successful tile response');
+    assert(tileStatuses.every(status => status === 200), 'Atlas tile requests must succeed');
+    assert.equal(await page.locator('.leaflet-control-zoom').count(), 0);
+    assert.equal(await page.locator('.leaflet-control-attribution').count(), 0);
+    await page.screenshot({ path: '.mission/preview/1b391e11/atlas-map.png' });
+    const headerPlate = await page.getByRole('button',{name:'Select vehicle',exact:true}).boundingBox();
+    assert(headerPlate.y >= 58, 'Pill stays below the island');
+    const scan = await page.getByText('Enter LotID',{exact:true}).boundingBox();
+    assert(scan.y > headerPlate.y + headerPlate.height, 'LotID control clears the pill');
+    await page.locator('.leaflet-marker-icon').filter({hasText:/^1$/}).first().click();
+    const favorite = page.getByRole('button',{name:'Favorite',exact:true});
+    await favorite.waitFor();
+    await page.getByText('per hour',{exact:true}).waitFor();
+    const before = await favorite.locator('svg').getAttribute('fill');
+    await favorite.click();
+    assert.notEqual(await favorite.locator('svg').getAttribute('fill'), before);
+    await page.screenshot({path:'.mission/preview/1b391e11/ios-lot-card.png'});
+    const handleBox = await page.getByRole('button',{name:'Expand or collapse lot details',exact:true}).boundingBox();
+    await page.mouse.move(handleBox.x + handleBox.width / 2, handleBox.y + handleBox.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(196, 140, {steps:20});
+    await page.mouse.up();
+    await page.getByText('Navigate',{exact:true}).waitFor();
+    await page.screenshot({path:'.mission/preview/1b391e11/ios-lot-card-expanded.png'});
+    await page.getByRole('button',{name:'Expand or collapse lot details',exact:true}).click();
+    await page.getByText('Navigate',{exact:true}).waitFor({state:'hidden'});
+    const swipeBox = await page.getByRole('button',{name:'Expand or collapse lot details',exact:true}).boundingBox();
+    await page.mouse.move(swipeBox.x + swipeBox.width / 2, swipeBox.y + swipeBox.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(swipeBox.x + swipeBox.width / 2 + 110, swipeBox.y + swipeBox.height / 2, {steps:12});
+    await page.mouse.up();
+    await page.waitForTimeout(1000);
+    await page.getByRole('button',{name:'Favorite',exact:true}).waitFor();
+    await page.getByRole('button',{name:'Close lot info',exact:true}).click();
+    await favorite.waitFor({state:'detached'});
+    const search = page.getByPlaceholder('Search Parking Lot');
+    await search.click({force:true});
+    await search.fill('Bay Street Permit');
+    await page.getByText('Bay Street Permit',{exact:true}).first().click();
+    await page.getByText('Permit Only',{exact:true}).first().waitFor();
+    await page.getByRole('button',{name:'Close lot info',exact:true}).click();
+    await favorite.waitFor({state:'detached'});
+    await search.click({force:true});
+    await search.fill('University Avenue');
+    await page.getByText('University Avenue',{exact:true}).first().click();
+    await page.getByText('$18',{exact:true}).waitFor();
+    await page.getByRole('button',{name:'Close lot info',exact:true}).click();
+    await favorite.waitFor({state:'detached'});
+    for (const [label, title] of [['Select vehicle','Switch Plate'],['Parking history','Previous Visits'],['Account settings','Profile']]) {
+      await page.getByRole('button',{name:label,exact:true}).click();
+      await page.getByText(title,{exact:true}).waitFor();
+      await page.getByText('Back',{exact:true}).last().click();
+      await page.getByRole('button',{name:'Open wallet',exact:true}).waitFor();
+    }
+    await page.getByRole('button', {name:'Open wallet', exact:true}).click();
+    await page.getByText('Balance (CAD)', { exact: true }).waitFor();
+    for (const feature of ['Paid', 'Alert']) {
+      await page.evaluate(feature => window.postMessage({ mobileFeature: feature }, location.origin), feature);
+      await page.getByText(feature === 'Paid' ? 'Download Receipt' : 'Pay Bill', { exact: true }).waitFor();
+    }
+    await page.getByText('Pay Bill', { exact: true }).click();
+    await page.getByText('.... 4242', { exact: true }).click();
+    await page.getByText('Pay $8.00', { exact: true }).last().click();
+    await page.getByText('Payment Success!', { exact: true }).waitFor();
+    assert.deepEqual(errors, []);
+    if (process.env.MOBILE_TEST_ROOT === 'build') {
+      await page.setViewportSize({width: 1440, height: 1000});
+      await page.goto('http://localhost:8786/', {waitUntil:'domcontentloaded'});
+      const mobile = page.locator('#parallel-mobile');
+      await mobile.waitFor({timeout:30000});
+      await mobile.scrollIntoViewIfNeeded();
+      const info = mobile.getByRole('button',{name:'Map credits',exact:true});
+      await info.click();
+      await mobile.getByRole('link',{name:'Thunderforest',exact:true}).waitFor();
+      await mobile.getByRole('link',{name:'OpenStreetMap contributors',exact:true}).waitFor();
+      await info.press('Escape');
+      assert.equal(await info.getAttribute('aria-expanded'),'false');
+      assert.equal(await mobile.locator('.parallel-mobile-screen').evaluate(el=>getComputedStyle(el).overflow),'hidden');
+      const app = page.frameLocator('#parallel-mobile iframe');
+      await app.getByText('Enter LotID', {exact:true}).waitFor();
+      await mobile.getByRole('tab', {name:'Paid', exact:true}).click();
+      await app.getByText('Download Receipt', {exact:true}).waitFor();
+      const replay = mobile.locator('.mission-playback button[aria-label="Replay demo"]');
+      assert.equal(await replay.locator('svg').count(),1);
+      assert.equal(await replay.innerText(),'');
+      await replay.click();
+      await app.getByText('Enter LotID', {exact:true}).waitFor();
+      assert.equal(await mobile.getByRole('tab', {name:'Map', exact:true}).getAttribute('aria-selected'),'true');
+      await app.getByText('Download Receipt', {exact:true}).waitFor({state:'detached'});
+      await app.locator('.leaflet-tile-loaded').first().waitFor();
+      await mobile.screenshot({path:'.mission/preview/1b391e11/mobile-light-replay.png'});
+    }
+    console.log('Passed: fixed light theme under dark browser preference, live Atlas tiles, original screens and local payment; host replay verified when testing build output.');
+  } finally {
+    await browser.close();
+  }
+})().catch(error => { console.error(error.message); process.exitCode = 1; }).finally(() => server.kill());

@@ -1,0 +1,244 @@
+{
+  "files": [
+    {
+      "path": "src/constants/colors.ts",
+      "sha256": "62630a7946a3122094ab7d3148bdc081aae4f8a6af30bf8dc5dccb4b7e016ded"
+    },
+    {
+      "path": "src/context/ThemeContext.tsx",
+      "sha256": "e83c1a133e57ec4d1836104893d646952f5af0c1eb71a98176667afd299b0863"
+    },
+    {
+      "path": "src/constants/cardStyles.ts",
+      "sha256": "fb4265800e94a1214b93edd5130ef03cb5cc9616b04a2d35ea774680d96fb831"
+    },
+    {
+      "path": "src/components/GlassView.tsx",
+      "sha256": "8743a8264c26c172c4280c30bfed717e7d0adc27e645f467e7951e3c4cd5ac38"
+    },
+    {
+      "path": "src/components/WebAlert.tsx",
+      "sha256": "18e8b8ce286ed810910334fb9b77d086576a91f51e2fd26dcd06121beb40b0e8"
+    },
+    {
+      "path": "src/components/LotFocusCard.tsx",
+      "sha256": "da3fb5fe9b9410131f36fe1d263c00ae635c793434b7764eedea3e80448c992a"
+    },
+    {
+      "path": "src/components/leaflet-map.css",
+      "sha256": "a603aa97f30127af9fd2f6db1e7bb0d07f6549a7d7cded8cd1fb14b875849037"
+    },
+    {
+      "path": "src/constants/mapStyles.ts",
+      "sha256": "e155aaf701cf7a225bcd2305821a1d84c6e48ff64a406a5d944c53349877d1e9"
+    },
+    {
+      "path": "src/components/MapComponents.web.tsx",
+      "sha256": "75ca64b1a8017d3bd001eb05f1f2b721a51cbdefa31e90b0fb9cf69fbdba8ea5"
+    },
+    {
+      "path": "src/components/Logo.tsx",
+      "sha256": "51041461d4e44ca419a86d843b2778b5a30352b5802d97d5501e9d6c3ac1132e"
+    },
+    {
+      "path": "src/context/PlateSelectionContext.tsx",
+      "sha256": "acd4a1d8d5dbdc9b137046e3c4f06cf7959172bb2781a4527dcca380884aeb9f"
+    },
+    {
+      "path": "src/context/WalletContext.tsx",
+      "sha256": "442d7a0c71831365f4da6f4c4ee4b1d04d824882ae16c1fa473ed62a91abec25"
+    },
+    {
+      "path": "src/utils/haptics.ts",
+      "sha256": "fc37133c0c77d43363e2f3324929b1bed08616cba625dea6178698051b26c7b9"
+    },
+    {
+      "path": "src/components/TopBar.tsx",
+      "sha256": "13423f1a694f0a99afccce6dadf0a1cdcac5e180a34baec35797b6b13fd4a57b"
+    },
+    {
+      "path": "src/components/ParkingLotMarker.tsx",
+      "sha256": "5175fb606dd2241f1fce2a7bd756da7438561d103b5a33e502e4c0a22e2a7c53"
+    },
+    {
+      "path": "src/utils/location.ts",
+      "sha256": "cf16058d962c75a4fee3aac0b9638afce50a52dbbda8ad14edfc703dbd626614"
+    },
+    {
+      "path": "src/utils/searchCache.ts",
+      "sha256": "a5abb636ae487c277c38c79d82d5951f5370ea67cf575894380f20a3eefd5831"
+    },
+    {
+      "path": "src/utils/suggestions.ts",
+      "sha256": "24d9cbb59a777ea3014ee9324d0a8bc33d424e182a20e66cc94fd69f45f60b86"
+    },
+    {
+      "path": "src/utils/geocoding.ts",
+      "sha256": "5760254a12ab5804da43f2ccc7bacb7f33506c408fd613559db083d3dc5c45b3"
+    },
+    {
+      "path": "src/components/MapSearch.tsx",
+      "sha256": "5d8eb9cf7ca27a09032fed1e50f882017b09d9d43152779a12e7b80c44144cd5"
+    },
+    {
+      "path": "src/components/RecentVisits.tsx",
+      "sha256": "74c03b84ab67f01630f6f1c8108b20f80f032a8080d30750a54bae53325a8f58"
+    },
+    {
+      "path": "src/utils/receiptGenerator.ts",
+      "sha256": "4ec6e559c4c780554df7c3ff4bf8da170ddb8faa9f58b26b1b27ab5c13f263a8"
+    },
+    {
+      "path": "src/utils/webStorage.ts",
+      "sha256": "4f5a34829b04a6b283e41d272827d2b1a528ed3e70900ff1ff56eb66baa3762e"
+    },
+    {
+      "path": "src/utils/recentVisitDismissals.ts",
+      "sha256": "92534674f7e6e5dd6e8644f5f48d40e66527ec5547c1d6f6c494d6f558d17287"
+    },
+    {
+      "path": "src/screens/Map/Map.tsx",
+      "sha256": "56be85eba6b9c9b62a0a1b256cc5d941d09abf8d32a6ebb4629888674f41005b"
+    },
+    {
+      "path": "src/constants/styles.ts",
+      "sha256": "c77f2681e0937fe7867fc487700adbb82e0095bb15d08ea53733963eccb25de7"
+    },
+    {
+      "path": "src/components/Button.tsx",
+      "sha256": "ef7aabc78ef05ebd8a4cc29383a93718ecdcee30ff561654894e359edd1f5c98"
+    },
+    {
+      "path": "src/components/LoadingLogo.tsx",
+      "sha256": "b3beca96bb846ecd03bfed54479a7c2bef89a2915465a1b53020888343712d91"
+    },
+    {
+      "path": "src/api/auth.ts",
+      "sha256": "46e2b6dcb925a4610b8c19c931b8a5a7432a623b11578838f956977ee9fc1b22"
+    },
+    {
+      "path": "src/components/BackButton.tsx",
+      "sha256": "67f573dd2aedded8003a040cd08b62224ec43b352182e18466b65918c49df3a0"
+    },
+    {
+      "path": "src/utils/phone.ts",
+      "sha256": "05edc2ff620df7a93333a506923e4b79b4b4b0f1b9b925dae49786110473497a"
+    },
+    {
+      "path": "src/screens/Account/AccountSettings.tsx",
+      "sha256": "7d7912d2a8e438e18957538081f7f182551b3654857dc2ae91f5e113c3fb6f52"
+    },
+    {
+      "path": "src/components/TextField.web.tsx",
+      "sha256": "d05bf15bc9dbf4debc25f2016c333c623ffecf54c4f4a48e131f0fc425fb2b9d"
+    },
+    {
+      "path": "src/components/PasswordTextField.tsx",
+      "sha256": "f9d96716fc2fd32c09d65289dc172ecb798814650655811e63dde0906fa32464"
+    },
+    {
+      "path": "src/screens/Account/ChangePassword.tsx",
+      "sha256": "b7aa126229d3380c0340a231af4e07996a843725d55438bf2e464b49db2c8dea"
+    },
+    {
+      "path": "src/screens/Legal/TermsAndConditions.tsx",
+      "sha256": "f832244c900483f228718a1618d4fd9076aff410d39f538f1f794a58bd3ab396"
+    },
+    {
+      "path": "src/screens/Legal/PrivacyPolicy.tsx",
+      "sha256": "c1d98358f0af84fed352bc81234d6b10dad98bc1dd9bc40086aba656bb8f3f14"
+    },
+    {
+      "path": "src/screens/Auth/PhoneVerification.tsx",
+      "sha256": "0c0f7fe1177978c566fe0b0451f9365dd5dd62827ca6cc330256e41ce7110916"
+    },
+    {
+      "path": "src/screens/Account/Plates.tsx",
+      "sha256": "259f739b800f562e25378a77f8710173f955dac7323d7516e9835ca14ac2b85e"
+    },
+    {
+      "path": "src/hooks/useAppRedirection.ts",
+      "sha256": "63500916e571724256ca7c872f7bc8a7dc71f03ac9009877199aa06817a0eb9e"
+    },
+    {
+      "path": "src/components/PreviousVisitsStack.tsx",
+      "sha256": "6d0175f1bf9b461e3a4d0d6b5006d3e905e7747cb916737c5944fa7b41ac51e5"
+    },
+    {
+      "path": "src/utils/parkingCalculations.ts",
+      "sha256": "f5f3fba1a56b57cd4f58b0be03cbf744f5a8b368fabd09f679768c1529982caa"
+    },
+    {
+      "path": "src/services/liveActivityService.web.ts",
+      "sha256": "5b32bf684986138ee2a06120dd7c9d2411d0bd2e59b7ddde0f0495757226e724"
+    },
+    {
+      "path": "src/screens/Visit/CurrentVisit.tsx",
+      "sha256": "1d4f745c2d78e9b2047197bbf72f32253b82638d4481ef87e29cbd47e255a868"
+    },
+    {
+      "path": "src/screens/Visit/UnpaidVisits.tsx",
+      "sha256": "4302d51622703effa3a28bb91b1567f74c036fc9dff08dce9d937582cf2cec36"
+    },
+    {
+      "path": "src/utils/sessionManager.ts",
+      "sha256": "14295392789e78654d8c11aba66fa6dac9b173793551e683dab499bf36524b8a"
+    },
+    {
+      "path": "src/screens/Map/ScanQR.tsx",
+      "sha256": "c7c4bde5605a0aecbd5708f0effee9eb05cc263ff593bed6db856a97e4758201"
+    },
+    {
+      "path": "src/config/env.ts",
+      "sha256": "d37b5c0dc086924eeec99e68f97af3eb9abfe0b752d1f4ecb445acfd0fc060e1"
+    },
+    {
+      "path": "src/components/WebCardField.tsx",
+      "sha256": "5906e1773d8f737d4acc00198d994aa18742fed6880e53575f4018b68531a094"
+    },
+    {
+      "path": "src/utils/stripeComponents.ts",
+      "sha256": "6c3e6686b34e23fdd5ecb7c6196714a14a0e287d15fd8c711972b7146d384864"
+    },
+    {
+      "path": "src/screens/Wallet/Wallet.tsx",
+      "sha256": "c5867c73ab7635b7e0b238b2deb1109e695faa006c054f8af59d852831acabd3"
+    },
+    {
+      "path": "src/screens/Visit/PreviousVisits.tsx",
+      "sha256": "86d95d3670c1f9288387f5d353e332cde6ba273a5cea3676552a3fc0baee9596"
+    },
+    {
+      "path": "src/screens/Account/Dispute.tsx",
+      "sha256": "2d60789b16c65ac52b60596b3626264e99524890f7ade1f660d699026611cc92"
+    },
+    {
+      "path": "src/api/payments.ts",
+      "sha256": "afd84f1fd9a39e19c30dd292aa86cd8efb10f621b2f98971ad13dfe6695c09b4"
+    },
+    {
+      "path": "src/screens/Wallet/Pay.tsx",
+      "sha256": "0f0ba3501c9871fe4a411d722beb82dbfdbddb82b88f836205f97c3b4261cb54"
+    },
+    {
+      "path": "src/hooks/useMarkedLocation.ts",
+      "sha256": "5cdac75584d88ef69419d41cda0d04717fff174fd2107887bd211becf4ff4c10"
+    },
+    {
+      "path": "src/hooks/useCompass.ts",
+      "sha256": "f6ee2137032c315350a2bbddb2a076f46200adbff00096907086c7cf90a80a6a"
+    },
+    {
+      "path": "src/screens/CarLocator/CarLocator.tsx",
+      "sha256": "2f27d8e5f5d66e4ab58900bc80b19d7c9b6d8dcf9036b97aa6e31e16e171d86d"
+    },
+    {
+      "path": "src/navigation/MainNavigator.tsx",
+      "sha256": "80d33b32095a4457bdddc69663ecd6adb6fab824a029ecab240fbb4db5f3637b"
+    },
+    {
+      "path": "src/context/FilterContext.tsx",
+      "sha256": "68736fe5fbdb8aeb9c58bdd21a5d36be77cef301b903274d810ffba27519794c"
+    }
+  ]
+}
