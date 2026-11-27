@@ -36,4 +36,4 @@ Expanded search and lot sheets leave a small horizontal inset and bottom clearan
 
 The mobile preview preloads behind the original app loading mark and reveals the map when visible and ready, with a staggered marker entrance. The loading overlay and marker entrance respect reduced-motion settings. Replay restarts the preview.
 
-The preview uses the product navigator’s normal screen setup and remounts it when a showcase tab changes, ensuring that the map can mount on initial load. `node scripts/test-mobile-startup.cjs` verifies the loader clears and map controls mount without network access.
+The preview keeps the current showcase screen mounted while the next screen loads, then slides the incoming view over it. Internal navigation uses the product’s iOS horizontal transition. Reduced-motion preferences disable the slide. `node scripts/test-mobile-startup.cjs` verifies the loader clears and map controls mount without network access.
