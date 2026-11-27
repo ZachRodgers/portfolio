@@ -1,0 +1,189 @@
+{
+  "tabs": [
+    {
+      "id": "purchase",
+      "label": "Purchase"
+    },
+    {
+      "id": "install",
+      "label": "Install"
+    },
+    {
+      "id": "manage",
+      "label": "Manage"
+    },
+    {
+      "id": "analytics",
+      "label": "Analytics"
+    },
+    {
+      "id": "ai-agents",
+      "label": "AI Agents"
+    }
+  ],
+  "slides": {
+    "purchase": {
+      "layout": "2-column",
+      "areas": [
+        {
+          "gridArea": "1 / 1 / 4 / 3",
+          "type": "media",
+          "video": "/assets/ux_ui/content/portfolio/parallel/setup/purchase.mp4"
+        },
+        {
+          "gridArea": "1 / 3 / 4 / 4",
+          "type": "text",
+          "header": "What used to take weeks, now takes minutes.",
+          "text": "Setup is the easiest, purchase here, we review your order, select ship directly where you setup yourself, or we schedule an installation for you.",
+          "secondaryText": "Map out your parking lot today!",
+          "button": {
+            "label": "Inquire",
+            "url": "https://www.parkwithparallel.com/",
+            "style": "primary"
+          },
+          "secondaryButton": {
+            "label": "Try Mapper",
+            "url": "https://operator.parkwithparallel.com/mapper",
+            "style": "secondary"
+          },
+          "chips": [
+            {
+              "icon": "/assets/ux_ui/content/portfolio/parallel/setup/timer.svg",
+              "label": "10 min"
+            }
+          ]
+        }
+      ]
+    },
+    "install": {
+      "layout": "2-column",
+      "areas": [
+        {
+          "gridArea": "1 / 1 / 3 / 2",
+          "type": "text",
+          "header": "Explore quick deploy options, or book a full installation.",
+          "text": "Parallel uses edge cameras, advanced camera vision for identifying vehicles with a 99.99% accuracy. Parallel identifies vehicles with AI, not just looking for a license plate."
+        },
+        {
+          "gridArea": "3 / 1 / 4 / 2",
+          "type": "text",
+          "logos": [
+            "/assets/ux_ui/content/portfolio/parallel/setup/logo_ipro.png",
+            "/assets/ux_ui/content/portfolio/parallel/setup/logo_adaptive.jpg",
+            "/assets/ux_ui/content/portfolio/parallel/setup/logo_carrida.png",
+            "/assets/ux_ui/content/portfolio/parallel/setup/logo_vaxtor.svg"
+          ]
+        },
+        {
+          "gridArea": "1 / 2 / 4 / 4",
+          "type": "media",
+          "video": "/assets/ux_ui/content/portfolio/parallel/setup/install.mp4"
+        }
+      ]
+    },
+    "manage": {
+      "layout": "2-column",
+      "areas": [
+        {
+          "gridArea": "1 / 1 / 4 / 3",
+          "type": "media",
+          "video": "/assets/ux_ui/content/portfolio/parallel/setup/manage.mp4",
+          "videoZoom": 107
+        },
+        {
+          "gridArea": "1 / 3 / 3 / 4",
+          "type": "text",
+          "header": "You're in full control.",
+          "text": "Your lot is setup, now, and forever. Manage everything through the operator portal. Manage revenue, price windows, and get notified anytime something happens.",
+          "button": {
+            "label": "Open Operator",
+            "url": "https://operator.parkwithparallel.com",
+            "style": "primary"
+          }
+        },
+        {
+          "gridArea": "3 / 3 / 4 / 4",
+          "type": "text",
+          "header": "New to Parallel?",
+          "button": {
+            "label": "Request a demo",
+            "url": "https://www.parkwithparallel.com/contact",
+            "style": "secondary"
+          }
+        }
+      ]
+    },
+    "analytics": {
+      "layout": "2-column",
+      "areas": [
+        {
+          "gridArea": "1 / 1 / 4 / 2",
+          "type": "text",
+          "header": "Data like you've never had before.",
+          "text": "We provide you live data throughout your day, but we also summarize it by the hour, day, month and year so you can quickly visualize or download trends.",
+          "chips": [
+            {
+              "icon": "/assets/ux_ui/content/portfolio/parallel/setup/revenue.svg",
+              "label": "revenue"
+            },
+            {
+              "icon": "/assets/ux_ui/content/portfolio/parallel/setup/occupancy.svg",
+              "label": "occupancy"
+            },
+            {
+              "icon": "/assets/ux_ui/content/portfolio/parallel/setup/segmentation.svg",
+              "label": "segments"
+            },
+            {
+              "icon": "/assets/ux_ui/content/portfolio/parallel/setup/emissions.svg",
+              "label": "ev"
+            },
+            {
+              "icon": "/assets/ux_ui/content/portfolio/parallel/setup/dwell_time.svg",
+              "label": "dwell time"
+            },
+            {
+              "icon": "/assets/ux_ui/content/portfolio/parallel/setup/download.svg",
+              "label": "reports"
+            },
+            {
+              "icon": "/assets/ux_ui/content/portfolio/parallel/setup/ai_predictions.svg",
+              "label": "ai predictions"
+            }
+          ]
+        },
+        {
+          "gridArea": "1 / 2 / 4 / 4",
+          "type": "media",
+          "video": "/assets/ux_ui/content/portfolio/parallel/setup/analytics.mp4"
+        }
+      ]
+    },
+    "ai-agents": {
+      "layout": "2-column",
+      "areas": [
+        {
+          "gridArea": "1 / 1 / 4 / 3",
+          "type": "media",
+          "video": "/assets/ux_ui/content/portfolio/parallel/setup/aiagents.mp4"
+        },
+        {
+          "gridArea": "1 / 3 / 4 / 4",
+          "type": "text",
+          "header": "AI manages everything.",
+          "text": "Parallel AI can diagnose issues, use data to flag violators, predict parking occupancy trends before they happen, and help modify any settings, from advanced pricing, to the plate registry.",
+          "secondaryText": "Ask agentic questions:",
+          "textTyper": {
+            "messages": [
+              "Please double my rates on weekends.",
+              "Add these plates to the registry: ABCD123, AAAA000",
+              "Why is my occupancy down 20% this month? How can we fix it?",
+              "My lot is supposed to be permit only weekdays 9-5, please fix!!",
+              "The occupancy appears to be off, please diagnose and fix."
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

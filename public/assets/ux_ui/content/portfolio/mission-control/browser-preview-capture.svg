@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#c5c0ae"/><stop offset="1" stop-color="#e8e1d0"/></linearGradient>
+    <linearGradient id="photo" x2="1" y2="1"><stop stop-color="#687563"/><stop offset=".52" stop-color="#b0a58c"/><stop offset="1" stop-color="#ddd2bd"/></linearGradient>
+  </defs>
+  <rect width="1200" height="720" fill="#f5f3ed"/>
+  <rect width="1200" height="31" fill="#68735a"/>
+  <text x="600" y="20" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" letter-spacing="2" fill="#fff">A LITTLE MORE ROOM TO BREATHE  ·  TORONTO, ONTARIO</text>
+  <text x="600" y="83" text-anchor="middle" font-family="Georgia,serif" font-size="25" letter-spacing="5" fill="#272b26">CASA TORONTO</text>
+  <text x="600" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" letter-spacing="3" fill="#77786f">TORONTO · ONTARIO</text>
+  <rect x="66" y="132" width="548" height="405" fill="url(#sky)"/>
+  <path d="M66 430 Q225 350 344 411 T614 366 V537 H66Z" fill="#7c826b"/>
+  <path d="M66 462 Q240 394 393 439 T614 408 V537 H66Z" fill="#5d6957"/>
+  <rect x="203" y="286" width="291" height="160" fill="#ebe7dd"/>
+  <rect x="230" y="316" width="118" height="130" fill="#9a9b88"/>
+  <rect x="365" y="316" width="102" height="130" fill="#777e6e"/>
+  <path d="M192 286 L347 229 L504 286Z" fill="#d8d1c2"/>
+  <text x="87" y="516" font-family="Arial,sans-serif" font-size="9" letter-spacing="2" fill="#fff">01 / A HOUSE IN TORONTO</text>
+  <text x="694" y="205" font-family="Arial,sans-serif" font-size="10" letter-spacing="3" fill="#737d62">SOMEWHERE TO SETTLE IN</text>
+  <text x="690" y="286" font-family="Georgia,serif" font-size="61" fill="#272b26">A slower kind</text>
+  <text x="690" y="348" font-family="Georgia,serif" font-size="61" fill="#272b26">of escape.</text>
+  <text x="692" y="395" font-family="Arial,sans-serif" font-size="15" fill="#6f7068">Room to wake slowly, wander by the lake,</text>
+  <text x="692" y="420" font-family="Arial,sans-serif" font-size="15" fill="#6f7068">and find your own pace in the city.</text>
+  <rect x="692" y="460" width="179" height="46" fill="#737d62"/>
+  <text x="781" y="488" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" letter-spacing="1.4" fill="#fff">DISCOVER THE HOUSE</text>
+  <rect x="178" y="577" width="844" height="88" fill="#fff"/>
+  <text x="208" y="609" font-family="Arial,sans-serif" font-size="9" letter-spacing="1.5" fill="#86877e">ARRIVE</text>
+  <text x="208" y="637" font-family="Georgia,serif" font-size="17" fill="#272b26">Nov 28, 2026</text>
+  <path d="M422 590 V650 M631 590 V650 M809 590 V650" stroke="#e5e3dc"/>
+  <text x="451" y="609" font-family="Arial,sans-serif" font-size="9" letter-spacing="1.5" fill="#86877e">DEPART</text>
+  <text x="451" y="637" font-family="Georgia,serif" font-size="17" fill="#272b26">Dec 02, 2026</text>
+  <text x="658" y="609" font-family="Arial,sans-serif" font-size="9" letter-spacing="1.5" fill="#86877e">GUESTS</text>
+  <text x="658" y="637" font-family="Georgia,serif" font-size="17" fill="#272b26">2 guests</text>
+  <rect x="833" y="597" width="166" height="48" fill="#737d62"/>
+  <text x="916" y="626" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" letter-spacing="1.2" fill="#fff">CHECK AVAILABILITY</text>
+</svg>

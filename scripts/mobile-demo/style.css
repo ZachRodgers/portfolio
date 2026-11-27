@@ -1,0 +1,35 @@
+@font-face{font-family:Oxanium;src:url('./assets/Oxanium-Regular.ttf')}html,body,#root{margin:0;width:100%;height:100%;overflow:hidden;background:#fff;color-scheme:light}#root{display:flex;flex-direction:column}button,input{font-family:inherit}
+
+#mobile-header-blur { pointer-events:none; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.9) 28%, rgba(0,0,0,.55) 55%, transparent 100%); -webkit-mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.9) 28%, rgba(0,0,0,.55) 55%, transparent 100%); }
+
+[id^="mobile-header-action-"] > div { background-color: rgba(100, 100, 100, .16) !important; }
+
+/* Offset React Native Web text to align its baseline with the iOS controls. */
+.css-146c3p1 { position:relative; top:1px; }
+input, textarea { outline:none; }
+input:focus-visible, textarea:focus-visible { box-shadow:none; }
+
+/* Match the light iOS switch while retaining its blue track. */
+[role="switch"] { accent-color:#1782ff; }
+[role="switch"] input, input[role="switch"] { accent-color:#1782ff; }
+[role="switch"] > div:last-child { background-color:#fff !important; }
+
+#mobile-search-glass, #mobile-header-pill { background-color:rgba(245,245,245,.66) !important; backdrop-filter:saturate(180%) blur(20px) !important; -webkit-backdrop-filter:saturate(180%) blur(20px) !important; }
+
+/* Visit cards use a slightly lower text baseline in the phone preview. */
+#demo-visit-content .css-146c3p1 { top:2px; }
+
+.mobile-loading { position:absolute; inset:0; z-index:9999; display:flex; justify-content:center; align-items:center; background:#fff; opacity:1; transition:opacity .35s ease; }
+.mobile-loading svg path:nth-of-type(2) { stroke-dasharray:500; animation:mobile-logo-stroke 4s linear infinite; }
+@keyframes mobile-logo-stroke { from { stroke-dashoffset:500; } to { stroke-dashoffset:-500; } }
+.mobile-loading--revealed { opacity:0; pointer-events:none; }
+.mobile-marker-pop { animation:mobile-marker-pop .38s cubic-bezier(.2,1.45,.5,1) both; transform-origin:50% 100%; }
+@keyframes mobile-marker-pop { from { opacity:0; transform:scale(.35); } to { opacity:1; transform:scale(1); } }
+@media (prefers-reduced-motion:reduce) { .mobile-loading { transition:none; } .mobile-loading svg path:nth-of-type(2) { animation:none; } .mobile-marker-pop { animation:none; } }
+
+.mobile-screen-stage { position:relative; flex:1; min-height:0; overflow:hidden; }
+.mobile-screen-layer { position:absolute; inset:0; display:flex; flex-direction:column; background:#fff; }
+.mobile-screen-layer--right { transform:translateX(100%); z-index:1; }
+.mobile-screen-layer--left { transform:translateX(-100%); z-index:1; }
+.mobile-screen-layer--entering { transform:translateX(0); transition:transform .4s cubic-bezier(.32,.72,0,1); }
+@media (prefers-reduced-motion:reduce) { .mobile-screen-layer--entering { transition:none; } }

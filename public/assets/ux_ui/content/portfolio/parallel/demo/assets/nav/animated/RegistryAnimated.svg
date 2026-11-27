@@ -1,0 +1,77 @@
+<svg width="17" height="17" viewBox="-3 -3 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+<defs>
+<style>
+  @keyframes swingY {
+    0%   { transform: scaleY(1); }
+    15%  { transform: scaleY(0.5); }
+    35%  { transform: scaleY(1.1); }
+    50%  { transform: scaleY(0.75); }
+    65%  { transform: scaleY(1.05); }
+    78%  { transform: scaleY(0.92); }
+    88%  { transform: scaleY(1.02); }
+    95%  { transform: scaleY(0.98); }
+    100% { transform: scaleY(1); }
+  }
+  @keyframes leftSkew {
+    0%   { transform: skewX(0deg); }
+    15%  { transform: skewX(-8deg); }
+    35%  { transform: skewX(2deg); }
+    50%  { transform: skewX(-4deg); }
+    65%  { transform: skewX(1deg); }
+    78%  { transform: skewX(-1.5deg); }
+    88%  { transform: skewX(0.5deg); }
+    95%  { transform: skewX(-0.3deg); }
+    100% { transform: skewX(0deg); }
+  }
+  @keyframes rightSkew {
+    0%   { transform: skewX(0deg); }
+    15%  { transform: skewX(8deg); }
+    35%  { transform: skewX(-2deg); }
+    50%  { transform: skewX(4deg); }
+    65%  { transform: skewX(-1deg); }
+    78%  { transform: skewX(1.5deg); }
+    88%  { transform: skewX(-0.5deg); }
+    95%  { transform: skewX(0.3deg); }
+    100% { transform: skewX(0deg); }
+  }
+  @keyframes bottomNarrow {
+    0%   { transform: scaleX(1); }
+    15%  { transform: scaleX(1.22); }
+    35%  { transform: scaleX(0.97); }
+    50%  { transform: scaleX(1.1); }
+    65%  { transform: scaleX(0.99); }
+    78%  { transform: scaleX(1.04); }
+    88%  { transform: scaleX(0.998); }
+    95%  { transform: scaleX(1.005); }
+    100% { transform: scaleX(1); }
+  }
+  .swing { transform-origin: 5.5px 2px; animation: swingY 1.1s cubic-bezier(0.22,0.61,0.36,1) forwards; }
+  .l-wall { transform-origin: 0px 2px; animation: leftSkew 1.1s cubic-bezier(0.22,0.61,0.36,1) forwards; }
+  .r-wall { transform-origin: 11px 2px; animation: rightSkew 1.1s cubic-bezier(0.22,0.61,0.36,1) forwards; }
+  .b-edge { transform-origin: 5.5px 9px; animation: bottomNarrow 1.1s cubic-bezier(0.22,0.61,0.36,1) forwards; }
+</style>
+</defs>
+<g class="swing">
+  <!-- Top edge with corners -->
+  <path d="M0 3 C0 2.44772 0.44772 2 1 2 L10 2 C10.5523 2 11 2.44772 11 3" stroke="#333333" fill="none"/>
+
+  <!-- Left wall + bottom-left corner (skews together) -->
+  <g class="l-wall">
+    <path d="M0 3 L0 8 C0 8.55228 0.44772 9 1 9" stroke="#333333" fill="none"/>
+  </g>
+
+  <!-- Right wall + bottom-right corner (skews together) -->
+  <g class="r-wall">
+    <path d="M11 3 L11 8 C11 8.55228 10.5523 9 10 9" stroke="#333333" fill="none"/>
+  </g>
+
+  <!-- Bottom straight edge only (narrows from center) -->
+  <g class="b-edge">
+    <line x1="1" y1="9" x2="10" y2="9" stroke="#333333"/>
+  </g>
+
+  <!-- Bolts -->
+  <circle cx="3.5" cy="4" r="0.5" fill="#333333"/>
+  <circle cx="7.5" cy="4" r="0.5" fill="#333333"/>
+</g>
+</svg>

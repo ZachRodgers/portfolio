@@ -1,0 +1,129 @@
+.ux-page {
+    --ux-rail-inset: max(clamp(20px, 8.8vw, 96px), calc((100% - 1312px) / 2));
+    --ux-hero-rule-inset: clamp(24px, 4svh, 36px);
+    --ux-frame-padding: clamp(16px, 3.5vw, 56px);
+    --ux-content-inset: calc(var(--ux-rail-inset) + var(--ux-frame-padding));
+    --ux-rule-color: rgba(255, 255, 255, .065);
+    --ux-joint-color: rgba(255, 255, 255, .35);
+    position: relative;
+    isolation: isolate;
+}
+.ux-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    background:
+        linear-gradient(var(--ux-rule-color), var(--ux-rule-color)) var(--ux-rail-inset) 0 / 1px 100% no-repeat,
+        linear-gradient(var(--ux-rule-color), var(--ux-rule-color)) calc(100% - var(--ux-rail-inset)) 0 / 1px 100% no-repeat;
+}
+.ux-page .ux-framework-section { position: relative; display: flow-root; }
+.ux-framework-rule {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right,
+        transparent max(0px, calc(var(--ux-rail-inset) - 240px)),
+        var(--ux-rule-color) var(--ux-rail-inset),
+        var(--ux-rule-color) calc(100% - var(--ux-rail-inset)),
+        transparent min(100%, calc(100% - var(--ux-rail-inset) + 240px)));
+    z-index: 4;
+    pointer-events: none;
+}
+.ux-framework-joint { position: absolute; top: 0; width: 11px; height: 11px; transform: translate(-5px, -5px); }
+.ux-framework-joint--left { left: var(--ux-rail-inset); }
+.ux-framework-joint--right { left: calc(100% - var(--ux-rail-inset)); }
+.ux-framework-joint::before, .ux-framework-joint::after { content: ""; position: absolute; background: var(--ux-joint-color); }
+.ux-framework-joint::before { top: 5px; left: 0; width: 11px; height: 1px; }
+.ux-framework-joint::after { top: 0; left: 5px; width: 1px; height: 11px; }
+.ux-page .ux-hero-title-rule {
+    top: var(--ux-hero-rule-inset);
+    transition: top .9s cubic-bezier(.22, 1, .36, 1);
+}
+.ux-page .ux-hero-title-rule.is-settled { top: calc(var(--ux-scene-gap) * 1.5 + var(--ux-name-height)); }
+.ux-page .ux-resume-rule { top: calc(-1 * var(--ux-hero-rule-inset)); }
+@media (prefers-reduced-motion: reduce) {
+    .ux-page .ux-hero-title-rule { transition: none; }
+}
+.ux-page .ux-contents,
+.ux-page #resume-section.component-container,
+.ux-page .branding-container,
+.ux-page .footer-container {
+    width: calc(100% - var(--ux-content-inset) * 2);
+    max-width: 1200px;
+}
+.ux-page #resume-section.component-container,
+.ux-page .branding-container,
+.ux-page .footer-container { padding-left: 0; padding-right: 0; }
+.ux-page .resume-container { gap: clamp(24px, 4vw, 64px); }
+.ux-page .branding-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (min-width: 769px) {
+    .ux-page .resume-container { display: grid; grid-template-columns: 27fr 46fr 27fr; }
+    .ux-page .resume-column { width: auto !important; min-width: 0; }
+    .ux-page .resume-portrait { aspect-ratio: 0.68; }
+    .ux-page .resume-portrait .profile-image { width: 100%; height: 100%; object-fit: cover; }
+}
+@media (max-width: 768px) {
+    .ux-page { --ux-rail-inset: 16px; --ux-frame-padding: 16px; }
+    .ux-page .resume-container { padding-left: 0; padding-right: 0; }
+    .ux-page .branding-grid { grid-template-columns: minmax(0, 1fr); }
+}
+.ux-page .skills-grid { grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); gap: 2px; }
+.ux-page .resume-studio .skill-icon { width: min(100%, 45px); height: auto; aspect-ratio: 1; }
+
+/* The rail confines the sticky navigation to the case studies. */
+.ux-page #portfolio { position: relative; }
+.ux-portfolio-nav-rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(50% + 656px + 12px);
+    width: calc((100% - 1312px) / 2 - 12px);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.ux-page .dynamic-nav {
+    position: sticky;
+    top: 50vh;
+    left: auto;
+    max-width: 100%;
+    pointer-events: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 1rem 0.5rem;
+}
+.ux-page .dynamic-nav .nav-content { gap: 0; }
+.ux-page .dynamic-nav .project-icon {
+    width: min(140px, calc((100vw - 1312px) / 2 - 28px));
+    height: 62px;
+    margin: 0 0 0 2.5px;
+    justify-content: flex-start;
+    transform: none;
+    transform-origin: left center;
+}
+.ux-page .dynamic-nav .project-icon.active { transform: none; }
+.ux-page .dynamic-nav .project-icon img {
+    width: 100%;
+    height: auto;
+    max-height: 50px;
+    object-fit: contain;
+    object-position: left center;
+    filter: none;
+}
+@supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .ux-portfolio-nav-rail { animation: ux-nav-reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 25%; }
+        @keyframes ux-nav-reveal { from { opacity: 0; } to { opacity: 1; } }
+    }
+}
+@media (max-width: 1600px) { .ux-portfolio-nav-rail { display: none; } }
+
+/* Keep project lists from overlapping while they open and close. */
+.ux-page .dynamic-nav .pages-list { overflow: hidden; transition: max-height .3s ease, opacity .2s ease, transform .3s ease; }
+.ux-page .dynamic-nav .pages-list.expanded { max-height: 180px; }
+.ux-page .dynamic-nav .pages-list.expanded .page-item { animation: none; opacity: .3; transform: none; }
+@media (prefers-reduced-motion: reduce) { .ux-page .dynamic-nav .pages-list { transition: none; } }

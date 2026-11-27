@@ -1,0 +1,17 @@
+.ux-icon-grid {
+    position: absolute;
+    inset: 8% 2% 12%;
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    pointer-events: none;
+    color: var(--ux-rule-color, rgba(255, 255, 255, .065));
+}
+.ux-icon-grid-cell { display: grid; place-items: center; }
+.ux-icon-grid-cell svg { width: clamp(18px, 2.8vw, 36px); height: auto; overflow: visible; }
+.ux-icon-grid-cell svg > * { stroke-dasharray: 1; stroke-dashoffset: var(--icon-trace); }
+@media (prefers-reduced-motion: reduce) {
+    .ux-icon-grid { display: none; }
+}
+
+.ux-icon-grid-burst svg > * { stroke-dasharray: none; stroke-dashoffset: 0; }

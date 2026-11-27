@@ -1,0 +1,29 @@
+import Parallel from '../content/portfolio/parallel';
+import Stockhub from '../content/portfolio/stockhub';
+import React from 'react';
+import MissionControl from '../content/portfolio/mission-control';
+import MissionControlPlanning from '../content/portfolio/mission-control/Planning';
+import MissionControlBrowserDesign from '../content/portfolio/mission-control/BrowserDesign';
+import MissionControlFeatures from '../content/portfolio/mission-control/Features';
+import FrameworkRule from './FrameworkRule';
+
+const Portfolio: React.FC<{ navigation?: React.ReactNode }> = ({ navigation }) => (
+    <div id="portfolio">
+        {navigation && <div className="ux-portfolio-nav-rail">{navigation}</div>}
+        <section id="project-1" className="ux-project ux-framework-section" aria-label="Parallel project"><FrameworkRule /><header className="mission-project-hero"><div className="mission-project-identity"><img src="/assets/ux_ui/hero/parallel.png" alt="Parallel" /></div><h2>An AI-powered parking platform for drivers and operators.</h2></header><Parallel /></section>
+        <section id="project-2" className="ux-project ux-framework-section" aria-labelledby="mission-project-title">
+            <FrameworkRule />
+            <header className="mission-project-hero">
+                <div className="mission-project-identity"><img src="/assets/ux_ui/hero/mission_control.png" alt="Mission Control" /></div>
+                <h2 id="mission-project-title">A coding workspace for engineers and designers, from first idea to finished code.</h2>
+            </header>
+            <MissionControl />
+            <MissionControlPlanning />
+            <MissionControlBrowserDesign />
+            <MissionControlFeatures />
+        </section>
+        <section id="project-3" className="ux-project ux-framework-section" aria-labelledby="stockhub-title"><FrameworkRule /><header className="mission-project-hero"><div className="mission-project-identity"><img src="/assets/ux_ui/hero/stockhub.png" alt="Stockhub" /></div><h2 id="stockhub-title">A modern dashboard that makes 50 years of product data easy to use.</h2></header><Stockhub /></section>
+    </div>
+);
+
+export default Portfolio;

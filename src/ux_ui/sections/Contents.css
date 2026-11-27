@@ -1,0 +1,71 @@
+.ux-contents {
+    position: absolute;
+    top: calc(var(--ux-scene-gap) * 2 + var(--ux-name-height));
+    bottom: var(--ux-scene-gap);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 1200px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: clamp(4px, .6vw, 8px);
+    grid-template-rows: minmax(0, 1fr);
+    overflow: hidden;
+    pointer-events: none;
+}
+.ux-contents-tile {
+    grid-row: 1;
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+}
+.ux-contents-tile.is-visible { visibility: visible; }
+.ux-contents-tile.is-visible.is-final { pointer-events: auto; }
+.ux-contents .ux-contents-art {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 450ms cubic-bezier(.2, .7, .2, 1);
+}
+.ux-contents-tile.is-final:hover .ux-contents-art.cell-reveal-ready,
+.ux-contents-tile.is-final:focus-visible .ux-contents-art.cell-reveal-ready { transform: scale(1.06); }
+.ux-contents-tile:focus-visible { outline: 2px solid white; outline-offset: -4px; z-index: 1; }
+@media (max-width: 600px) {
+    .ux-contents .ux-contents-art { object-position: 50% 60%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ux-contents .ux-contents-art { transition: none; }
+}
+
+.ux-contents-brand {
+    position: absolute;
+    inset: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: clamp(32px, 5vw, 72px) 12% 48px;
+    background: linear-gradient(rgba(0, 0, 0, .45), transparent);
+    visibility: hidden;
+    pointer-events: none;
+}
+.ux-contents-brand img {
+    display: block;
+    width: 100%;
+    height: clamp(28px, 5vw, 64px);
+    object-fit: contain;
+    object-position: center top;
+}
+.ux-contents-brand--parallel img { width: 59%; }
+.ux-contents-brand--mission_control img { width: 70%; }
+.ux-contents-brand--stockhub img { width: 81%; }
+.ux-contents.has-logos .is-visible .ux-contents-brand { visibility: visible; }
+
+
+@media (prefers-reduced-motion: reduce) { .ux-contents.is-skipped .is-visible { animation: none; } }
+
+.ux-contents { --frame-outline-color: var(--ux-rule-color, rgba(255,255,255,.065)); }
+.ux-frame-outline { grid-row: 1; position: relative; z-index: 2; }
+.ux-contents-brand { z-index: 1; }

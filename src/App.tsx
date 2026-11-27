@@ -1,60 +1,41 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
+import IndustrialDesign from './industrial_design/IndustrialDesign';
+import UxUi from './ux_ui/UxUi';
+import Recipes from './recipes/Recipes';
 
-// Import sections
-import Hero from './sections/Hero';
-import Resume from './sections/Resume';
-import Contents from './sections/Contents';
-import Portfolio from './sections/Portfolio';
-import Branding from './sections/Branding';
+const pages = {
+    '/industrial_design': IndustrialDesign,
+    '/ux_ui': UxUi,
+    '/recipes': Recipes,
+};
 
-// Import components
-import Footer from './components/Footer';
-import DynamicNav from './components/DynamicNav';
-import LoadingScreen from './components/LoadingScreen';
+const aliases: Record<string, keyof typeof pages> = {
+    '/design': '/industrial_design',
+    '/id': '/industrial_design',
+    '/ux-ui': '/ux_ui',
+    '/ux': '/ux_ui',
+    '/ui': '/ux_ui',
+    '/uxui': '/ux_ui',
+};
 
-// Import hooks
-import useAssetLoading from './hooks/useAssetLoading';
+export const DEFAULT_ROUTE: keyof typeof pages = '/ux_ui';
 
 function App() {
-    const { isLoading } = useAssetLoading();
+    if (/^\/(ux-ui|ux_ui)\/contents\/portfolio\/mission-control\/?$/.test(window.location.pathname)) {
+        window.history.replaceState(null, '', '/ux_ui' + window.location.search + '#project-2');
+    }
+    const path = window.location.pathname.replace(/\/+$/, '') || '/';
+    const isKnownRoute = Object.prototype.hasOwnProperty.call(pages, path);
+    const alias = Object.prototype.hasOwnProperty.call(aliases, path) ? aliases[path] : undefined;
+    const route = isKnownRoute ? path as keyof typeof pages : alias || DEFAULT_ROUTE;
 
-    useEffect(() => {
-        if (isLoading) return;
+    if (!isKnownRoute) {
+        window.history.replaceState(null, '', route + window.location.search + window.location.hash);
+    }
 
-        const hash = window.location.hash.replace('#', '');
-        if (!hash) return;
-
-        const scrollToHash = () => {
-            const target = document.getElementById(hash);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        };
-
-        // Attempt immediately and once more after a tick to account for layout
-        scrollToHash();
-        const timeoutId = setTimeout(scrollToHash, 150);
-
-        return () => clearTimeout(timeoutId);
-    }, [isLoading]);
-
-    return (
-        <div className="App">
-            <LoadingScreen isLoading={isLoading} />
-            {!isLoading && (
-                <>
-                    <DynamicNav />
-                    <Hero />
-                    <Resume />
-                    <Contents />
-                    <Portfolio />
-                    <Branding />
-                    <Footer />
-                </>
-            )}
-        </div>
-    );
+    const Page = pages[route];
+    return <Page mainRoute={DEFAULT_ROUTE} />;
 }
 
 export default App;

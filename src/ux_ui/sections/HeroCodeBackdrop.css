@@ -1,0 +1,22 @@
+.ux-code-backdrop { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ux-code-fragment {
+    position: absolute;
+    margin: 0;
+    color: var(--ux-rule-color, rgba(255, 255, 255, .065));
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: clamp(10px, .95vw, 14px);
+    font-weight: 400;
+    line-height: 1.9;
+    white-space: pre;
+}
+.ux-code-fragment--left { top: 22%; left: 10%; }
+.ux-code-fragment--right { top: 32%; left: 73%; }
+.ux-code-fragment--bottom { top: 76%; left: 19%; }
+.ux-code-cursor { opacity: .7; }
+@media (max-width: 700px) {
+    .ux-code-fragment { font-size: 9px; }
+    .ux-code-fragment--left { top: 12%; left: 8%; }
+    .ux-code-fragment--right { top: 73%; left: 54%; }
+    .ux-code-fragment--bottom { top: 81%; left: 8%; }
+}
+@media (prefers-reduced-motion: reduce) { .ux-code-backdrop { display: none; } }

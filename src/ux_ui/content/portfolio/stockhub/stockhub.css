@@ -1,0 +1,115 @@
+.stockhub-overview .mission-feature-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.stockhub-why { display:block; margin:36px auto 0; border:0; background:transparent; color:#aaa; font:22px 'Caveat',sans-serif; cursor:default; }
+@media(max-width:700px){.stockhub-overview .mission-feature-grid{grid-template-columns:1fr}}
+.stockhub-browser-bar { height: 48px; box-sizing: border-box; display: flex; align-items: center; gap: 18px; padding: 0 18px; color: #929292; background: #161616; border-bottom: 1px solid #292929; font-family: Arial, sans-serif; font-size: 12px; }
+.stockhub-browser-navigation, .stockhub-browser-actions { display: flex; align-items: center; flex: none; }
+.stockhub-browser-navigation { gap: 16px; }
+.stockhub-browser-actions { justify-content: flex-end; gap: 18px; }
+.stockhub-window-controls { display: flex; align-items: center; gap: 7px; }
+.stockhub-window-controls span { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; color: #1d1d1d; background: #686868; }
+.stockhub-browser-address { height: 28px; flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px; box-sizing: border-box; padding: 0 16px; background: #242424; border-radius: 999px; color: #bcbcbc; }
+.stockhub-browser-favicon { display: block; width: 12px; height: 12px; flex: 0 0 12px; overflow: hidden; opacity: .72; }
+.stockhub-browser-favicon img { display: block; max-width: none; width: 80px; height: auto; }
+.stockhub-overview .mission-demo-viewport iframe { border-radius: 0; }
+
+.stockhub-window-controls svg { display: block; flex: none; }
+[data-theme="light"] .stockhub-browser-bar { background: #f1f1f1; border-bottom-color: #dedede; color: #707070; }
+[data-theme="light"] .stockhub-browser-address { background: #fff; color: #535353; }
+[data-theme="light"] .stockhub-browser-favicon img { filter: brightness(0); }
+[data-theme="light"] .stockhub-window-controls span { background: #d3d3d3; color: #f7f7f7; }
+
+.stockhub-order-bottom { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px; padding-top: 32px; align-items: start; }
+.stockhub-order-bottom .stockhub-why { margin: 0; justify-self: start; }
+.stockhub-order-bottom h3 { margin: 0 0 12px; font-size: 17px; font-weight: 500; line-height: 1.4; }
+.stockhub-order-bottom p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
+@media(max-width: 700px) { .stockhub-order-bottom { grid-template-columns: 1fr; gap: 26px; } .stockhub-order-bottom article { grid-row: 1; } }
+
+.stockhub-alert-frame .mission-demo-background { margin-left: calc(-1 * var(--ux-frame-padding)); padding-left: 0; border-radius: 0 4px 4px 0; }
+.stockhub-alert-frame .mission-demo-viewport { border-radius: 0 4px 4px 0; }
+.stockhub-alert-bottom { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px; padding-top: 32px; align-items: start; }
+.stockhub-alert-bottom h3 { margin: 0 0 12px; font-size: 17px; font-weight: 500; line-height: 1.4; }
+.stockhub-alert-bottom p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
+.stockhub-alert-bottom .stockhub-why { margin: 0; justify-self: end; }
+@media(max-width: 700px) { .stockhub-alert-bottom { grid-template-columns: 1fr; gap: 26px; } }
+
+.stockhub-tone-inventory .mission-demo-background { background: linear-gradient(135deg, #a7a8a1 0%, #92938b 48%, #777970 100%); }
+.stockhub-tone-orders .mission-demo-background { background: linear-gradient(135deg, #a5a8ab 0%, #909498 48%, #777c81 100%); }
+.stockhub-tone-alerts .mission-demo-background { background: linear-gradient(135deg, #b0a79e 0%, #998f86 48%, #80766f 100%); }
+.stockhub-tone-fourth .mission-demo-background { background: linear-gradient(135deg, #a9a7a8 0%, #939192 48%, #797778 100%); }
+.stockhub-admin-top { display: grid; grid-template-columns: max-content minmax(0,1fr) max-content; align-items: center; gap: clamp(18px, 2vw, 28px); margin-bottom: 24px; }
+.stockhub-admin-top .stockhub-why { margin: 0; }
+.stockhub-admin-select-wrap { position: relative; display: flex; align-items: center; justify-self: start; width: max-content; z-index: 5; }
+.stockhub-admin-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-width: 155px; padding: 10px 16px; border: 1px solid #353535; border-radius: 999px; background: #1d1d1d; color: #fff; font: inherit; font-size: 13px; cursor: pointer; }
+.stockhub-admin-select-trigger:hover, .stockhub-admin-select-trigger[aria-expanded="true"] { background: #292929; }
+.stockhub-admin-select-trigger:focus-visible, .stockhub-admin-menu button:focus-visible { outline: 2px solid #eee; outline-offset: 2px; }
+.stockhub-admin-select-trigger svg { color: #aaa; }
+.stockhub-admin-menu { position: absolute; top: calc(100% + 8px); left: 0; min-width: 190px; box-sizing: border-box; padding: 5px; border: 1px solid #3b3b3b; border-radius: 12px; background: #1d1d1d; box-shadow: 0 12px 30px #0008; }
+.stockhub-admin-menu button { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; padding: 10px 11px; border: 0; border-radius: 7px; background: transparent; color: #c8c8c8; text-align: left; font: inherit; font-size: 13px; cursor: pointer; }
+.stockhub-admin-menu button:hover, .stockhub-admin-menu button:focus-visible { background: #343434; color: #fff; }
+.stockhub-admin-menu button[aria-selected="true"] { color: #fff; }
+.stockhub-admin-description h3 { margin: 0 0 6px; font-size: 17px; font-weight: 500; line-height: 1.4; }
+.stockhub-admin-description p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+@media(max-width:700px) {.stockhub-admin-top { grid-template-columns: minmax(0,1fr) max-content; gap: 16px; } .stockhub-admin-description { grid-column: 1 / -1; grid-row: 2; } .stockhub-admin-select-trigger { min-width: 145px; } }
+
+/* Keep each rationale anchored to its accompanying content. */
+.stockhub-order-bottom { grid-template-columns: minmax(145px, .65fr) minmax(0, 1.35fr); }
+.stockhub-alert-bottom { grid-template-columns: minmax(0, 1.35fr) minmax(145px, .65fr); }
+.stockhub-order-bottom .stockhub-rationale, .stockhub-alert-bottom .stockhub-rationale, .stockhub-admin-top .stockhub-rationale { position: relative; inset: auto; }
+.stockhub-order-bottom .stockhub-rationale { justify-self: start; margin: 18px 0 0 20px; }
+.stockhub-alert-bottom .stockhub-rationale { justify-self: end; margin: 18px 20px 0 0; }
+.stockhub-admin-top .stockhub-rationale { justify-self: end; }
+.stockhub-rationale.stockhub-rationale .rationale-paper { width: 460px; height: 410px; padding: 65px 76px; }
+.stockhub-rationale.stockhub-rationale .rationale-paper > * { top: auto; left: auto; }
+.stockhub-order-bottom .stockhub-rationale .rationale-paper { right: auto; left: -12px; transform-origin: 15% 100%; }
+.stockhub-order-bottom .stockhub-rationale .rationale-paper::before { transform-origin: 15% 90%; }
+@media(max-width:700px) {
+ .stockhub-order-bottom, .stockhub-alert-bottom { grid-template-columns: 1fr; gap: 18px; }
+ .stockhub-order-bottom .stockhub-rationale, .stockhub-alert-bottom .stockhub-rationale { margin: 0; justify-self: end; }
+ .stockhub-order-bottom .stockhub-rationale .rationale-paper { left: auto; right: 0; }
+ .stockhub-rationale.stockhub-rationale .rationale-paper { width: min(400px, calc(100vw - 48px)); height: auto; min-height: 370px; padding: 48px 38px; }
+}
+
+.stockhub-rationale-sketch { display:flex; align-items:center; gap:12px; margin-top:18px; color:#535d49; }
+.stockhub-rationale-sketch > span { width:75px; font:19px/1 'Caveat',sans-serif; text-align:center; }
+.stockhub-sketch-dashboard, .stockhub-sketch-detail { display:flex; flex-direction:column; gap:6px; width:112px; height:70px; box-sizing:border-box; padding:9px; border:1px solid #979c91; border-radius:3px; background:#e5e6e1; transform:rotate(-4deg); }
+.stockhub-sketch-detail { transform:rotate(4deg); }
+.stockhub-sketch-dashboard i, .stockhub-sketch-detail i { width:45%; height:5px; background:#9fa79a; margin-bottom:4px; }
+.stockhub-sketch-dashboard span, .stockhub-sketch-detail span { height:4px; background:#bdc3b7; }
+.stockhub-sketch-dashboard b { width:65%; height:4px; background:#a4aca0; }
+.mission-rationale[data-open="false"] .stockhub-rationale-sketch { opacity:0; }
+.mission-rationale[data-open="true"] .stockhub-rationale-sketch { animation:rationale-details .4s .44s ease-out both; }
+@media(prefers-reduced-motion:reduce) { .mission-rationale[data-open="true"] .stockhub-rationale-sketch { animation:none; } }
+
+/* Give the longer notes room inside the paper and open the admin note below its trigger. */
+.stockhub-rationale--1.stockhub-rationale .rationale-paper { width: 530px; height: 500px; padding: 85px 90px; }
+.stockhub-rationale--3.stockhub-rationale .rationale-paper { top: 40px; bottom: auto; width: 490px; height: 440px; padding: 80px 85px; transform-origin: 85% 0; }
+.stockhub-rationale--3.stockhub-rationale .rationale-paper::before { transform-origin: 85% 10%; }
+.stockhub-rationale--3.stockhub-rationale .rationale-paper::after { top: -45px; bottom: auto; }
+.stockhub-rationale-sketch { position:relative; width:210px; height:85px; margin:16px auto 0; }
+.stockhub-sketch-sheet, .stockhub-sketch-legacy { position:absolute; top:2px; width:132px; height:78px; box-sizing:border-box; padding:8px; border:1px solid #8f9889; border-radius:3px; background:#e5e6e1; box-shadow:0 3px 8px #0002; }
+.stockhub-sketch-sheet { left:0; transform:rotate(-7deg); }
+.stockhub-sketch-sheet i, .stockhub-sketch-legacy i { display:block; width:100%; height:7px; margin-bottom:5px; background:#99a591; }
+.stockhub-sketch-sheet div { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; }
+.stockhub-sketch-sheet div span { height:6px; background:#c4ccc0; }
+.stockhub-sketch-sheet div span:nth-child(4n) { background:#a5b3a0; }
+.stockhub-sketch-legacy { right:0; top:8px; transform:rotate(7deg); background:#dedfd9; }
+.stockhub-sketch-legacy i { background:#8b9485; }
+.stockhub-sketch-legacy div { display:flex; gap:2px; margin-bottom:5px; }
+.stockhub-sketch-legacy b { width:28px; height:8px; border:1px solid #a8afa2; background:#c7cec2; }
+.stockhub-sketch-legacy > span { display:block; width:88%; height:4px; margin:3px 0; background:#aeb7a9; }
+.stockhub-sketch-legacy > span:nth-of-type(2) { width:67%; }
+.stockhub-sketch-sheet small, .stockhub-sketch-legacy small { position:absolute; bottom:4px; right:6px; color:#596253; font:11px/1 'Caveat',sans-serif; }
+@media(max-width:700px) {
+ .stockhub-rationale--1.stockhub-rationale .rationale-paper, .stockhub-rationale--3.stockhub-rationale .rationale-paper { width:min(400px, calc(100vw - 48px)); height:auto; min-height:390px; max-height:none; padding:55px 48px; }
+ .stockhub-rationale--3.stockhub-rationale .rationale-paper { top:40px; bottom:auto; }
+}
+
+/* Arrows echo the hand-drawn annotations and point back toward each preview. */
+.stockhub-rationale.stockhub-rationale .rationale-paper .stockhub-rationale-arrow { position:absolute; width:58px; height:60px; transform:none; }
+.stockhub-rationale--0.stockhub-rationale .rationale-paper .stockhub-rationale-arrow { left:25px; top:155px; }
+.stockhub-rationale--2.stockhub-rationale .rationale-paper .stockhub-rationale-arrow { left:auto; right:65px; top:85px; width:75px; transform:rotate(-60deg); }
+.stockhub-rationale--3.stockhub-rationale .rationale-paper { padding-top:20px; padding-bottom:140px; }
+.stockhub-rationale--3.stockhub-rationale .rationale-paper .stockhub-rationale-arrow { left:25px; top:100px; transform:rotate(-90deg); }
+@media(max-width:700px) {
+ .stockhub-rationale--3.stockhub-rationale .rationale-paper { padding-top:35px; padding-bottom:75px; }
+}

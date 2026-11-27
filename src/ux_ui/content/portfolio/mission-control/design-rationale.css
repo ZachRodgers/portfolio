@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap');
+
+.mission-overview { position: relative; }
+.mission-rationale { position:absolute; right:max(var(--ux-content-inset), calc((100% - 1200px) / 2)); bottom:18px; z-index:5; }
+.mission-rationale .rationale-trigger { position:relative; z-index:1; display:flex; align-items:baseline; gap:6px; padding:8px 10px; border:0; color:#a0a0a0; background:transparent; cursor:pointer; transition:transform .2s,color .2s; }
+.rationale-trigger svg { width:19px; height:19px; flex:none; align-self:center; transform:translateY(5px) rotate(-10deg); }
+.rationale-trigger span { display:block; font-family:'Caveat',sans-serif; font-size:22px; line-height:1; transform:rotate(-5deg); }
+.mission-rationale .rationale-trigger:hover, .mission-rationale[data-open="true"] .rationale-trigger { color:white; }
+.rationale-trigger:hover { transform:translateY(-3px); }
+.rationale-trigger:focus-visible,.rationale-close:focus-visible { outline:2px solid #a98be5; outline-offset:4px; }
+.mission-rationale .rationale-paper { position:absolute; right:-12px; bottom:38px; width:500px; height:500px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; padding:58px 76px; border-radius:0; isolation:isolate; background:transparent; color:#252621; opacity:1; visibility:hidden; pointer-events:none; transform-origin:85% 100%; transition:visibility 0s linear .4s; font-family:'Montserrat',sans-serif; }
+.mission-rationale[data-open="true"] .rationale-paper { opacity:1; visibility:visible; pointer-events:auto; transition-delay:0s; }
+.mission-rationale .rationale-paper::before { content:""; position:absolute; inset:-8px; z-index:-1; background:#f5f4ef; border-radius: 54% 46% 57% 43% / 48% 55% 45% 52%; transform:rotate(var(--blob-rotation, -8deg)) scale(.08); transform-origin:85% 90%; opacity:0; filter:drop-shadow(0 12px 24px #0002); }
+.mission-rationale--0 .rationale-paper { width:440px; height:400px; padding:65px 72px; }
+.mission-rationale--0 .rationale-paper::before { border-radius: 58% 42% 53% 47% / 52% 45% 55% 48%; }
+.mission-rationale--1 .rationale-paper { width:525px; height:430px; padding:65px 78px; }
+.mission-rationale--1 .rationale-paper::before { border-radius: 45% 55% 43% 57% / 53% 45% 55% 47%; --blob-rotation:5deg; }
+.mission-rationale--2 .rationale-paper::before { border-radius: 48% 52% 56% 44% / 43% 52% 48% 57%; --blob-rotation:-6deg; }
+.mission-rationale--3 .rationale-paper { width:465px; height:420px; padding:65px 74px; }
+.mission-rationale--3 .rationale-paper::before { border-radius: 52% 48% 41% 59% / 44% 57% 43% 56%; --blob-rotation:7deg; }
+.mission-rationale--1 .rationale-arrow { left:auto; right:22px; top:105px; transform:rotate(15deg); }
+.mission-rationale--0 .rationale-arrow { left:16px; top:150px; transform:none; }
+.mission-rationale--2 .rationale-arrow { left:15px; top:150px; transform:none; }
+.mission-rationale--3 .rationale-arrow { left:18px; top:170px; transform:rotate(20deg); }
+.rationale-paper::after { content:''; position:absolute; bottom:-42px; right:0; width:180px; height:60px; }
+.mission-rationale .rationale-close { position:absolute; top:48px; right:86px; border:0; background:transparent; color:#55574f; padding:8px; cursor:pointer; }
+.mission-rationale .rationale-eyebrow { font-size:9px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:#73766a; }
+.mission-rationale .rationale-paper h3 { color:#252621; font-family:'Caveat',sans-serif; font-size:38px; line-height:1.05; font-weight:500; margin:13px 0 19px; transform:rotate(-4deg); letter-spacing:-.02em; }
+.mission-rationale .rationale-paper p { color:#44463e; font-size:13px; font-weight:400; line-height:1.75; margin:0; }
+.mission-rationale .rationale-arrow { position:absolute; width:58px; height:60px; left:12px; top:160px; transform:rotate(65deg); fill:none; stroke:#42483a; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.mission-rationale.mission-rationale--0 .rationale-arrow { left:16px; top:150px; transform:none; }
+.mission-rationale.mission-rationale--2 .rationale-arrow { left:10px; top:190px; width:75px; height:130px; transform:none; }
+.mission-rationale .rationale-research { margin-top:23px; padding-left:13px; border-left:1px solid #b5b9aa; }
+.mission-rationale .rationale-research > span { font-family:'Caveat',sans-serif; font-size:22px; color:#4c5841; }
+.mission-rationale .rationale-research p { margin-top:3px; font-size:11px; line-height:1.65; }
+.mission-rationale .rationale-paper footer { margin-top:19px; font-size:9px; color:#787b71; }
+.rationale-wireframes { display:flex; align-items:center; gap:12px; margin:20px -15px 0; }
+.rationale-wireframe { width:130px; height:86px; box-sizing:border-box; flex-shrink:0; border:1px solid #979c91; background:#e5e6e1; border-radius:3px; padding:9px; transform:rotate(-5deg); overflow:hidden; }
+.rationale-wireframe i { display:block; height:4px; width:40%; background:#adb2a7; margin-bottom:9px; }
+.rationale-wireframe div { display:inline-flex; flex-direction:column; gap:5px; width:35%; }
+.rationale-wireframe span { display:block; background:#b8bdb2; height:4px; width:100%; }
+.rationale-wireframe b { display:inline-block; width:50%; height:46px; background:#c9cdc4; margin-left:10%; }
+.rationale-sketch-note { font-family:'Caveat',sans-serif; font-size:19px; line-height:1; width:80px; text-align:center; color:#535d49; }
+.rationale-wireframe--tasks { transform:rotate(5deg); }
+.rationale-wireframe--tasks div { display:flex; flex-direction:row; align-items:center; width:100%; margin-top:7px; }
+.mission-rationale--2 .rationale-paper { width:540px; height:540px; padding:64px 84px; }
+.mission-rationale--2 .rationale-paper h3 { margin-bottom:13px; }
+.rationale-tools { display:grid; grid-template-columns:repeat(4,1fr); gap:17px 8px; margin:20px -7px 12px -15px; }
+.rationale-sources { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:16px; font-size:10px; line-height:1.5; }
+.rationale-sources a { color:#535d49; text-underline-offset:3px; }
+.mission-rationale--3 .rationale-paper { width:570px; height:510px; padding:80px 75px 80px 125px; }
+.mission-rationale--3 .rationale-paper > * { position:relative; top:-45px; left:20px; }
+.rationale-tools > div { position:relative; display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; color:#343b2e; }
+.rationale-tools span { font-size:9px; line-height:1.4; }
+.rationale-tools .is-cut { color:#92938b; }
+.rationale-tools .is-cut::after { content:''; position:absolute; top:13px; width:39px; height:1.5px; background:#a37867; transform:rotate(-40deg); }
+.rationale-legend { font-family:'Caveat',sans-serif; font-size:19px; color:#5b654e; text-align:center; }
+.rationale-legend span { margin:0 9px; color:#aaa; }
+.rationale-legend s { color:#947361; }
+.mission-rationale--2 .rationale-research { margin-top:12px; }
+.mission-rationale--2 .rationale-paper footer { margin-top:12px; }
+
+.mission-rationale .rationale-paper.is-pinned { animation:rationale-pin-jiggle .45s ease-out; }
+@keyframes rationale-pin-jiggle { 0%, 100% { transform:scale(1) rotate(0); } 35% { transform:scale(1.025) rotate(-1deg); } 65% { transform:scale(.995) rotate(.5deg); } }
+.mission-rationale[data-open="true"] .rationale-paper::before { transform:rotate(var(--blob-rotation, -8deg)) scale(1); opacity:1; animation:rationale-bloom .6s ease-out both; }
+.mission-rationale[data-open="false"] .rationale-paper::before { animation:rationale-recede .4s ease-in both; }
+@keyframes rationale-bloom {
+  0% { transform:rotate(var(--blob-rotation, -8deg)) scale(.08,.04); border-radius:50%; opacity:0; }
+  35% { transform:rotate(calc(var(--blob-rotation, -8deg) - 2deg)) scale(.67,.57); border-radius:62% 38% 42% 58% / 43% 62% 38% 57%; opacity:1; }
+  75% { transform:rotate(calc(var(--blob-rotation, -8deg) + .5deg)) scale(1.015,.99); }
+  100% { transform:rotate(var(--blob-rotation, -8deg)) scale(1); opacity:1; }
+}
+@keyframes rationale-recede {
+  0% { transform:rotate(var(--blob-rotation, -8deg)) scale(1); opacity:1; }
+  55% { transform:rotate(calc(var(--blob-rotation, -8deg) - 2deg)) scale(.67,.57); border-radius:62% 38% 42% 58% / 43% 62% 38% 57%; opacity:1; }
+  100% { transform:rotate(var(--blob-rotation, -8deg)) scale(.08,.04); border-radius:50%; opacity:0; }
+}
+.mission-rationale[data-open="false"] .rationale-title,
+.mission-rationale[data-open="false"] .rationale-paper p,
+.mission-rationale[data-open="false"] .rationale-sources,
+.mission-rationale[data-open="false"] .rationale-arrow path,
+.mission-rationale[data-open="false"] .rationale-wireframes,
+.mission-rationale[data-open="false"] .rationale-tools { opacity:0; transition:opacity .12s ease; }
+.mission-rationale[data-open="true"] .rationale-title { animation:rationale-title-reveal .38s .24s steps(12,end) both; }
+.mission-rationale[data-open="true"] .rationale-paper p { animation:rationale-details .4s .4s ease-out both; }
+.mission-rationale[data-open="true"] .rationale-sources { animation:rationale-details .4s .45s ease-out both; }
+.mission-rationale[data-open="true"] .rationale-wireframes,
+.mission-rationale[data-open="true"] .rationale-tools { animation:rationale-details .4s .44s ease-out both; }
+.mission-rationale[data-open="true"] .rationale-arrow path { stroke-dasharray:1; stroke-dashoffset:1; animation:rationale-draw .5s .35s ease-out forwards; }
+.mission-rationale[data-open="true"] .rationale-arrow .rationale-arrow-head { animation-duration:.2s; animation-delay:.8s; }
+@keyframes rationale-title-reveal { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 -4% 0 0); } }
+@keyframes rationale-details { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+@keyframes rationale-draw { to { stroke-dashoffset:0; } }
+
+@media(max-width:700px) {
+ .mission-rationale { right:22px; bottom:8px; }
+ .mission-rationale[class*="mission-rationale--"] .rationale-paper { width:min(400px,calc(100vw - 48px)); height:auto; min-height:370px; max-height:72vh; right:0; padding:48px 38px; }
+ .mission-rationale .rationale-title { margin-bottom:12px; font-size:40px; }
+ .mission-rationale .rationale-arrow { display:none; }
+ .mission-rationale--3 .rationale-paper > * { top:0; left:0; }
+ .mission-rationale .rationale-close { top:17px; right:38px; }
+ .rationale-wireframes { gap:8px; margin-left:0; margin-right:0; }
+ .rationale-wireframe { width:36%; flex-shrink:1; }
+ .rationale-sketch-note { width:25%; font-size:17px; }
+}
+@media(prefers-reduced-motion:reduce) { .mission-rationale .rationale-paper,.mission-rationale .rationale-trigger,.mission-rationale .rationale-paper::before { transition:none; } .mission-rationale .rationale-paper.is-pinned, .mission-rationale[data-open="true"] .rationale-paper::before, .mission-rationale[data-open="false"] .rationale-paper::before, .mission-rationale[data-open="true"] .rationale-title, .mission-rationale[data-open="true"] .rationale-paper p, .mission-rationale[data-open="true"] .rationale-sources, .mission-rationale[data-open="true"] .rationale-wireframes, .mission-rationale[data-open="true"] .rationale-tools, .mission-rationale[data-open="true"] .rationale-arrow path { animation:none; stroke-dashoffset:0; } }
+
+.mission-rationale .rationale-title { display:block; width:100%; margin:0 0 18px; color:#252621; font-family:'Caveat',sans-serif; font-size:49px; line-height:1.05; font-weight:500; letter-spacing:-.02em; }
+.mission-rationale--0 .rationale-title { font-size:43px; }
+.mission-rationale--1 .rationale-title { font-size:46px; }
+.mission-rationale.mission-rationale--2 .rationale-paper .rationale-title { margin-bottom:22px; }
+.mission-rationale--3 .rationale-title { font-size:43px; }

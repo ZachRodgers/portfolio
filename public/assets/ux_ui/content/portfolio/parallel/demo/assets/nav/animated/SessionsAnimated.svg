@@ -1,0 +1,32 @@
+<svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+<defs>
+<style>
+  @keyframes buttonClick {
+    0%   { transform: translateY(0); }
+    8%   { transform: translateY(0.4px); }
+    16%  { transform: translateY(0); }
+    100% { transform: translateY(0); }
+  }
+  @keyframes handSpin {
+    0%   { transform: rotate(0deg); }
+    10%  { transform: rotate(0deg); }
+    75%  { transform: rotate(360deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .button {
+    transform-origin: 5.5px 0.917px;
+    animation: buttonClick 0.9s ease-out forwards;
+  }
+  .hand {
+    transform-origin: 5.5px 6.417px;
+    animation: handSpin 0.9s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
+  }
+</style>
+</defs>
+<!-- Top button (clicks down) -->
+<path class="button" d="M4.5835 0.916687H6.41683" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Clock hand (spins) -->
+<path class="hand" d="M5.5 6.41669L6.875 5.04169" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Clock body (stays still) -->
+<path d="M5.50016 10.0833C7.52521 10.0833 9.16683 8.44171 9.16683 6.41667C9.16683 4.39162 7.52521 2.75 5.50016 2.75C3.47512 2.75 1.8335 4.39162 1.8335 6.41667C1.8335 8.44171 3.47512 10.0833 5.50016 10.0833Z" stroke="#333333" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

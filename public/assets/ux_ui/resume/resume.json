@@ -1,0 +1,105 @@
+{
+  "columns": {
+    "column1": 27,
+    "column2": 46,
+    "column3": 27
+  },
+  "profile": {
+    "image": "profile.jpg",
+    "name": "Zach Rodgers",
+    "statement": "Product designer with over 3 years of experience creating mobile, web, and AI products. My background in industrial design and software development helps me take ideas from early research through to launch."
+  },
+  "experience": [
+    {
+      "icon": "Parallel.jpg",
+      "title": "Co-Founder & CTO",
+      "company": "Parallel",
+      "date": "Sept 2024 to July 2026",
+      "description": "• Co-founded an AI parking company and led product design and engineering from concept to launch.\n• Designed and shipped mobile and web products, guided by interviews and usability testing.\n• Built a conversational assistant that automates parking workflows.\n• Led engineers and designers, set priorities, and managed releases. Created the brand and camera hardware for pilots.\n• Launched with customers in 2025. The platform processes hundreds of license plates daily."
+    },
+    {
+      "icon": "Nedco.png",
+      "title": "Software Engineer (Contract)",
+      "company": "Nedco",
+      "date": "Mar 2026 to Present",
+      "description": "• Designed and built an inventory platform, owning product design, frontend, and backend architecture.\n• Worked with Nedco and its customer to improve workflows through interviews, usability tests, and A/B testing.\n• Integrated Microsoft Graph and authentication. The product passed a two-week external penetration test and remains under my care."
+    },
+    {
+      "icon": "Studio63.jpg",
+      "title": "Industrial Design Intern",
+      "company": "Studio 63",
+      "date": "2023",
+      "description": "• Led design of an electric side-by-side and designed vehicle interfaces.\n• Built a full-scale prototype for UX testing and contributed to autonomous vehicle projects."
+    }
+  ],
+  "education": [
+    {
+      "icon": "Carleton.jpg",
+      "title": "Industrial Design",
+      "institution": "Carleton University",
+      "date": "2020-2024",
+      "description": "Bachelor of Industrial Design with High Distinction. Teaching Assistant for IDES 3001 from 2023 to 2024."
+    }
+  ],
+  "languages": [
+    {
+      "name": "English",
+      "percentage": 100
+    },
+    {
+      "name": "French",
+      "percentage": 60
+    },
+    {
+      "name": "TypeScript, CSS, HTML",
+      "percentage": 100
+    },
+    {
+      "name": "Java",
+      "percentage": 90
+    }
+  ],
+  "achievements": [],
+  "skills": {
+    "icons": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      "react",
+      "nextjs",
+      "html",
+      "css",
+      "swift",
+      "python",
+      "java",
+      "postgresql",
+      "linux",
+      5
+    ],
+    "labels": [
+      "Figma",
+      "GitHub",
+      "Adobe Illustrator",
+      "Adobe Photoshop",
+      "Adobe InDesign",
+      "Adobe After Effects",
+      "Adobe Lightroom",
+      "JavaScript",
+      "React and React Native",
+      "Next.js",
+      "HTML",
+      "CSS",
+      "Swift",
+      "Python",
+      "Java",
+      "PostgreSQL",
+      "Linux",
+      "Blender"
+    ]
+  }
+}

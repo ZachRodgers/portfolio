@@ -1,0 +1,48 @@
+.mission-overview { padding: 0; scroll-margin-top: 32px; }
+.ux-project { scroll-margin-top: 32px; }
+.mission-project-hero { width: calc(100% - var(--ux-content-inset) * 2); max-width: 1200px; margin: 0 auto; padding: clamp(40px, 6vw, 76px) 0 0; display: grid; grid-template-columns: minmax(0, 29fr) minmax(0, 71fr); gap: clamp(24px, 3vw, 42px); align-items: center; }
+.mission-project-hero--placeholder { padding-bottom: clamp(40px, 6vw, 76px); }
+.mission-project-identity img { display: block; width: min(100%, 310px); height: auto; }
+.mission-project-hero h2 { margin: 0; font-size: clamp(22px, 2.25vw, 32px); font-weight: 400; line-height: 1.25; letter-spacing: -.025em; text-wrap: balance; }
+@media(max-width:700px) { .mission-project-hero { grid-template-columns: 1fr; gap: 28px; } .mission-project-identity img { width: min(75%, 280px); } }
+.mission-overview-inner { width: calc(100% - var(--ux-content-inset) * 2); max-width: 1200px; margin: 0 auto; padding: clamp(40px, 6vw, 88px) 0; }
+.mission-overview h2 { max-width: 800px; margin: 0 0 36px; font-size: clamp(24px, 2.6vw, 36px); line-height: 1.25; font-weight: 400; letter-spacing: -.025em; }
+.mission-demo-background { position: relative; isolation: isolate; padding: 44px 24px 24px; background: linear-gradient(135deg, #a7a8a1 0%, #92938b 44%, #777970 100%); border-radius: 4px; }
+.mission-demo-background--planning { background: linear-gradient(135deg, #a5a8ab 0%, #909498 46%, #777c81 100%); }
+#mission-control-browser-design .mission-demo-background { background: linear-gradient(135deg, #b0a79e 0%, #998f86 48%, #80766f 100%); }
+#mission-control-features .mission-demo-background { background: linear-gradient(135deg, #ffffff14, #00000012), var(--showcase-tone); }
+#mission-control-features[data-feature="brand"] { --showcase-tone: #a19d90; }
+#mission-control-features[data-feature="index"] { --showcase-tone: #8f9b99; }
+#mission-control-features[data-feature="git"] { --showcase-tone: #a1978e; }
+#mission-control-features[data-feature="skills"] { --showcase-tone: #9a9a93; }
+.mission-demo-background::before { content: ''; position: absolute; z-index: 0; inset: 0; border-radius: inherit; opacity: .12; pointer-events: none; mix-blend-mode: soft-light; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E"); }
+.mission-demo-viewport { position: relative; width: 100%; overflow: hidden; border-radius: 4px; box-shadow: 0 15px 40px #0003; }
+.mission-demo-viewport iframe { position: absolute; top: 0; left: 0; display: block; margin: 0; border: 0; transform-origin: top left; }
+.mission-playback { position: absolute; top: 10px; right: 18px; display: flex; gap: 5px; }
+.mission-playback button { display: grid; place-items: center; width: 25px; height: 25px; color: #65685f; background: transparent; border: 0; border-radius: 4px; cursor: pointer; transition: color .15s, background .15s; }
+.mission-playback button:hover { color: #32362e; background: #0000000b; }
+.mission-playback button:focus-visible { color: #32362e; background: #0000000b; outline: 1px solid #54584e; outline-offset: 2px; }
+.mission-feature-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 36px; padding-top: 32px; }
+.mission-feature-grid h3 { margin: 0 0 12px; font-size: 17px; font-weight: 500; line-height: 1.4; }
+.mission-feature-grid p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
+.mission-browser-section .mission-overview-inner { max-width: 1480px; }
+.mission-browser-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(190px, 250px); align-items: center; gap: clamp(22px, 3vw, 42px); width: calc(100% - var(--ux-content-inset) * 2); max-width: 1480px; margin: 0 auto; padding: clamp(40px, 6vw, 88px) 0; }
+.mission-browser-layout .mission-demo-background { min-width: 0; }
+.mission-browser-notes { display: grid; gap: 36px; }
+.mission-browser-notes h3 { margin: 0 0 12px; font-size: 17px; font-weight: 500; line-height: 1.4; }
+.mission-browser-notes p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
+@media(max-width:1100px) { .mission-browser-layout { grid-template-columns: 1fr; } .mission-browser-notes { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; } }
+@media(max-width:700px) { .mission-demo-background { padding: 38px 10px 10px; } .mission-feature-grid { grid-template-columns: 1fr; gap: 26px; } .mission-browser-notes { grid-template-columns: 1fr; gap: 22px; } }
+.mission-demo-background--crop { padding-left: 0; }
+.mission-demo-viewport--crop { overflow: clip; border-radius: 0 4px 4px 0; }
+.mission-showcase-tabs { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: min(100%, 680px); margin: 0 auto 30px; padding: 4px; border: 1px solid #353535; border-radius: 999px; background: #1d1d1d; }
+.mission-showcase-indicator { position: absolute; inset: 4px auto 4px 4px; width: calc((100% - 8px) / 4); border-radius: 999px; background: #434343; transform: translateX(calc(var(--selected-tab) * 100%)); transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+.mission-showcase-tabs button { position: relative; z-index: 1; border: 0; border-radius: 999px; padding: 10px 6px; color: #aaa; background: transparent; cursor: pointer; font: inherit; font-size: clamp(10px, 1vw, 13px); }
+.mission-showcase-tabs button[aria-selected="true"] { color: #fff; }
+.mission-showcase-tabs button:focus-visible { outline: 2px solid white; outline-offset: 2px; }
+.mission-showcase-description { max-width: 700px; min-height: 54px; margin: 0 auto 24px; text-align: center; }
+.mission-showcase-description p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.7; text-wrap: balance; }
+.mission-showcase-frames { display: grid; }
+.mission-showcase-frame { grid-area: 1 / 1; min-width: 0; visibility: hidden; pointer-events: none; }
+.mission-showcase-frame[data-active="true"] { visibility: visible; pointer-events: auto; }
+@media(prefers-reduced-motion:reduce) { .mission-playback button, .mission-showcase-indicator { transition: none; } }

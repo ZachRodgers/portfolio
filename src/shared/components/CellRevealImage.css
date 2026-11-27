@@ -1,0 +1,3 @@
+.cell-reveal-image { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.cell-reveal-image.cell-reveal-loading { opacity: 0; }
+.cell-reveal-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }

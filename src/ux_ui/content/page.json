@@ -1,0 +1,20 @@
+{
+  "resumeDataUrl": "/assets/ux_ui/resume/resume.json",
+  "projects": [],
+  "projectIconBasePath": "/assets/ux_ui/icons/project_icons",
+  "footerProjects": [
+    {
+      "id": "project-1",
+      "name": "Parallel",
+      "icon": "/assets/industrial_design/icons/project_icons/Parallel.svg"
+    },
+    {
+      "id": "project-2",
+      "name": "Mission Control"
+    },
+    {
+      "id": "project-3",
+      "name": "Stockhub"
+    }
+  ]
+}
