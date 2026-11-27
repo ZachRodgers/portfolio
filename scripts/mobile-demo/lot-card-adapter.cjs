@@ -1,7 +1,15 @@
 module.exports = function adaptLotCard(contents) {
   const handle = '<View style={styles.handleContainer} {...panResponder.panHandlers}>';
   if (!contents.includes(handle)) throw new Error('Lot card handle source changed');
+  const width = 'const width = windowWidth - (progress * 32);';
+  const margin = 'const margin = progress * 16;';
+  const height = 'const EXPANDED_CARD_HEIGHT = windowHeight - SNAP_TOP;';
+  if (!contents.includes(width) || !contents.includes(margin) || !contents.includes(height)) throw new Error('Lot card dimensions source changed');
   return contents
+    .replace('<AnimatedGlassView\n                        intensity={100}', '<AnimatedGlassView\n                        nativeID="mobile-lot-glass"\n                        intensity={100}')
+    .replace(width, 'const width = windowWidth - 12 - (progress * 20);')
+    .replace(margin, 'const margin = 6 + progress * 10;')
+    .replace(height, 'const EXPANDED_CARD_HEIGHT = windowHeight - SNAP_TOP - 12;')
     .replace('const panResponder = React.useRef(', `const webGesture = React.useRef<any>(null);
     const snapWebSheet = (target: number) => {
         setCurrentSnap(target === SNAP_TOP ? '10' : '65');
@@ -38,5 +46,5 @@ module.exports = function adaptLotCard(contents) {
     .replaceAll('accessibilityLabel=', 'accessibilityRole="button" accessibilityLabel=')
     .replace('accessibilityRole="button" accessibilityRole="button"', 'accessibilityRole="button"')
     .replace('const openInMaps = () => {', `const openInMaps = () => {
-        if (Platform.OS === 'web') { window.open('https://www.openstreetmap.org/directions?to=' + lot.lotLatitude + ',' + lot.lotLongitude, '_blank', 'noopener,noreferrer'); return; }`);
+        if (Platform.OS === 'web') return;`);
 };

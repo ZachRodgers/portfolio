@@ -37,6 +37,8 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
     await searchInput.click({force:true});
     await page.getByText('King West',{exact:true}).first().waitFor();
     await page.waitForTimeout(1200);
+    const searchRect=await page.locator('#mobile-search-glass').boundingBox();
+    assert(searchRect.x >= 5 && searchRect.x <= 8 && searchRect.x + searchRect.width <= 388 && searchRect.y + searchRect.height <= 820, 'Expanded search reaches near the edges without clipping');
     await page.screenshot({path:'.mission/preview/1b391e11/search-expanded.png'});
     const focus = await searchInput.evaluate(el => ({outline:getComputedStyle(el).outlineColor, shadow:getComputedStyle(el).boxShadow}));
     assert(!focus.outline.includes('0, 95, 204'), 'Search must not have the blue browser outline');
@@ -57,7 +59,13 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
     await page.mouse.move(196, 140, {steps:20});
     await page.mouse.up();
     await page.getByText('Navigate',{exact:true}).waitFor();
+    await page.waitForTimeout(700);
+    const lotRect=await page.locator('#mobile-lot-glass').boundingBox();
+    assert(lotRect.x >= 5 && lotRect.x <= 8 && lotRect.x + lotRect.width <= 388 && lotRect.y + lotRect.height <= 820, 'Expanded lot sheet retains rounded edges');
     await page.screenshot({path:'.mission/preview/1b391e11/ios-lot-card-expanded.png'});
+    const urlBeforeNavigate=page.url();
+    await page.getByText('Navigate',{exact:true}).click();
+    assert.equal(page.url(),urlBeforeNavigate);
     await page.getByRole('button',{name:'Expand or collapse lot details',exact:true}).click();
     await page.getByText('Navigate',{exact:true}).waitFor({state:'hidden'});
     const swipeBox = await page.getByRole('button',{name:'Expand or collapse lot details',exact:true}).boundingBox();
@@ -85,20 +93,53 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
     for (const [label, title] of [['Select vehicle','Switch Plate'],['Parking history','Previous Visits'],['Account settings','Profile']]) {
       await page.getByRole('button',{name:label,exact:true}).click();
       await page.getByText(title,{exact:true}).waitFor();
+      const headerBox=await page.getByText(title,{exact:true}).boundingBox();
+      const backBox=await page.getByText('Back',{exact:true}).last().boundingBox();
+      assert(headerBox.y >= backBox.y + backBox.height, `${title} must clear Back`);
+      if(title==='Profile'){await page.getByText('Zach Rodgers',{exact:true}).waitFor();await page.getByText('zach@example.ca',{exact:true}).waitFor();}
+      if(title==='Previous Visits'){await page.getByText('Queen Street',{exact:true}).first().waitFor();assert.equal(await page.getByText('All previous visits displayed',{exact:true}).count(),0);await page.waitForTimeout(1200); await page.screenshot({path:'.mission/preview/1b391e11/history-polish.png'}); await page.getByText('St Lawrence',{exact:true}).waitFor(); await page.getByText('$12.00',{exact:true}).last().waitFor();}
       await page.getByText('Back',{exact:true}).last().click();
       await page.getByRole('button',{name:'Open wallet',exact:true}).waitFor();
     }
     await page.getByRole('button', {name:'Open wallet', exact:true}).click();
     await page.getByText('Balance (CAD)', { exact: true }).waitFor();
-    for (const feature of ['Paid', 'Alert']) {
+    const walletTitle=await page.getByText('Wallet',{exact:true}).boundingBox(); const walletBack=await page.getByText('Back',{exact:true}).last().boundingBox(); assert(walletTitle.y >= walletBack.y+walletBack.height);
+    await page.screenshot({path:'.mission/preview/1b391e11/wallet-polish.png'});
+    const toggle = page.getByRole('switch').first(); await toggle.click(); await page.getByText('Confirm',{exact:true}).click(); await page.waitForTimeout(500);
+    const thumbColor=await toggle.evaluate(el=>getComputedStyle(el.previousElementSibling).backgroundColor);
+    assert.equal(thumbColor,'rgb(255, 255, 255)','Switch thumb remains white');
+    await page.screenshot({path:'.mission/preview/1b391e11/wallet-refill.png'});
+    for (const feature of ['Parked', 'Alert']) {
       await page.evaluate(feature => window.postMessage({ mobileFeature: feature }, location.origin), feature);
-      await page.getByText(feature === 'Paid' ? 'Download Receipt' : 'Pay Bill', { exact: true }).waitFor();
+      await page.getByText(feature === 'Parked' ? 'You are currently parked at' : 'Pay Bill', { exact: true }).waitFor();
+      await page.waitForSelector('.leaflet-container');
+      await page.waitForTimeout(700);
+      const maps=await page.locator('.leaflet-container').count(); assert(maps >= 1, 'Visit card map is present');
+      if (feature === 'Parked') { await page.getByText('End Visit',{exact:true}).waitFor(); assert.equal(await page.getByText('You owe',{exact:false}).count(),0); }
+      await page.screenshot({path:'.mission/preview/1b391e11/visit-'+feature+'.png'});
     }
     await page.getByText('Pay Bill', { exact: true }).click();
     await page.getByText('.... 4242', { exact: true }).click();
     await page.getByText('Pay $8.00', { exact: true }).last().click();
     await page.getByText('Payment Success!', { exact: true }).waitFor();
     assert.deepEqual(errors, []);
+    const live = await browser.newPage({viewport:{width:393,height:860}});
+    await live.clock.install();
+    await live.goto('http://localhost:8786/assets/ux_ui/content/portfolio/parallel/mobile/demo/index.html',{waitUntil:'domcontentloaded'});
+    await live.getByText('Enter LotID',{exact:true}).waitFor();
+    await live.evaluate(() => window.postMessage({mobileFeature:'Parked'},location.origin));
+    await live.getByText('You are currently parked at',{exact:true}).waitFor();
+    const liveCharge=live.getByText(/\$[0-9]+\.[0-9]{2} for .+ mins/).first();
+    await liveCharge.waitFor();
+    const beforeLive=await liveCharge.innerText();
+    await live.clock.fastForward(61000);
+    await live.waitForFunction(before => [...document.querySelectorAll('div')].some(el => /^\$[0-9]+\.[0-9]{2} for .+ mins$/.test(el.textContent || '') && el.textContent !== before),beforeLive);
+    await live.screenshot({path:'.mission/preview/1b391e11/parked-live.png'});
+    await live.getByText('End Visit',{exact:true}).click();
+    await live.getByText('Confirm Departure',{exact:true}).waitFor();
+    await live.getByText('End Visit',{exact:true}).last().click();
+    await live.getByText('Enter LotID',{exact:true}).waitFor();
+    await live.close();
     if (process.env.MOBILE_TEST_ROOT === 'build') {
       await page.setViewportSize({width: 1440, height: 1000});
       await page.goto('http://localhost:8786/', {waitUntil:'domcontentloaded'});
@@ -114,15 +155,15 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
       assert.equal(await mobile.locator('.parallel-mobile-screen').evaluate(el=>getComputedStyle(el).overflow),'hidden');
       const app = page.frameLocator('#parallel-mobile iframe');
       await app.getByText('Enter LotID', {exact:true}).waitFor();
-      await mobile.getByRole('tab', {name:'Paid', exact:true}).click();
-      await app.getByText('Download Receipt', {exact:true}).waitFor();
+      await mobile.getByRole('tab', {name:'Parked', exact:true}).click();
+      await app.getByText('You are currently parked at', {exact:true}).waitFor();
       const replay = mobile.locator('.mission-playback button[aria-label="Replay demo"]');
       assert.equal(await replay.locator('svg').count(),1);
       assert.equal(await replay.innerText(),'');
       await replay.click();
       await app.getByText('Enter LotID', {exact:true}).waitFor();
       assert.equal(await mobile.getByRole('tab', {name:'Map', exact:true}).getAttribute('aria-selected'),'true');
-      await app.getByText('Download Receipt', {exact:true}).waitFor({state:'detached'});
+      await app.getByText('You are currently parked at', {exact:true}).waitFor({state:'detached'});
       await app.locator('.leaflet-tile-loaded').first().waitFor();
       await mobile.screenshot({path:'.mission/preview/1b391e11/mobile-light-replay.png'});
     }

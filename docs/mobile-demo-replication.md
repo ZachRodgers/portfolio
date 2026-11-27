@@ -4,7 +4,7 @@ Run `npm run build:mobile-demo` to rebuild from `MOBILE_SOURCE` (default `/home/
 
 The runtime imports the original MainNavigator and its web screen tree, including Map, Wallet, Pay, Plates, AccountSettings, CurrentVisit, UnpaidVisits, PreviousVisits, and ScanQR. Original TopBar, Logo, Lucide icons, SVG components, Leaflet map, markers, search sheet, GlassView web fallback, design tokens, and Oxanium font remain in use. No custom app navigation, invented icons, or replacement screen CSS is added.
 
-The iframe uses a fixed 393 × 860 viewport and scales as one unit within the prepared phone frame. Map, Paid, and Alert select original map, recent paid visit, and unpaid visit views using same-origin messages. Replay resets local demo state.
+The iframe uses a fixed 393 × 860 viewport and scales as one unit within the prepared phone frame. Map, Parked, and Alert select the map, original live current-visit screen, and unpaid visit screen using same-origin messages. The parked view uses the app’s real per-minute charge and duration calculations with a local demo session. Replay resets local demo state.
 
 Local adapters replace authentication, backend services, browser storage, configuration, and payment confirmation. Twenty-four fictional Toronto lots, a fictional plate and account, and a saved sample card support exploration. Wallet balance uses cents while session totals use dollars, matching the source screen contracts. Payments never contact Stripe. Card entry uses the product’s existing web fallback. Unknown API reads reject requests rather than reaching the production backend.
 
@@ -22,10 +22,14 @@ The demo is locked to the original light palette, including when the browser pre
 
 The map header enables the original TopBar `useGlassEffect` variant used by Map.native.tsx: a single floating pill with plate, wallet, history, and account actions. Its dimensions, icons, and glass surfaces remain from the source. The native masked blur is adapted to CSS mask-image on web; the scan button uses the native map’s 146px top offset. Other screens retain their own original headers.
 
-The floating map pill has 24px of extra top clearance for the phone island. Lot selections import the original iOS LotFocusCard: rounded glass sheet, pricing dividers, occupancy gradient, favorites, drag expansion, and horizontal lot switching. Favorites use the demo’s in-memory storage and reset on Replay. Directions open OpenStreetMap in a separate tab on web.
+The floating map pill has 24px of extra top clearance for the phone island. Lot selections import the original iOS LotFocusCard: rounded glass sheet, pricing dividers, occupancy gradient, favorites, drag expansion, and horizontal lot switching. Favorites use the demo’s in-memory storage and reset on Replay. The Navigate action stays within the demo.
 
 A browser pointer adapter on the native card’s handle drives its existing spring and horizontal transition animations. Visitors can drag up to expand, drag down to collapse or dismiss, swipe left/right between lots, or click/keyboard-activate the handle to expand and collapse.
 
 Map credits are available from the info control at the bottom of the phone backdrop. Hover, focus, or activate it to reveal links to Thunderforest and OpenStreetMap; Escape dismisses the opened popover.
 
 The preview uses a fixed Toronto demo location for nearby suggestions and any simulated location-dependent flows. It does not request the visitor’s device location. The expanded search sheet is inset to keep its rounded corners visible, and browser focus styles use neutral colors.
+
+Profile data uses a fictional email and Zach Rodgers. Visit history contains three paid visits and one permit visit with shortened addresses; no real parking or payments are displayed.
+
+Expanded search and lot sheets leave a small horizontal inset and bottom clearance so their rounded corners remain visible inside the phone frame.

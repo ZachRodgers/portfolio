@@ -8,3 +8,13 @@
 .css-146c3p1 { position:relative; top:1px; }
 input, textarea { outline:none; }
 input:focus-visible, textarea:focus-visible { box-shadow:none; }
+
+/* Match the light iOS switch while retaining its blue track. */
+[role="switch"] { accent-color:#1782ff; }
+[role="switch"] input, input[role="switch"] { accent-color:#1782ff; }
+[role="switch"] > div:last-child { background-color:#fff !important; }
+
+#mobile-search-glass, #mobile-header-pill { background-color:rgba(245,245,245,.66) !important; backdrop-filter:saturate(180%) blur(20px) !important; -webkit-backdrop-filter:saturate(180%) blur(20px) !important; }
+
+/* Visit cards use a slightly lower text baseline in the phone preview. */
+#demo-visit-content .css-146c3p1 { top:2px; }

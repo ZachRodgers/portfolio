@@ -3,7 +3,7 @@ import { Info, RotateCcw } from 'lucide-react';
 import DesignRationale from '../mission-control/DesignRationale';
 import './MobileApp.css';
 
-const slides = ['Map', 'Paid', 'Alert'];
+const slides = ['Map', 'Parked', 'Alert'];
 
 export default function MobileApp() {
     const [active, setActive] = useState('Map');
