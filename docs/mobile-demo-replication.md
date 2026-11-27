@@ -27,3 +27,5 @@ The floating map pill has 24px of extra top clearance for the phone island. Lot 
 A browser pointer adapter on the native card’s handle drives its existing spring and horizontal transition animations. Visitors can drag up to expand, drag down to collapse or dismiss, swipe left/right between lots, or click/keyboard-activate the handle to expand and collapse.
 
 Map credits are available from the info control at the bottom of the phone backdrop. Hover, focus, or activate it to reveal links to Thunderforest and OpenStreetMap; Escape dismisses the opened popover.
+
+The preview uses a fixed Toronto demo location for nearby suggestions and any simulated location-dependent flows. It does not request the visitor’s device location. The expanded search sheet is inset to keep its rounded corners visible, and browser focus styles use neutral colors.

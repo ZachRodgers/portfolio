@@ -3,3 +3,8 @@
 #mobile-header-blur { pointer-events:none; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.9) 28%, rgba(0,0,0,.55) 55%, transparent 100%); -webkit-mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.9) 28%, rgba(0,0,0,.55) 55%, transparent 100%); }
 
 [id^="mobile-header-action-"] > div { background-color: rgba(100, 100, 100, .16) !important; }
+
+/* Offset React Native Web text to align its baseline with the iOS controls. */
+.css-146c3p1 { position:relative; top:1px; }
+input, textarea { outline:none; }
+input:focus-visible, textarea:focus-visible { box-shadow:none; }

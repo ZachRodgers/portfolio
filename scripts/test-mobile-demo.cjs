@@ -8,6 +8,7 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
   try {
     const page = await browser.newPage({ viewport: { width: 393, height: 830 }, colorScheme: 'dark' });
     page.setDefaultTimeout(12000);
+    await page.addInitScript(() => { (window).__geoRequests = 0; Object.defineProperty(navigator, 'geolocation', { configurable:true, value: { getCurrentPosition() { (window).__geoRequests++; }, watchPosition() { (window).__geoRequests++; return 1; }, clearWatch() {} } }); });
     const errors = [];
     const tileStatuses = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -32,7 +33,17 @@ const server = spawn('python3', ['-m', 'http.server', '8786', '-d', process.env.
     assert(headerPlate.y >= 58, 'Pill stays below the island');
     const scan = await page.getByText('Enter LotID',{exact:true}).boundingBox();
     assert(scan.y > headerPlate.y + headerPlate.height, 'LotID control clears the pill');
-    await page.locator('.leaflet-marker-icon').filter({hasText:/^1$/}).first().click();
+    const searchInput = page.getByPlaceholder('Search Parking Lot');
+    await searchInput.click({force:true});
+    await page.getByText('King West',{exact:true}).first().waitFor();
+    await page.waitForTimeout(1200);
+    await page.screenshot({path:'.mission/preview/1b391e11/search-expanded.png'});
+    const focus = await searchInput.evaluate(el => ({outline:getComputedStyle(el).outlineColor, shadow:getComputedStyle(el).boxShadow}));
+    assert(!focus.outline.includes('0, 95, 204'), 'Search must not have the blue browser outline');
+    await searchInput.fill('Waterfront');
+    await page.getByText('Waterfront',{exact:true}).first().click();
+    assert.equal(await page.evaluate(() => window.__geoRequests),0,'Demo must not request device location');
+
     const favorite = page.getByRole('button',{name:'Favorite',exact:true});
     await favorite.waitFor();
     await page.getByText('per hour',{exact:true}).waitFor();

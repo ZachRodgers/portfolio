@@ -7,7 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { lotAdvancedPricingService as demoAdvancedPricing } from '../../api/api';
 ` + contents
     .replace(header, '<TopBar actions={topBarActions} onLogoPress={handleLogoRefresh} useGlassEffect />')
-    .replace('top: 80,', 'top: 146,')
+    .replace('top: 80,', 'top: 138,')
+    .replaceAll('latitudeDelta: 0.0922', 'latitudeDelta: 0.045')
+    .replace('showsUserLocation={true}', 'showsUserLocation={false}')
     .replace('const [focusLot, setFocusLot]', `const [demoFavorites, setDemoFavorites] = useState<Set<string>>(new Set());
     useEffect(() => { AsyncStorage.getItem('parking_lot_favorites').then(value => { if (value) setDemoFavorites(new Set(JSON.parse(value))); }); }, []);
     const toggleDemoFavorite = (lotId: string) => {
